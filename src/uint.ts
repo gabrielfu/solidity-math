@@ -31,14 +31,6 @@ export abstract class BaseNumber {
         this.bn = new BN(number);
     }
 
-    get uboundp1() {
-        return this.ubound.add(C.BN1);
-    }
-
-    get lbounds1() {
-        return this.lbound.sub(C.BN1);
-    }
-
     clone(): this {
         let obj = createNewInstance(this);
         obj.bn = this.bn.clone();
