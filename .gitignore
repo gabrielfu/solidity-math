@@ -1,5 +1,6 @@
 # typescipt compiled js
 src/**/*.js
+build/*
 
 # hardhat artifacts
 artifacts/
