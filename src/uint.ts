@@ -2,7 +2,7 @@ import * as BN from "bn.js";
 import * as util from "util";
 import { checkSameType, createNewInstance } from "./utils";
 import * as C from "./constants";
-
+import { isUnchecked } from "./unchecked";
 
 
 /** @description valid types to construct a new BN from */
@@ -43,8 +43,54 @@ export abstract class BaseNumber {
         return `${this.constructor.name}(bn=${this.bn.toString()})`
     }
 
+    /** @description performs integer wrap around in-place */
+    abstract iwraparound(): this;
+
+    checkBounds(): this {
+        if (this.bn.lte(this.ubound) && this.bn.gte(this.lbound)) {
+            return this;
+        }
+
+        // under / overflow
+        if (isUnchecked()) {
+            return this.iwraparound();
+        } 
+        else {
+            throw new RangeError(`Value under/overflow outside of unchecked mode: ${util.inspect(this)}`);
+        }
+    }
+
+    iadd(b: this): this {
+        binaryOp(this, b, "iadd");
+        return this.checkBounds();;
+    }
+
+    add(b: this): this {
+        return this.clone().iadd(b);
+    }
+}
+
+
+/** @description Unsigned integer base class */
+export abstract class BaseUint extends BaseNumber {
+    lbound: BN = C.BN0; // lower bound for uint is always 0
+
     /** 
-     * @description performs integer wraparound in-place
+     * @description performs unsigned integer wraparound in-place
+     */
+    iwraparound(): this {
+        this.bn = this.bn.mod(this.ubound.add(C.BN1));
+        return this;
+    }
+    
+}
+
+
+/** @description Signed integer base class */
+export abstract class BaseInt extends BaseNumber {
+    
+    /** 
+     * @description performs signed integer wraparound in-place
      * copied from https://stackoverflow.com/a/707426
      */
     iwraparound(): this {
@@ -56,26 +102,7 @@ export abstract class BaseNumber {
         this.bn = this.bn.sub(this.lbound).mod(range).add(this.lbound);
         return this;
     }
-
-    iadd(b: this): this {
-        binaryOp(this, b, "iadd");
-        return this.iwraparound();;
-    }
-
-    add(b: this): this {
-        return this.clone().iadd(b);
-    }
 }
-
-// TODO: necessary base classes?
-/** @description Unsigned integer base class */
-export abstract class BaseUint extends BaseNumber {
-    lbound: BN = C.BN0; // lower bound for uint is always 0
-}
-
-
-/** @description Signed integer base class */
-export abstract class BaseInt extends BaseNumber {}
 
 
 export class Uint128 extends BaseUint {
