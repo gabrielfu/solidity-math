@@ -9,7 +9,7 @@ type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 
 
 /** @description checks if a & b are of the same type */
-function checkSameType(a: any, b: any, opname: string) {
+function _checkSameType(a: any, b: any, opname: string) {
     let atype = a.constructor.name;
     let btype = b.constructor.name;
     if (atype != btype) {
@@ -26,7 +26,7 @@ export function binaryOp<T extends BaseNumber>(
     b: T, 
     opname: keyof BN,
 ): BN {
-    checkSameType(a, b, opname);
+    _checkSameType(a, b, opname);
     // @ts-ignore // ignores [opname]
     return a.bn[opname](b.bn); 
 }
