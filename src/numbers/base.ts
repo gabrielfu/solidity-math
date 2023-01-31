@@ -85,3 +85,34 @@ export abstract class BaseNumber {
         return this.clone().iadd(b);
     }
 }
+
+/**
+ * @description Create a BaseNamber subclass instance.
+ * @param classDispatcher a mapping of `bitlen` to corresponding BaseNumber subclass constructor
+ * @param number input argument for the constructor
+ * @param bitlen 
+ */
+function _createInstance(
+    classDispatcher: Map<number, typeof BaseNumber>, 
+    number: BNInput, 
+    bitlen: number
+): BaseNumber {
+    return new ((classDispatcher.get(bitlen) as unknown) as new(number: BNInput) => BaseNumber)(number);
+}
+
+/**
+ * @description helper function to create an alias for a BaseNumber subclass
+ * @param classDispatcher a mapping of `bitlen` to corresponding BaseNumber subclass constructor
+ * @param bitlen 
+ */
+export function _alias(
+    classDispatcher: Map<number, typeof BaseNumber>,
+    bitlen: number
+): (number: BNInput) => BaseNumber {
+    const f = function(number: BNInput) { 
+        return _createInstance(classDispatcher, number, bitlen) 
+    };
+    f.max = f(f(0).ubound);
+    f.min = f(f(0).lbound);
+    return f;
+}
