@@ -1,17 +1,8 @@
 import * as BN from "bn.js";
 import * as util from "util";
 import { checkSameType, createNewInstance } from "./utils";
+import * as C from "./constants";
 
-const BN0 = new BN(0);
-const BN1 = new BN(1);
-const BN2 = new BN(2);
-const BN256 = new BN(256);
-const bit256 = BN2.pow(BN256);
-
-const ranges: Map<number, BN> = new Map([
-    [2, BN2.pow(BN2)],
-    [256, BN2.pow(BN256)],
-]);
 
 
 /** @description valid types to construct a new BN from */
@@ -66,6 +57,7 @@ export abstract class BaseNumber {
 }
 
 
+/** @description Unsigned integer base class */
 export class BaseUint extends BaseNumber {
     rmax: BN;
 
@@ -74,7 +66,7 @@ export class BaseUint extends BaseNumber {
         bitlen: number,
     ) {
         super(number, bitlen);
-        this.rmax = ranges.get(bitlen) as BN;
+        this.rmax = C.ranges.get(bitlen) as BN;
     }
 
     iadd(b: this): this {
@@ -85,13 +77,34 @@ export class BaseUint extends BaseNumber {
 }
 
 
-export class Uint256 extends BaseUint {
+/** @description Signed integer base class */
+export class BaseInt extends BaseNumber {
+    rmax: BN;
+
     constructor(
         number: BNInput,
+        bitlen: number,
     ) {
-        super(number, 256);
+        super(number, bitlen);
+        this.rmax = C.ranges.get(bitlen) as BN;
+    }
+
+    iadd(b: this): this {
+        super.iadd(b);
+        this.bn = this.bn.mod(this.rmax);
+        return this;
     }
 }
 
+
+export class Uint8 extends BaseUint {
+    constructor(number: BNInput) { super(number, 8); }
+}
+
+export class Uint256 extends BaseUint {
+    constructor(number: BNInput) { super(number, 256); }
+}
+
 export function uint256(number: BNInput) { return new Uint256(number) };
-uint256.max = uint256(bit256.sub(BN1));
+uint256.max = uint256(C.bit256.sub(C.BN1));
+uint256.min = uint256(C.BN0);
