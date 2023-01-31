@@ -23,15 +23,20 @@ export function binaryOp<T extends BaseNumber>(
 
 export abstract class BaseNumber {
     bn: BN;
-    bitlen: number;
-    abstract rmax: BN;
+    abstract bitlen: number;
+    abstract ubound: BN;
+    abstract lbound: BN;
 
-    constructor(
-        number: BNInput,
-        bitlen: number,
-    ) {
+    constructor(number: BNInput) {
         this.bn = new BN(number);
-        this.bitlen = bitlen;
+    }
+
+    get uboundp1() {
+        return this.ubound.add(C.BN1);
+    }
+
+    get lbounds1() {
+        return this.lbound.sub(C.BN1);
     }
 
     clone(): this {
@@ -58,55 +63,50 @@ export abstract class BaseNumber {
 
 
 /** @description Unsigned integer base class */
-export class BaseUint extends BaseNumber {
-    rmax: BN;
+export abstract class BaseUint extends BaseNumber {
+    lbound: BN = C.BN0; // lower bound for uint is always 0
 
-    constructor(
-        number: BNInput,
-        bitlen: number,
-    ) {
-        super(number, bitlen);
-        this.rmax = C.ranges.get(bitlen) as BN;
+    constructor(number: BNInput) {
+        super(number);
     }
 
     iadd(b: this): this {
         super.iadd(b);
-        this.bn = this.bn.mod(this.rmax);
+        this.bn = this.bn.mod(this.uboundp1);
         return this;
     }
 }
 
 
 /** @description Signed integer base class */
-export class BaseInt extends BaseNumber {
-    rmax: BN;
-
-    constructor(
-        number: BNInput,
-        bitlen: number,
-    ) {
-        super(number, bitlen);
-        this.rmax = C.ranges.get(bitlen) as BN;
+export abstract class BaseInt extends BaseNumber {
+    constructor(number: BNInput) {
+        super(number);
     }
 
     iadd(b: this): this {
         super.iadd(b);
-        this.bn = this.bn.mod(this.rmax);
+        // TODO: wraparound for signed int
+        // this.bn = this.bn.mod(this.uboundp1);
         return this;
     }
 }
 
 
-export class Uint8 extends BaseUint {
-    constructor(number: BNInput) { super(number, 8); }
+export class Uint128 extends BaseUint {
+    bitlen = 8;
+    ubound = C.bit8.sub(C.BN1);
 }
 
 export class Uint256 extends BaseUint {
-    constructor(number: BNInput) { super(number, 256); }
+    bitlen = 256;
+    ubound = C.bit256.sub(C.BN1);
 }
 
 export class Int256 extends BaseInt {
-    constructor(number: BNInput) { super(number, 256); }
+    bitlen = 256;
+    ubound = C.bit256.div(C.BN2).sub(C.BN1);
+    lbound = C.bit256.div(C.BN2).neg();
 }
 
 export function uint256(number: BNInput) { return new Uint256(number) };
