@@ -55,5 +55,13 @@ describe("Test", function () {
             let expected = int256.min.bn;
             expect(output).to.equal(expected);
         });
+        it("int256 add", async function () {
+            const { contract } = await loadFixture(deployFixture);
+            let a = C.bit256.div(C.BN2).sub(C.BN256);
+            let b = C.BN256.mul(C.BN2);
+            let output = await contract.int256add(a.toString(), b.toString());
+            let expected = int256(a).add(int256(b)).bn;
+            expect(output).to.equal(expected);
+        });
     });
 })
