@@ -51,9 +51,23 @@ export abstract class BaseNumber {
         return `${this.constructor.name}(bn=${this.bn.toString()})`
     }
 
+    /** 
+     * @description performs integer wraparound in-place
+     * copied from https://stackoverflow.com/a/707426
+     */
+    iwraparound(): this {
+        let range = this.ubound.sub(this.lbound).add(C.BN1);
+        if (this.bn.lt(this.lbound)) {
+            let a = this.lbound.sub(this.bn).div(range).add(C.BN1).mul(range);
+            this.bn.iadd(a);
+        }
+        this.bn = this.bn.sub(this.lbound).mod(range).add(this.lbound);
+        return this;
+    }
+
     iadd(b: this): this {
         binaryOp(this, b, "iadd");
-        return this;
+        return this.iwraparound();;
     }
 
     add(b: this): this {
@@ -61,36 +75,15 @@ export abstract class BaseNumber {
     }
 }
 
-
+// TODO: necessary base classes?
 /** @description Unsigned integer base class */
 export abstract class BaseUint extends BaseNumber {
     lbound: BN = C.BN0; // lower bound for uint is always 0
-
-    constructor(number: BNInput) {
-        super(number);
-    }
-
-    iadd(b: this): this {
-        super.iadd(b);
-        this.bn = this.bn.mod(this.uboundp1);
-        return this;
-    }
 }
 
 
 /** @description Signed integer base class */
-export abstract class BaseInt extends BaseNumber {
-    constructor(number: BNInput) {
-        super(number);
-    }
-
-    iadd(b: this): this {
-        super.iadd(b);
-        // TODO: wraparound for signed int
-        // this.bn = this.bn.mod(this.uboundp1);
-        return this;
-    }
-}
+export abstract class BaseInt extends BaseNumber {}
 
 
 export class Uint128 extends BaseUint {
