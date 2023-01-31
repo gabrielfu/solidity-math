@@ -30,9 +30,10 @@ export function binaryOp<T extends BaseNumber>(
 }
 
 
-export class BaseNumber {
+export abstract class BaseNumber {
     bn: BN;
     bitlen: number;
+    abstract rmax: BN;
 
     constructor(
         number: BNInput,
@@ -72,18 +73,14 @@ export class BaseUint extends BaseNumber {
         number: BNInput,
         bitlen: number,
     ) {
-        super(number, 256);
-        this.rmax = ranges.get(this.bitlen) as BN;
+        super(number, bitlen);
+        this.rmax = ranges.get(bitlen) as BN;
     }
 
     iadd(b: this): this {
         super.iadd(b);
         this.bn = this.bn.mod(this.rmax);
         return this;
-    }
-
-    add(b: this): this {
-        return this.clone().iadd(b);
     }
 }
 
