@@ -28,9 +28,13 @@ export function binaryOp<T extends BaseNumber>(
 }
 
 export abstract class BaseNumber {
+    /** @description underlying BN */
     bn: BN;
+    /** @description bit length (size) of this type */
     abstract bitlen: number;
+    /** @description max representable number of this type */
     abstract ubound: BN;
+    /** @description min representable number of this type */
     abstract lbound: BN;
 
     constructor(number: BNInput) {
@@ -41,6 +45,7 @@ export abstract class BaseNumber {
         return new (obj.constructor as new(bn: BN) => T)(obj.bn.clone());
     }
 
+    /** @description makes a copy of this number */
     clone(): this {
         return BaseNumber._copy(this);
     }
