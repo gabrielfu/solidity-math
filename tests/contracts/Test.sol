@@ -12,7 +12,7 @@ contract Test {
 
     // arithmetics
     function uint256add(uint256 a, uint256 b) public pure returns (uint256) { unchecked { return a + b; } }
-    function int256add(int256 a, int256 b) public pure returns (int256) { return a + b; }
-    function uint256sub(uint256 a, uint256 b) public pure returns (uint256) { return a - b; }
-    function int256sub(int256 a, int256 b) public pure returns (int256) { return a - b; }
+    function int256add(int256 a, int256 b) public pure returns (int256) { unchecked { return a + b; } }
+    function uint256sub(uint256 a, uint256 b) public pure returns (uint256) { unchecked { return a - b; } }
+    function int256sub(int256 a, int256 b) public pure returns (int256) { unchecked { return a - b; } }
 }
