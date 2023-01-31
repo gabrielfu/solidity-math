@@ -4,7 +4,6 @@ import { BaseNumber, BNInput } from "./base";
 
 /** @description Signed integer base class */
 export abstract class BaseInt extends BaseNumber {
-    
     /** 
      * @description performs signed integer wraparound in-place
      * copied from https://stackoverflow.com/a/707426
@@ -18,13 +17,17 @@ export abstract class BaseInt extends BaseNumber {
         this.bn = this.bn.sub(this.lbound).mod(range).add(this.lbound);
         return this;
     }
+
+    get ubound(): BN {
+        return (C.ranges.get(this.bitlen) as BN).div(C.BN2).sub(C.BN1);
+    }
+
+    get lbound(): BN {
+        return (C.ranges.get(this.bitlen) as BN).div(C.BN2).neg();
+    }
 }
 
-export class Int256 extends BaseInt {
-    bitlen = 256;
-    ubound = C.bit256.div(C.BN2).sub(C.BN1);
-    lbound = C.bit256.div(C.BN2).neg();
-}
+export class Int256 extends BaseInt { bitlen = 256; }
 
 export function int256(number: BNInput) { return new Int256(number) };
 int256.max = int256(int256(0).ubound);
