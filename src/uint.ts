@@ -44,16 +44,16 @@ export abstract class BaseNumber {
     }
 
     /** @description performs integer wrap around in-place */
-    abstract iwraparound(): this;
+    abstract _iwraparound(): this;
 
-    checkBounds(): this {
+    _checkBounds(): this {
         if (this.bn.lte(this.ubound) && this.bn.gte(this.lbound)) {
             return this;
         }
 
         // under / overflow
         if (isUnchecked()) {
-            return this.iwraparound();
+            return this._iwraparound();
         } 
         else {
             throw new RangeError(`Value under/overflow outside of unchecked mode: ${util.inspect(this)}`);
@@ -62,7 +62,7 @@ export abstract class BaseNumber {
 
     iadd(b: this): this {
         binaryOp(this, b, "iadd");
-        return this.checkBounds();;
+        return this._checkBounds();;
     }
 
     add(b: this): this {
@@ -78,7 +78,7 @@ export abstract class BaseUint extends BaseNumber {
     /** 
      * @description performs unsigned integer wraparound in-place
      */
-    iwraparound(): this {
+    _iwraparound(): this {
         this.bn = this.bn.mod(this.ubound.add(C.BN1));
         return this;
     }
@@ -93,7 +93,7 @@ export abstract class BaseInt extends BaseNumber {
      * @description performs signed integer wraparound in-place
      * copied from https://stackoverflow.com/a/707426
      */
-    iwraparound(): this {
+    _iwraparound(): this {
         let range = this.ubound.sub(this.lbound).add(C.BN1);
         if (this.bn.lt(this.lbound)) {
             let a = this.lbound.sub(this.bn).div(range).add(C.BN1).mul(range);
