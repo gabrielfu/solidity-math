@@ -19,16 +19,16 @@ export abstract class BaseInt extends BaseNumber {
     }
 
     get ubound(): BN {
-        return (C.ranges.get(this.bitlen) as BN).div(C.BN2).sub(C.BN1);
+        return C._getBitValues(this.bitlen).intmax;
     }
 
     get lbound(): BN {
-        return (C.ranges.get(this.bitlen) as BN).div(C.BN2).neg();
+        return C._getBitValues(this.bitlen).intmin;
     }
 }
 
 export class Int256 extends BaseInt { bitlen = 256; }
 
 export function int256(number: BNInput) { return new Int256(number) };
-int256.max = int256(int256(0).ubound);
-int256.min = int256(int256(0).lbound);
+int256.max = int256(C._getBitValues(256).intmax);
+int256.min = int256(C._getBitValues(256).intmin);

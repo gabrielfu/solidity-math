@@ -13,7 +13,7 @@ export abstract class BaseUint extends BaseNumber {
     }
 
     get ubound(): BN {
-        return (C.ranges.get(this.bitlen) as BN).sub(C.BN1);
+        return C._getBitValues(this.bitlen).uintmax;
     }
 
     get lbound(): BN {
@@ -25,5 +25,5 @@ export class Uint8 extends BaseUint { bitlen = 8;}
 export class Uint256 extends BaseUint { bitlen = 256; }
 
 export function uint256(number: BNInput) { return new Uint256(number) };
-uint256.max = uint256(uint256(0).ubound);
-uint256.min = uint256(uint256(0).lbound);
+uint256.max = uint256(C._getBitValues(256).uintmax);
+uint256.min = uint256(C.BN0);
