@@ -25,6 +25,12 @@ export abstract class BaseInt extends BaseNumber {
     get lbound(): BN {
         return C._getBitValues(this.bitlen).intmin;
     }
+
+    neg() {
+        let r = this.clone();
+        r.bn = r.bn.neg();
+        return r._checkBounds();
+    }
 }
 
 export class Int8 extends BaseInt { bitlen = 8; }

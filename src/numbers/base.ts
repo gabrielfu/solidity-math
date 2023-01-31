@@ -84,6 +84,42 @@ export abstract class BaseNumber {
     add(b: this): this {
         return this.clone().iadd(b);
     }
+
+    isub(b: this): this {
+        binaryOp(this, b, "isub");
+        return this._checkBounds();;
+    }
+
+    sub(b: this): this {
+        return this.clone().isub(b);
+    }
+
+    imul(b: this): this {
+        binaryOp(this, b, "imul");
+        return this._checkBounds();;
+    }
+
+    mul(b: this): this {
+        return this.clone().imul(b);
+    }
+
+    div(b: this): this {
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "div");
+        return r._checkBounds();
+    }
+
+    mod(b: this): this {
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "mod");
+        return r._checkBounds();
+    }
+
+    pow(b: this): this {
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "pow");
+        return r._checkBounds();
+    }
 }
 
 /**
