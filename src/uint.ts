@@ -105,6 +105,14 @@ export class Uint256 extends BaseUint {
     constructor(number: BNInput) { super(number, 256); }
 }
 
+export class Int256 extends BaseInt {
+    constructor(number: BNInput) { super(number, 256); }
+}
+
 export function uint256(number: BNInput) { return new Uint256(number) };
 uint256.max = uint256(C.bit256.sub(C.BN1));
 uint256.min = uint256(C.BN0);
+
+export function int256(number: BNInput) { return new Int256(number) };
+int256.max = int256(C.bit256.div(C.BN2).sub(C.BN1));
+int256.min = int256(C.bit256.div(C.BN2).neg());
