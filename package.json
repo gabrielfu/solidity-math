@@ -24,6 +24,7 @@
     "typescript": "~4.7.0"
   },
   "dependencies": {
-    "bn.js": "^5.2.1"
+    "bn.js": "^5.2.1",
+    "contextlib": "^1.2.0"
   }
 }
