@@ -5,7 +5,8 @@ import { ethers } from "hardhat";
 import { Contract } from "ethers";
 import * as BN from "bn.js";
 
-import * as uint from "../../src/uint";
+import { uint256, int256 } from "../../src/uint";
+import * as C from "../../src/constants";
 
 
 async function deployFixture() {    
@@ -21,13 +22,21 @@ describe("Test", function () {
         it("uint256.max", async function () {
             const { contract } = await loadFixture(deployFixture);
             let output = await contract.uint256max();
-            let expected = uint.uint256.max.bn;
+            let expected = uint256.max.bn;
             expect(output).to.equal(expected);
         });
         it("uint256.min", async function () {
             const { contract } = await loadFixture(deployFixture);
             let output = await contract.uint256min();
-            let expected = uint.uint256.min.bn;
+            let expected = uint256.min.bn;
+            expect(output).to.equal(expected);
+        });
+        it("uint256 add", async function () {
+            const { contract } = await loadFixture(deployFixture);
+            let a = C.bit256.sub(C.BN256);
+            let b = C.BN256.mul(C.BN2);
+            let output = await contract.uint256add(a.toString(), b.toString());
+            let expected = uint256(a).add(uint256(b)).bn;
             expect(output).to.equal(expected);
         });
     });
@@ -37,13 +46,13 @@ describe("Test", function () {
         it("int256.max", async function () {
             const { contract } = await loadFixture(deployFixture);
             let output = await contract.int256max();
-            let expected = uint.uint256.max.bn;
+            let expected = int256.max.bn;
             expect(output).to.equal(expected);
         });
         it("int256.min", async function () {
             const { contract } = await loadFixture(deployFixture);
             let output = await contract.int256min();
-            let expected = uint.uint256.min.bn;
+            let expected = int256.min.bn;
             expect(output).to.equal(expected);
         });
     });
