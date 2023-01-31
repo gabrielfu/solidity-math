@@ -1,12 +1,23 @@
 import * as BN from "bn.js";
 import * as util from "util";
-import { checkSameType, createNewInstance } from "./utils";
 import * as C from "./constants";
 import { isUnchecked } from "./unchecked";
 
 
 /** @description valid types to construct a new BN from */
 type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
+
+
+/** @description checks if a & b are of the same type */
+function checkSameType(a: any, b: any, opname: string) {
+    let atype = a.constructor.name;
+    let btype = b.constructor.name;
+    if (atype != btype) {
+        throw new TypeError(
+            `Cannot perform ${opname} operation on ${atype} and ${btype}`
+        );
+    }
+}
 
 
 /** @description performs binary operation with type safety check */
@@ -31,11 +42,12 @@ export abstract class BaseNumber {
         this.bn = new BN(number);
     }
 
+    static _copy<T extends BaseNumber>(obj: T): T {
+        return new (obj.constructor as new(bn: BN) => T)(obj.bn.clone());
+    }
+
     clone(): this {
-        let obj = createNewInstance(this);
-        obj.bn = this.bn.clone();
-        obj.bitlen = this.bitlen;
-        return obj;
+        return BaseNumber._copy(this);
     }
 
     /** @description console.log string representation */
@@ -46,6 +58,11 @@ export abstract class BaseNumber {
     /** @description performs integer wrap around in-place */
     abstract _iwraparound(): this;
 
+    /** 
+     * @description Checks if `this` has under/overflowed and takes action.
+     * If in unchecked mode, wraps around the lower/upper bound in-place.
+     * If not, throws a RangeError.
+     */
     _checkBounds(): this {
         if (this.bn.lte(this.ubound) && this.bn.gte(this.lbound)) {
             return this;
