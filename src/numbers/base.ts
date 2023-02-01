@@ -185,4 +185,43 @@ export abstract class BaseNumber {
         r.ishrn(b);
         return r;
     }
+
+    // bit
+
+    iand(b: this): this {
+        binaryOp(this, b, "iuand");
+        return this;
+    }
+
+    and(b: this): this {
+        return this.clone().iand(b);
+    }
+
+    ior(b: this): this {
+        binaryOp(this, b, "iuor");
+        return this;
+    }
+
+    or(b: this): this {
+        return this.clone().ior(b);
+    }
+
+    ixor(b: this): this {
+        binaryOp(this, b, "iuxor");
+        return this;
+    }
+
+    xor(b: this): this {
+        return this.clone().ixor(b);
+    }
+
+    inot(): this {
+        // @ts-ignore
+        this.bn.inotn(this.constructor._bitlen);
+        return this;
+    }
+
+    not(): this {
+        return this.clone().inot();
+    }
 }
