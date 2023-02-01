@@ -78,6 +78,7 @@ unchecked(() => {
 ### Unchecked 
 
 ```solidity
+// Solidity code
 uint256 x;
 uint256 y;
 uint256 z;
@@ -88,6 +89,7 @@ unchecked {
 ```
 
 ```typescript
+// Typescript equivalent
 import { uint256, unchecked } from "solidity-math";
 
 let x = uint256(0);
