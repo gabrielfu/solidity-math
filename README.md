@@ -193,10 +193,10 @@ unchecked(() => {
 ```
 
 ### Muldiv
-[muldiv](https://xn--2-umb.com/21/muldiv/index.html) is an algorithm to calculate `floor(a * b / denominator)`.
+[muldiv](https://xn--2-umb.com/21/muldiv/index.html) is an algorithm that calculates `floor(a * b / denominator)`.
 It is also included in [Uniswap V3 FullMath.sol](https://github.com/Uniswap/v3-core/blob/412d9b236a1e75a98568d49b1aeb21e3a1430544/contracts/libraries/FullMath.sol#L8).
 
-Below is the Typescript equivalent function. Note that the original code is using Solidity <0.8.0, 
+Below is the Typescript equivalent function. Note that the original code is in Solidity <0.8.0, 
 which allows `-uint256(denominator)`. To use this package, 
 we need to perform `uint256(0).sub(denominator)` in unchecked mode.
 
@@ -224,7 +224,7 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
     prod1 = prod1.sub(uint256(+(remainder.gt(prod0))));
     prod0 = prod0.sub(remainder);
 
-    let twos: Uint256 = uint256(0);
+    let twos = uint256(0);
     // -x for uint256 is disabled since 0.8.0
     // so we need unchecked mode
     unchecked(() => {
