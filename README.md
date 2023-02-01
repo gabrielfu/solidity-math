@@ -162,6 +162,9 @@ unchecked(() => {
 });
 ```
 
+For the purpose of this package, you should also perform Solidity inline assembly `assembly { ... }` 
+in `unchecked` mode.
+
 ### Casting
 To be implemented.
 
