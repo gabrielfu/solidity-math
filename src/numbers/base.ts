@@ -62,8 +62,8 @@ export abstract class BaseNumber {
     }
 
     /** @description constructor as static function supporting subclasses */
-    static _new<T extends BaseNumber>(bn: BNInput): T {
-        return new (this as unknown as new(_bn: BNInput) => T)(bn);
+    static _new<T extends BaseNumber>(number: BNInput): T {
+        return new (this as unknown as new(_number: BNInput) => T)(number);
     }
 
     /** @description max representable number of this type */
@@ -164,7 +164,7 @@ function _createInstance(
     cls: typeof BaseNumber, 
     number: BNInput
 ): BaseNumber {
-    return new (cls as unknown as new(number: BNInput) => BaseNumber)(number);
+    return cls._new(number);
 }
 
 /**
