@@ -109,7 +109,7 @@ a = a.add(b); // solidity: a = a + b
 | `a.div(b)`       | Divide                   | `a / b`             | ✅              | 
 | `a.mod(b)`       | Modulo                   | `a % b`             | ✅              | 
 | `a.pow(b)`       | Exponentiation           | `a ** b`            |                 | 
-| `a.neg()`        | Negation (flip sign), for `Int` only     | `-a`                |                 |
+| `a.neg()`        | Negation, for `Int` only     | `-a`                |                 |
 | `a.addmod(b, m)` | Add then modulo          | `assembly { addmod(a, b, m) }` |       |
 | `a.mulmod(b, m)` | Multiply then modulo     | `assembly { mulmod(a, b, m) }` |       |
 | `a.shln(b)`      | Shift left               | `a << b`            | ✅              | 
