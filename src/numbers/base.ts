@@ -61,21 +61,25 @@ export abstract class BaseNumber {
         return this.constructor._lbound;
     }
 
+    /** @description constructor as static function supporting subclasses */
+    static _new<T extends BaseNumber>(bn: BN): T {
+        return new (this as unknown as new(_bn: BN) => T)(bn.clone());
+    }
+
+    /** @description max representable number of this type */
     static max<T extends BaseNumber>(): T {
-        return new (this as unknown as new(bn: BN) => T)(this._ubound);
+        return this._new(this._ubound);
     }
 
+    /** @description min representable number of this type */
     static min<T extends BaseNumber>(): T {
-        return new (this as unknown as new(bn: BN) => T)(this._lbound);
-    }
-
-    static _copy<T extends BaseNumber>(obj: T): T {
-        return new (obj.constructor as new(bn: BN) => T)(obj.bn.clone());
+        return this._new(this._lbound);
     }
 
     /** @description makes a copy of this number */
     clone(): this {
-        return BaseNumber._copy(this);
+        // @ts-ignore call static function
+        return this.constructor._new(this.bn);
     }
 
     /** @description console.log string representation */
