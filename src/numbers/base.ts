@@ -153,34 +153,3 @@ export abstract class BaseNumber {
         return r._checkBounds();
     }
 }
-
-/**
- * @description Create a BaseNamber subclass instance.
- * @param cls BaseNumber subclass type
- * @param number input argument for the constructor
- * @param bitlen 
- */
-function _createInstance(
-    cls: typeof BaseNumber, 
-    number: BNInput
-): BaseNumber {
-    return cls._new(number);
-}
-
-/**
- * @description helper function to create an alias for a BaseNumber subclass
- * @param classDispatcher a mapping of `bitlen` to corresponding BaseNumber subclass constructor
- * @param bitlen 
- */
-export function _alias(
-    classDispatcher: Map<number, typeof BaseNumber>,
-    bitlen: number
-): (number: BNInput) => BaseNumber {
-    let cls = (classDispatcher.get(bitlen) as typeof BaseNumber)
-    const f = function(number: BNInput) { 
-        return _createInstance(cls, number) 
-    };
-    f.max = f(cls._ubound);
-    f.min = f(cls._lbound);
-    return f;
-}

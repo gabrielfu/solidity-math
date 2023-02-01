@@ -1,6 +1,6 @@
 import * as BN from "bn.js";
 import * as C from "../constants";
-import { BaseNumber, BNInput, _alias } from "./base";
+import { BaseNumber, BNInput } from "./base";
 
 /** @description Signed integer base class */
 export abstract class BaseInt extends BaseNumber {
@@ -66,70 +66,36 @@ export class Int240 extends BaseInt { static _bitlen = 240; }
 export class Int248 extends BaseInt { static _bitlen = 248; }
 export class Int256 extends BaseInt { static _bitlen = 256; }
 
-const _classDispatcher: Map<number, typeof BaseInt> = new Map([
-    [8, Int8],
-    [16, Int16],
-    [24, Int24],
-    [32, Int32],
-    [40, Int40],
-    [48, Int48],
-    [56, Int56],
-    [64, Int64],
-    [72, Int72],
-    [80, Int80],
-    [88, Int88],
-    [96, Int96],
-    [104, Int104],
-    [112, Int112],
-    [120, Int120],
-    [128, Int128],
-    [136, Int136],
-    [144, Int144],
-    [152, Int152],
-    [160, Int160],
-    [168, Int168],
-    [176, Int176],
-    [184, Int184],
-    [192, Int192],
-    [200, Int200],
-    [208, Int208],
-    [216, Int216],
-    [224, Int224],
-    [232, Int232],
-    [240, Int240],
-    [248, Int248],
-    [256, Int256],
-])
-
-export const int8: (number: BNInput) => Int8 = _alias(_classDispatcher, 8) as (number: BNInput) => Int8;
-export const int16: (number: BNInput) => Int16 = _alias(_classDispatcher, 16) as (number: BNInput) => Int16;
-export const int24: (number: BNInput) => Int24 = _alias(_classDispatcher, 24) as (number: BNInput) => Int24;
-export const int32: (number: BNInput) => Int32 = _alias(_classDispatcher, 32) as (number: BNInput) => Int32;
-export const int40: (number: BNInput) => Int40 = _alias(_classDispatcher, 40) as (number: BNInput) => Int40;
-export const int48: (number: BNInput) => Int48 = _alias(_classDispatcher, 48) as (number: BNInput) => Int48;
-export const int56: (number: BNInput) => Int56 = _alias(_classDispatcher, 56) as (number: BNInput) => Int56;
-export const int64: (number: BNInput) => Int64 = _alias(_classDispatcher, 64) as (number: BNInput) => Int64;
-export const int72: (number: BNInput) => Int72 = _alias(_classDispatcher, 72) as (number: BNInput) => Int72;
-export const int80: (number: BNInput) => Int80 = _alias(_classDispatcher, 80) as (number: BNInput) => Int80;
-export const int88: (number: BNInput) => Int88 = _alias(_classDispatcher, 88) as (number: BNInput) => Int88;
-export const int96: (number: BNInput) => Int96 = _alias(_classDispatcher, 96) as (number: BNInput) => Int96;
-export const int104: (number: BNInput) => Int104 = _alias(_classDispatcher, 104) as (number: BNInput) => Int104;
-export const int112: (number: BNInput) => Int112 = _alias(_classDispatcher, 112) as (number: BNInput) => Int112;
-export const int120: (number: BNInput) => Int120 = _alias(_classDispatcher, 120) as (number: BNInput) => Int120;
-export const int128: (number: BNInput) => Int128 = _alias(_classDispatcher, 128) as (number: BNInput) => Int128;
-export const int136: (number: BNInput) => Int136 = _alias(_classDispatcher, 136) as (number: BNInput) => Int136;
-export const int144: (number: BNInput) => Int144 = _alias(_classDispatcher, 144) as (number: BNInput) => Int144;
-export const int152: (number: BNInput) => Int152 = _alias(_classDispatcher, 152) as (number: BNInput) => Int152;
-export const int160: (number: BNInput) => Int160 = _alias(_classDispatcher, 160) as (number: BNInput) => Int160;
-export const int168: (number: BNInput) => Int168 = _alias(_classDispatcher, 168) as (number: BNInput) => Int168;
-export const int176: (number: BNInput) => Int176 = _alias(_classDispatcher, 176) as (number: BNInput) => Int176;
-export const int184: (number: BNInput) => Int184 = _alias(_classDispatcher, 184) as (number: BNInput) => Int184;
-export const int192: (number: BNInput) => Int192 = _alias(_classDispatcher, 192) as (number: BNInput) => Int192;
-export const int200: (number: BNInput) => Int200 = _alias(_classDispatcher, 200) as (number: BNInput) => Int200;
-export const int208: (number: BNInput) => Int208 = _alias(_classDispatcher, 208) as (number: BNInput) => Int208;
-export const int216: (number: BNInput) => Int216 = _alias(_classDispatcher, 216) as (number: BNInput) => Int216;
-export const int224: (number: BNInput) => Int224 = _alias(_classDispatcher, 224) as (number: BNInput) => Int224;
-export const int232: (number: BNInput) => Int232 = _alias(_classDispatcher, 232) as (number: BNInput) => Int232;
-export const int240: (number: BNInput) => Int240 = _alias(_classDispatcher, 240) as (number: BNInput) => Int240;
-export const int248: (number: BNInput) => Int248 = _alias(_classDispatcher, 248) as (number: BNInput) => Int248;
-export const int256: (number: BNInput) => Int256 = _alias(_classDispatcher, 256) as (number: BNInput) => Int256;
+// alias functions
+export const int8 = (number: BNInput) => Int8._new(number) as Int8;
+export const int16 = (number: BNInput) => Int16._new(number) as Int16;
+export const int24 = (number: BNInput) => Int24._new(number) as Int24;
+export const int32 = (number: BNInput) => Int32._new(number) as Int32;
+export const int40 = (number: BNInput) => Int40._new(number) as Int40;
+export const int48 = (number: BNInput) => Int48._new(number) as Int48;
+export const int56 = (number: BNInput) => Int56._new(number) as Int56;
+export const int64 = (number: BNInput) => Int64._new(number) as Int64;
+export const int72 = (number: BNInput) => Int72._new(number) as Int72;
+export const int80 = (number: BNInput) => Int80._new(number) as Int80;
+export const int88 = (number: BNInput) => Int88._new(number) as Int88;
+export const int96 = (number: BNInput) => Int96._new(number) as Int96;
+export const int104 = (number: BNInput) => Int104._new(number) as Int104;
+export const int112 = (number: BNInput) => Int112._new(number) as Int112;
+export const int120 = (number: BNInput) => Int120._new(number) as Int120;
+export const int128 = (number: BNInput) => Int128._new(number) as Int128;
+export const int136 = (number: BNInput) => Int136._new(number) as Int136;
+export const int144 = (number: BNInput) => Int144._new(number) as Int144;
+export const int152 = (number: BNInput) => Int152._new(number) as Int152;
+export const int160 = (number: BNInput) => Int160._new(number) as Int160;
+export const int168 = (number: BNInput) => Int168._new(number) as Int168;
+export const int176 = (number: BNInput) => Int176._new(number) as Int176;
+export const int184 = (number: BNInput) => Int184._new(number) as Int184;
+export const int192 = (number: BNInput) => Int192._new(number) as Int192;
+export const int200 = (number: BNInput) => Int200._new(number) as Int200;
+export const int208 = (number: BNInput) => Int208._new(number) as Int208;
+export const int216 = (number: BNInput) => Int216._new(number) as Int216;
+export const int224 = (number: BNInput) => Int224._new(number) as Int224;
+export const int232 = (number: BNInput) => Int232._new(number) as Int232;
+export const int240 = (number: BNInput) => Int240._new(number) as Int240;
+export const int248 = (number: BNInput) => Int248._new(number) as Int248;
+export const int256 = (number: BNInput) => Int256._new(number) as Int256;
