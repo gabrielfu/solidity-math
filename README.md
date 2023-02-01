@@ -10,7 +10,8 @@ Solidity integer types and operations. It is useful for replicating public Solid
     - Signed integers: `int8`, `int16`, ..., `int256`
 - ✅ Checked & unchecked modes
 - ✅ Type safety checks
-- ✅ Type casting (coming soon)
+- Type casting (coming soon)
+- Test coverage (coming soon)
 
 ## Table of Contents
 * [Features](#features)
