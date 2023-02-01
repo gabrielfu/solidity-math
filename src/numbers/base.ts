@@ -11,7 +11,7 @@ function _checkSameType(a: any, b: any, opname: string) {
     let btype = b.constructor.name;
     if (atype != btype) {
         throw new TypeError(
-            `Cannot perform ${opname} operation on ${atype} and ${btype}`
+            `Operator ${opname} not compatible with types ${atype} and ${btype}.`
         );
     }
 }
