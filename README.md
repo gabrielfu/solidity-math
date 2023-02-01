@@ -5,12 +5,12 @@ Solidity integer types and operations. It is useful for replicating public Solid
 
 ## Features
 - ✅ Compatible with Solidity 0.8.17
-- ✅ Comprehensive Solidity integer types
+- ✅ Comprehensive Solidity integer types & operators
     - Unsigned integers: `uint8`, `uint16`, ..., `uint256`
     - Signed integers: `int8`, `int16`, ..., `int256`
 - ✅ Checked & unchecked modes
 - ✅ Type safety checks
-- ✅ Provides arithmetic, bit, shift & comparison operators
+- ✅ Type casting (coming soon)
 
 ## Table of Contents
 * [Features](#features)
@@ -28,6 +28,19 @@ Solidity integer types and operations. It is useful for replicating public Solid
 ## Installation
 
 ## Usage
+```typescript
+import { Uint256, uint256, unchecked } from "solidity-math";
+
+let a = new Uint256(10); // create new Uint256 number
+let b = uint256(10); // same as above, alias function
+
+console.log(a.eq(b)); // true
+console.log(a.add(b)); // Uint256(bn=20)
+unchecked(() => {
+    console.log(a.sub(b).sub(b)); // Uint256(bn=115792089237316195423570985008687907853269984665640564039457584007913129639926)
+});
+console.log(a.sub(b).sub(b)); // RangeError: Value under/overflow outside of unchecked mode: Uint256(bn=-10) 
+```
 
 ## Documentation
 
