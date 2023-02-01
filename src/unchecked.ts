@@ -2,10 +2,10 @@
  * Usage:
  * 
  * ``` code
- * import { With, unchecked, isUnchecked } from "./unchecked";
+ * import { unchecked } from "./unchecked";
  * 
- * With(unchecked, () => {
- *   console.log("_UNCHECKED:", isUnchecked());
+ * unchecked(() => {
+ *   // perform your unchecked solidity math
  * })
  * ```
  */
