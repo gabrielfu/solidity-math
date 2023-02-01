@@ -193,7 +193,7 @@ unchecked(() => {
 ```
 
 ### Muldiv
-(muldiv)[https://xn--2-umb.com/21/muldiv/index.html] is an algorithm to calculate `floor(a * b / denominator)`.
+[muldiv](https://xn--2-umb.com/21/muldiv/index.html) is an algorithm to calculate `floor(a * b / denominator)`.
 It is also included in [Uniswap V3 FullMath.sol](https://github.com/Uniswap/v3-core/blob/412d9b236a1e75a98568d49b1aeb21e3a1430544/contracts/libraries/FullMath.sol#L8).
 
 Below is the Typescript equivalent function. Note that the original code is using Solidity <0.8.0, 
