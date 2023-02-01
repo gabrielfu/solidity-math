@@ -8,6 +8,7 @@ Solidity integer types and operations. It is useful for replicating public Solid
 - ✅ Comprehensive Solidity integer types & operators
     - Unsigned integers: `uint8`, `uint16`, ..., `uint256`
     - Signed integers: `int8`, `int16`, ..., `int256`
+- ✅ Inline assembly functions: `addmod()` & `mulmod()`
 - ✅ Checked & unchecked modes
 - ✅ Type safety checks
 - Type casting (coming soon)
