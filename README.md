@@ -1,6 +1,7 @@
 # solidity-math
 
-Performs Solidity maths in Javascript with fully compatible types and behaviours.
+This package extends [bn.js](https://github.com/indutny/bn.js/) to implement 
+Solidity integer types and operations. It is useful for replicating public Solidity contract interactions, particularly when developing autonomous agents and DeFi programs.
 
 ## Features
 - ✅ Compatible with Solidity 0.8.17
