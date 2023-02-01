@@ -17,6 +17,9 @@ abstract class BaseUint extends BaseNumber {
      */
     _iwraparound(): this {
         this.bn = this.bn.mod(this._ubound.add(C.BN1));
+        if (this.bn.isNeg()) {
+            this.bn = this.bn.add(this._ubound).add(C.BN1);
+        }
         return this;
     }
 }

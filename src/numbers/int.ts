@@ -14,15 +14,16 @@ export abstract class BaseInt extends BaseNumber {
 
     /** 
      * @description performs signed integer wraparound in-place
-     * copied from https://stackoverflow.com/a/707426
      */
     _iwraparound(): this {
         let range = this._ubound.sub(this._lbound).add(C.BN1);
-        if (this.bn.lt(this._lbound)) {
-            let a = this._lbound.sub(this.bn).div(range).add(C.BN1).mul(range);
-            this.bn.iadd(a);
+        this.bn = this.bn.sub(this._lbound).mod(range);
+        if (this.bn.isNeg()) {
+            this.bn = this.bn.add(this._ubound).add(C.BN1);
         }
-        this.bn = this.bn.sub(this._lbound).mod(range).add(this._lbound);
+        else {
+            this.bn = this.bn.add(this._lbound);
+        }
         return this;
     }
 
