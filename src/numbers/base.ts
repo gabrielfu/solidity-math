@@ -156,13 +156,10 @@ export abstract class BaseNumber {
         return this.clone().imod(b);
     }
 
-    ipow(b: this): this {
-        this.bn = binaryOp(this, b, "pow");
-        return this._checkBounds();
-    }
-
     pow(b: this): this {
-        return this.clone().ipow(b);
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "pow");
+        return r._checkBounds();
     }
 
     // shift

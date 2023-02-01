@@ -106,7 +106,7 @@ a = a.add(b); // solidity: a = a + b
 | `a.mul(b)`      | Multiply                 | `a * b`             | ✅              | ✅       | ✅    |
 | `a.div(b)`      | Divide                   | `a / b`             | ✅              | ✅       | ✅    |
 | `a.mod(b)`      | Modulo                   | `a % b`             | ✅              | ✅       | ✅    |
-| `a.pow(b)`      | Exponentiation           | `a ** b`            | ✅              | ✅       | ✅    |
+| `a.pow(b)`      | Exponentiation           | `a ** b`            |                 | ✅       | ✅    |
 | `a.neg()`       | Negation (flip sign)     | `-a`                |                 |           | ✅    |
 | `a.shln(b)`     | Shift left               | `a << b`            | ✅              | ✅       | ✅    |
 | `a.shrn(b)`     | Shift right              | `a >> b`            | ✅              | ✅       | ✅    |
