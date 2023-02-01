@@ -108,6 +108,8 @@ export abstract class BaseNumber {
         }
     }
 
+    // arithmetic
+
     iadd(b: this): this {
         binaryOp(this, b, "iadd");
         return this._checkBounds();;
@@ -151,5 +153,36 @@ export abstract class BaseNumber {
         let r = this.clone();
         r.bn = binaryOp(r, b, "pow");
         return r._checkBounds();
+    }
+
+    // shift
+    // never under / overflows
+
+    ishln(b: this | number): this {
+        if (typeof b != "number") {
+            b = b.bn.toNumber();
+        }
+        this.bn.iushln(b);
+        return this;
+    }
+
+    shln(b: this | number): this {
+        let r = this.clone();
+        r.ishln(b);
+        return r;
+    }
+
+    ishrn(b: this | number): this {
+        if (typeof b != "number") {
+            b = b.bn.toNumber();
+        }
+        this.bn.iushrn(b);
+        return this;
+    }
+
+    shrn(b: this | number): this {
+        let r = this.clone();
+        r.ishrn(b);
+        return r;
     }
 }
