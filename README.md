@@ -26,6 +26,7 @@ Solidity integer types and operations. It is useful for replicating public Solid
     + [Unchecked Mode](#unchecked-mode)
 * [Example](#example)
     + [Unchecked Arithmetic](#unchecked-arithmetic)
+    + [Muldiv](#muldiv)
 
 ## Installation
 
@@ -189,4 +190,68 @@ let z = uint256(0);
 unchecked(() => {
     z = x.sub(y);
 });
+```
+
+### Muldiv
+(muldiv)[https://xn--2-umb.com/21/muldiv/index.html] is an algorithm to calculate `floor(a * b / denominator)`.
+It is also included in [Uniswap V3 FullMath.sol](https://github.com/Uniswap/v3-core/blob/412d9b236a1e75a98568d49b1aeb21e3a1430544/contracts/libraries/FullMath.sol#L8).
+
+Below is the Typescript equivalent function. Note that the original code is using Solidity <0.8.0, 
+which allows `-uint256(denominator)`. To use this package, 
+we need to perform `uint256(0).sub(denominator)` in unchecked mode.
+
+```typescript
+import { unchecked, uint256, Uint256 } from "./build/src/index";
+
+function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
+    if (!denominator.gt(uint256(0))) {
+        throw new Error;
+    }
+
+    let mm = a.mulmod(b, Uint256.max());
+    let prod0 = a.mul(b);
+    let prod1 = mm.sub(prod0).sub(uint256(+(a.lt(b))));
+
+    if (prod1.eq(uint256(0))) {
+        return prod0.div(denominator);
+    }
+
+    if (!prod1.lt(denominator)) {
+        throw new Error;
+    }
+
+    let remainder = a.mulmod(b, denominator);
+    prod1 = prod1.sub(uint256(+(remainder.gt(prod0))));
+    prod0 = prod0.sub(remainder);
+
+    let twos: Uint256 = uint256(0);
+    // -x for uint256 is disabled since 0.8.0
+    // so we need unchecked mode
+    unchecked(() => {
+        twos = uint256(0).sub(denominator).and(denominator);
+        denominator = denominator.div(twos);
+
+        prod0 = prod0.div(twos);
+        twos = uint256(0).sub(twos).div(twos).add(uint256(1));
+    });
+
+    prod0.ior(prod1.mul(twos));
+
+    let inv = denominator.xor(uint256(2)).mul(uint256(3));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+    inv.imul(uint256(2).sub(denominator.mul(inv)));
+
+    let result = prod0.mul(inv);
+    return result;
+}
+
+let a = uint256(14718); // create new Uint256 number
+let b = uint256(13812); // same as above, alias function
+let denominator = uint256(151231); // same as above, alias function
+
+console.log(muldiv(a, b, denominator)); // Uint256(bn=1344)
 ```
