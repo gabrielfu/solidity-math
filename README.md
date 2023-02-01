@@ -60,7 +60,41 @@ Solidity integer types and operations. It is useful for replicating public Solid
 | `uint256`  | `int256` |
 
 ### Arithmetics
-#### Unchecked mode
 
+### Unchecked mode
+
+To mimic Solidity `unchecked` arithmetic:
+```typescript
+import { unchecked } from "solidity-math";
+
+unchecked(() => {
+    // your calcuations
+    ...
+});
+```
 
 ## Example
+
+### Unchecked 
+
+```solidity
+uint256 x;
+uint256 y;
+uint256 z;
+
+unchecked {
+    z = x - y;
+}
+```
+
+```typescript
+import { uint256, unchecked } from "solidity-math";
+
+let x = uint256(0);
+let y = uint256(0);
+let z = uint256(0);
+
+unchecked(() => {
+    z = x.sub(y);
+});
+```
