@@ -62,8 +62,8 @@ export abstract class BaseNumber {
     }
 
     /** @description constructor as static function supporting subclasses */
-    static _new<T extends BaseNumber>(bn: BN): T {
-        return new (this as unknown as new(_bn: BN) => T)(bn.clone());
+    static _new<T extends BaseNumber>(bn: BNInput): T {
+        return new (this as unknown as new(_bn: BNInput) => T)(bn);
     }
 
     /** @description max representable number of this type */
@@ -79,7 +79,7 @@ export abstract class BaseNumber {
     /** @description makes a copy of this number */
     clone(): this {
         // @ts-ignore call static function
-        return this.constructor._new(this.bn);
+        return this.constructor._new(this.bn.clone());
     }
 
     /** @description console.log string representation */
@@ -162,8 +162,7 @@ export abstract class BaseNumber {
  */
 function _createInstance(
     cls: typeof BaseNumber, 
-    number: BNInput, 
-    bitlen: number
+    number: BNInput
 ): BaseNumber {
     return new (cls as unknown as new(number: BNInput) => BaseNumber)(number);
 }
@@ -179,7 +178,7 @@ export function _alias(
 ): (number: BNInput) => BaseNumber {
     let cls = (classDispatcher.get(bitlen) as typeof BaseNumber)
     const f = function(number: BNInput) { 
-        return _createInstance(cls, number, bitlen) 
+        return _createInstance(cls, number) 
     };
     f.max = f(cls._ubound);
     f.min = f(cls._lbound);
