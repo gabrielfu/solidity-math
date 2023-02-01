@@ -16,16 +16,12 @@ function _checkSameType(a: any, b: any, opname: string) {
     }
 }
 
-interface Constructor<M> {
-    new (...args: any[]): M
-}
-
 /** @description performs binary operation with type safety check */
 export function binaryOp<T extends BaseNumber>(
     a: T,
     b: T, 
     opname: keyof BN,
-): BN {
+): any {
     _checkSameType(a, b, opname);
     // @ts-ignore // ignores [opname]
     return a.bn[opname](b.bn); 
@@ -223,5 +219,31 @@ export abstract class BaseNumber {
 
     not(): this {
         return this.clone().inot();
+    }
+
+    // comparison
+
+    gt(b: this): Boolean {
+        return binaryOp(this, b, "gt");
+    }
+
+    lt(b: this): Boolean {
+        return binaryOp(this, b, "lt");
+    }
+
+    gte(b: this): Boolean {
+        return binaryOp(this, b, "gte");
+    }
+
+    lte(b: this): Boolean {
+        return binaryOp(this, b, "lte");
+    }
+
+    eq(b: this): Boolean {
+        return binaryOp(this, b, "eq");
+    }
+
+    neq(b: this): Boolean {
+        return !binaryOp(this, b, "eq");
     }
 }
