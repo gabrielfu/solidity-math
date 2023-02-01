@@ -16,6 +16,10 @@ function _checkSameType(a: any, b: any, opname: string) {
     }
 }
 
+interface Constructor<M> {
+    new (...args: any[]): M
+}
+
 /** @description performs binary operation with type safety check */
 export function binaryOp<T extends BaseNumber>(
     a: T,
@@ -31,14 +35,38 @@ export abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
     /** @description bit length (size) of this type */
-    abstract bitlen: number;
+    static _bitlen: number = 0;
     /** @description max representable number of this type */
-    abstract ubound: BN;
+    static _ubound: BN;
     /** @description min representable number of this type */
-    abstract lbound: BN;
+    static _lbound: BN;
 
     constructor(number: BNInput) {
         this.bn = new BN(number);
+    }
+
+    /** @description bit length (size) of this type */
+    get _bitlen(): number {
+        // @ts-ignore
+        return this.constructor._bitlen;
+    }
+    /** @description max representable number of this type */
+    get _ubound(): BN {
+        // @ts-ignore
+        return this.constructor._ubound;
+    }
+    /** @description min representable number of this type */
+    get _lbound(): BN {
+        // @ts-ignore
+        return this.constructor._lbound;
+    }
+
+    static max<T extends BaseNumber>(): T {
+        return new (this as unknown as new(bn: BN) => T)(this._ubound);
+    }
+
+    static min<T extends BaseNumber>(): T {
+        return new (this as unknown as new(bn: BN) => T)(this._lbound);
     }
 
     static _copy<T extends BaseNumber>(obj: T): T {
@@ -64,7 +92,7 @@ export abstract class BaseNumber {
      * If not, throws a RangeError.
      */
     _checkBounds(): this {
-        if (this.bn.lte(this.ubound) && this.bn.gte(this.lbound)) {
+        if (this.bn.lte(this._ubound) && this.bn.gte(this._lbound)) {
             return this;
         }
         // under / overflow
@@ -124,16 +152,16 @@ export abstract class BaseNumber {
 
 /**
  * @description Create a BaseNamber subclass instance.
- * @param classDispatcher a mapping of `bitlen` to corresponding BaseNumber subclass constructor
+ * @param cls BaseNumber subclass type
  * @param number input argument for the constructor
  * @param bitlen 
  */
 function _createInstance(
-    classDispatcher: Map<number, typeof BaseNumber>, 
+    cls: typeof BaseNumber, 
     number: BNInput, 
     bitlen: number
 ): BaseNumber {
-    return new ((classDispatcher.get(bitlen) as unknown) as new(number: BNInput) => BaseNumber)(number);
+    return new (cls as unknown as new(number: BNInput) => BaseNumber)(number);
 }
 
 /**
@@ -145,10 +173,11 @@ export function _alias(
     classDispatcher: Map<number, typeof BaseNumber>,
     bitlen: number
 ): (number: BNInput) => BaseNumber {
+    let cls = (classDispatcher.get(bitlen) as typeof BaseNumber)
     const f = function(number: BNInput) { 
-        return _createInstance(classDispatcher, number, bitlen) 
+        return _createInstance(cls, number, bitlen) 
     };
-    f.max = f(f(0).ubound);
-    f.min = f(f(0).lbound);
+    f.max = f(cls._ubound);
+    f.min = f(cls._lbound);
     return f;
 }

@@ -4,26 +4,26 @@ import { BaseNumber, BNInput, _alias } from "./base";
 
 /** @description Signed integer base class */
 export abstract class BaseInt extends BaseNumber {
+    static get _ubound() {
+        return C._getBitValues(this._bitlen).intmax;
+    }
+
+    static get _lbound() {
+        return C._getBitValues(this._bitlen).intmin;
+    }
+
     /** 
      * @description performs signed integer wraparound in-place
      * copied from https://stackoverflow.com/a/707426
      */
     _iwraparound(): this {
-        let range = this.ubound.sub(this.lbound).add(C.BN1);
-        if (this.bn.lt(this.lbound)) {
-            let a = this.lbound.sub(this.bn).div(range).add(C.BN1).mul(range);
+        let range = this._ubound.sub(this._lbound).add(C.BN1);
+        if (this.bn.lt(this._lbound)) {
+            let a = this._lbound.sub(this.bn).div(range).add(C.BN1).mul(range);
             this.bn.iadd(a);
         }
-        this.bn = this.bn.sub(this.lbound).mod(range).add(this.lbound);
+        this.bn = this.bn.sub(this._lbound).mod(range).add(this._lbound);
         return this;
-    }
-
-    get ubound(): BN {
-        return C._getBitValues(this.bitlen).intmax;
-    }
-
-    get lbound(): BN {
-        return C._getBitValues(this.bitlen).intmin;
     }
 
     neg() {
@@ -33,38 +33,38 @@ export abstract class BaseInt extends BaseNumber {
     }
 }
 
-export class Int8 extends BaseInt { bitlen = 8; }
-export class Int16 extends BaseInt { bitlen = 16; }
-export class Int24 extends BaseInt { bitlen = 24; }
-export class Int32 extends BaseInt { bitlen = 32; }
-export class Int40 extends BaseInt { bitlen = 40; }
-export class Int48 extends BaseInt { bitlen = 48; }
-export class Int56 extends BaseInt { bitlen = 56; }
-export class Int64 extends BaseInt { bitlen = 64; }
-export class Int72 extends BaseInt { bitlen = 72; }
-export class Int80 extends BaseInt { bitlen = 80; }
-export class Int88 extends BaseInt { bitlen = 88; }
-export class Int96 extends BaseInt { bitlen = 96; }
-export class Int104 extends BaseInt { bitlen = 104; }
-export class Int112 extends BaseInt { bitlen = 112; }
-export class Int120 extends BaseInt { bitlen = 120; }
-export class Int128 extends BaseInt { bitlen = 128; }
-export class Int136 extends BaseInt { bitlen = 136; }
-export class Int144 extends BaseInt { bitlen = 144; }
-export class Int152 extends BaseInt { bitlen = 152; }
-export class Int160 extends BaseInt { bitlen = 160; }
-export class Int168 extends BaseInt { bitlen = 168; }
-export class Int176 extends BaseInt { bitlen = 176; }
-export class Int184 extends BaseInt { bitlen = 184; }
-export class Int192 extends BaseInt { bitlen = 192; }
-export class Int200 extends BaseInt { bitlen = 200; }
-export class Int208 extends BaseInt { bitlen = 208; }
-export class Int216 extends BaseInt { bitlen = 216; }
-export class Int224 extends BaseInt { bitlen = 224; }
-export class Int232 extends BaseInt { bitlen = 232; }
-export class Int240 extends BaseInt { bitlen = 240; }
-export class Int248 extends BaseInt { bitlen = 248; }
-export class Int256 extends BaseInt { bitlen = 256; }
+export class Int8 extends BaseInt { static _bitlen = 8; }
+export class Int16 extends BaseInt { static _bitlen = 16; }
+export class Int24 extends BaseInt { static _bitlen = 24; }
+export class Int32 extends BaseInt { static _bitlen = 32; }
+export class Int40 extends BaseInt { static _bitlen = 40; }
+export class Int48 extends BaseInt { static _bitlen = 48; }
+export class Int56 extends BaseInt { static _bitlen = 56; }
+export class Int64 extends BaseInt { static _bitlen = 64; }
+export class Int72 extends BaseInt { static _bitlen = 72; }
+export class Int80 extends BaseInt { static _bitlen = 80; }
+export class Int88 extends BaseInt { static _bitlen = 88; }
+export class Int96 extends BaseInt { static _bitlen = 96; }
+export class Int104 extends BaseInt { static _bitlen = 104; }
+export class Int112 extends BaseInt { static _bitlen = 112; }
+export class Int120 extends BaseInt { static _bitlen = 120; }
+export class Int128 extends BaseInt { static _bitlen = 128; }
+export class Int136 extends BaseInt { static _bitlen = 136; }
+export class Int144 extends BaseInt { static _bitlen = 144; }
+export class Int152 extends BaseInt { static _bitlen = 152; }
+export class Int160 extends BaseInt { static _bitlen = 160; }
+export class Int168 extends BaseInt { static _bitlen = 168; }
+export class Int176 extends BaseInt { static _bitlen = 176; }
+export class Int184 extends BaseInt { static _bitlen = 184; }
+export class Int192 extends BaseInt { static _bitlen = 192; }
+export class Int200 extends BaseInt { static _bitlen = 200; }
+export class Int208 extends BaseInt { static _bitlen = 208; }
+export class Int216 extends BaseInt { static _bitlen = 216; }
+export class Int224 extends BaseInt { static _bitlen = 224; }
+export class Int232 extends BaseInt { static _bitlen = 232; }
+export class Int240 extends BaseInt { static _bitlen = 240; }
+export class Int248 extends BaseInt { static _bitlen = 248; }
+export class Int256 extends BaseInt { static _bitlen = 256; }
 
 const _classDispatcher: Map<number, typeof BaseInt> = new Map([
     [8, Int8],

@@ -4,55 +4,55 @@ import { BaseNumber, BNInput, _alias } from "./base";
 
 /** @description Unsigned integer base class */
 abstract class BaseUint extends BaseNumber {
+    static get _ubound() {
+        return C._getBitValues(this._bitlen).uintmax;
+    }
+
+    static get _lbound() {
+        return C.BN0; // lower bound for uint is always 0
+    }
+
     /** 
      * @description performs unsigned integer wraparound in-place
      */
     _iwraparound(): this {
-        this.bn = this.bn.mod(this.ubound.add(C.BN1));
+        this.bn = this.bn.mod(this._ubound.add(C.BN1));
         return this;
-    }
-
-    get ubound(): BN {
-        return C._getBitValues(this.bitlen).uintmax;
-    }
-
-    get lbound(): BN {
-        return C.BN0; // lower bound for uint is always 0
     }
 }
 
-export class Uint8 extends BaseUint { bitlen = 8; }
-export class Uint16 extends BaseUint { bitlen = 16; }
-export class Uint24 extends BaseUint { bitlen = 24; }
-export class Uint32 extends BaseUint { bitlen = 32; }
-export class Uint40 extends BaseUint { bitlen = 40; }
-export class Uint48 extends BaseUint { bitlen = 48; }
-export class Uint56 extends BaseUint { bitlen = 56; }
-export class Uint64 extends BaseUint { bitlen = 64; }
-export class Uint72 extends BaseUint { bitlen = 72; }
-export class Uint80 extends BaseUint { bitlen = 80; }
-export class Uint88 extends BaseUint { bitlen = 88; }
-export class Uint96 extends BaseUint { bitlen = 96; }
-export class Uint104 extends BaseUint { bitlen = 104; }
-export class Uint112 extends BaseUint { bitlen = 112; }
-export class Uint120 extends BaseUint { bitlen = 120; }
-export class Uint128 extends BaseUint { bitlen = 128; }
-export class Uint136 extends BaseUint { bitlen = 136; }
-export class Uint144 extends BaseUint { bitlen = 144; }
-export class Uint152 extends BaseUint { bitlen = 152; }
-export class Uint160 extends BaseUint { bitlen = 160; }
-export class Uint168 extends BaseUint { bitlen = 168; }
-export class Uint176 extends BaseUint { bitlen = 176; }
-export class Uint184 extends BaseUint { bitlen = 184; }
-export class Uint192 extends BaseUint { bitlen = 192; }
-export class Uint200 extends BaseUint { bitlen = 200; }
-export class Uint208 extends BaseUint { bitlen = 208; }
-export class Uint216 extends BaseUint { bitlen = 216; }
-export class Uint224 extends BaseUint { bitlen = 224; }
-export class Uint232 extends BaseUint { bitlen = 232; }
-export class Uint240 extends BaseUint { bitlen = 240; }
-export class Uint248 extends BaseUint { bitlen = 248; }
-export class Uint256 extends BaseUint { bitlen = 256; }
+export class Uint8 extends BaseUint { static _bitlen = 8; }
+export class Uint16 extends BaseUint { static _bitlen = 16; }
+export class Uint24 extends BaseUint { static _bitlen = 24; }
+export class Uint32 extends BaseUint { static _bitlen = 32; }
+export class Uint40 extends BaseUint { static _bitlen = 40; }
+export class Uint48 extends BaseUint { static _bitlen = 48; }
+export class Uint56 extends BaseUint { static _bitlen = 56; }
+export class Uint64 extends BaseUint { static _bitlen = 64; }
+export class Uint72 extends BaseUint { static _bitlen = 72; }
+export class Uint80 extends BaseUint { static _bitlen = 80; }
+export class Uint88 extends BaseUint { static _bitlen = 88; }
+export class Uint96 extends BaseUint { static _bitlen = 96; }
+export class Uint104 extends BaseUint { static _bitlen = 104; }
+export class Uint112 extends BaseUint { static _bitlen = 112; }
+export class Uint120 extends BaseUint { static _bitlen = 120; }
+export class Uint128 extends BaseUint { static _bitlen = 128; }
+export class Uint136 extends BaseUint { static _bitlen = 136; }
+export class Uint144 extends BaseUint { static _bitlen = 144; }
+export class Uint152 extends BaseUint { static _bitlen = 152; }
+export class Uint160 extends BaseUint { static _bitlen = 160; }
+export class Uint168 extends BaseUint { static _bitlen = 168; }
+export class Uint176 extends BaseUint { static _bitlen = 176; }
+export class Uint184 extends BaseUint { static _bitlen = 184; }
+export class Uint192 extends BaseUint { static _bitlen = 192; }
+export class Uint200 extends BaseUint { static _bitlen = 200; }
+export class Uint208 extends BaseUint { static _bitlen = 208; }
+export class Uint216 extends BaseUint { static _bitlen = 216; }
+export class Uint224 extends BaseUint { static _bitlen = 224; }
+export class Uint232 extends BaseUint { static _bitlen = 232; }
+export class Uint240 extends BaseUint { static _bitlen = 240; }
+export class Uint248 extends BaseUint { static _bitlen = 248; }
+export class Uint256 extends BaseUint { static _bitlen = 256; }
 
 const _classDispatcher: Map<number, typeof BaseUint> = new Map([
     [8, Uint8],
