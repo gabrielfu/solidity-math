@@ -86,13 +86,13 @@ console.log(a.sub(b).sub(b)); // RangeError: Value under/overflow outside of unc
 | `uint256`  | `int256` |
 
 ### Operations
-Binary operations must be performed on two Numbers of the same type, e.g.: 
+Non unary operations must be performed on two Numbers of the same type, e.g.: 
 ```typescript
 uint256(1).add(uint256(2)); // valid
 uint256(1).add(uint128(2)); // invalid, error raised
 ```
 
-Some binary operations also have an in-place version, which have an `i` prefix 
+Some operations also have an in-place version, which have an `i` prefix 
 before the method name, e.g.:
 ```typescript
 // these two lines are equivalent
@@ -100,27 +100,29 @@ a.iadd(b); // solidity: a += b
 a = a.add(b); // solidity: a = a + b
 ```
 
-| Method          | Description              | Solidity Equivalent | In-place version | Unsigned | Signed |
-|-----------------|--------------------------|---------------------|------------------|----------|--------|
-| `a.add(b)`      | Add                      | `a + b`             | ✅              | ✅       | ✅    |
-| `a.sub(b)`      | Subtract                 | `a - b`             | ✅              | ✅       | ✅    |
-| `a.mul(b)`      | Multiply                 | `a * b`             | ✅              | ✅       | ✅    |
-| `a.div(b)`      | Divide                   | `a / b`             | ✅              | ✅       | ✅    |
-| `a.mod(b)`      | Modulo                   | `a % b`             | ✅              | ✅       | ✅    |
-| `a.pow(b)`      | Exponentiation           | `a ** b`            |                 | ✅       | ✅    |
-| `a.neg()`       | Negation (flip sign)     | `-a`                |                 |           | ✅    |
-| `a.shln(b)`     | Shift left               | `a << b`            | ✅              | ✅       | ✅    |
-| `a.shrn(b)`     | Shift right              | `a >> b`            | ✅              | ✅       | ✅    |
-| `a.and(b)`      | Bitwise and              | `a & b`             | ✅              | ✅       | ✅    |
-| `a.or(b)`       | Bitwise or               | `a \| b`            | ✅              | ✅       | ✅    |
-| `a.xor(b)`      | Bitwise xor              | `a ^ b`             | ✅              | ✅       | ✅    |
-| `a.not()`       | Bitwise negation         | `~a`                |                 | ✅       | ✅    |
-| `a.gt(b)`       | Greater than             | `a > b`             |                 | ✅       | ✅    |
-| `a.lt(b)`       | Less than                | `a < b`             |                 | ✅       | ✅    |
-| `a.gte(b)`      | Greater than or equal to | `a >= b`            |                 | ✅       | ✅    |
-| `a.lte(b)`      | Less than or equal to    | `a <= b`            |                 | ✅       | ✅    |
-| `a.eq(b)`       | Equal to                 | `a == b`            |                 | ✅       | ✅    |
-| `a.neq(b)`      | Not equal to             | `a != b`            |                 | ✅       | ✅    |
+| Method           | Description              | Solidity Equivalent | In-place version | Unsigned | Signed |
+|------------------|--------------------------|---------------------|------------------|----------|--------|
+| `a.add(b)`       | Add                      | `a + b`             | ✅              | ✅       | ✅    |
+| `a.sub(b)`       | Subtract                 | `a - b`             | ✅              | ✅       | ✅    |
+| `a.mul(b)`       | Multiply                 | `a * b`             | ✅              | ✅       | ✅    |
+| `a.div(b)`       | Divide                   | `a / b`             | ✅              | ✅       | ✅    |
+| `a.mod(b)`       | Modulo                   | `a % b`             | ✅              | ✅       | ✅    |
+| `a.pow(b)`       | Exponentiation           | `a ** b`            |                 | ✅       | ✅    |
+| `a.neg()`        | Negation (flip sign)     | `-a`                |                 |           | ✅    |
+| `a.addmod(b, m)` | Add then modulo          | `assembly { addmod(a, b, m) }` |                 | ✅       | ✅    |
+| `a.mulmod(b, m)` | Multiply then modulo     | `assembly { mulmod(a, b, m) }` |                 | ✅       | ✅    |
+| `a.shln(b)`      | Shift left               | `a << b`            | ✅              | ✅       | ✅    |
+| `a.shrn(b)`      | Shift right              | `a >> b`            | ✅              | ✅       | ✅    |
+| `a.and(b)`       | Bitwise and              | `a & b`             | ✅              | ✅       | ✅    |
+| `a.or(b)`        | Bitwise or               | `a \| b`            | ✅              | ✅       | ✅    |
+| `a.xor(b)`       | Bitwise xor              | `a ^ b`             | ✅              | ✅       | ✅    |
+| `a.not()`        | Bitwise negation         | `~a`                |                 | ✅       | ✅    |
+| `a.gt(b)`        | Greater than             | `a > b`             |                 | ✅       | ✅    |
+| `a.lt(b)`        | Less than                | `a < b`             |                 | ✅       | ✅    |
+| `a.gte(b)`       | Greater than or equal to | `a >= b`            |                 | ✅       | ✅    |
+| `a.lte(b)`       | Less than or equal to    | `a <= b`            |                 | ✅       | ✅    |
+| `a.eq(b)`        | Equal to                 | `a == b`            |                 | ✅       | ✅    |
+| `a.neq(b)`       | Not equal to             | `a != b`            |                 | ✅       | ✅    |
 
 
 ### Number Creation

@@ -162,6 +162,20 @@ export abstract class BaseNumber {
         return r._checkBounds();
     }
 
+    addmod(b: this, m: this): this {
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "add");
+        r.bn = binaryOp(r, m, "mod");
+        return r._checkBounds();
+    }
+
+    mulmod(b: this, m: this): this {
+        let r = this.clone();
+        r.bn = binaryOp(r, b, "mul");
+        r.bn = binaryOp(r, m, "mod");
+        return r._checkBounds();
+    }
+
     // shift
     // never under / overflows
 
