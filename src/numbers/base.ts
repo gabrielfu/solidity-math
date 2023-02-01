@@ -78,9 +78,14 @@ export abstract class BaseNumber {
         return this.constructor._new(this.bn.clone());
     }
 
-    /** @description console.log string representation */
+    /** @description string representation of underlying value */
+    toString(base=10) {
+        return this.bn.toString(base);
+    }
+
+    /** @description string representation of instance */
     [util.inspect.custom]() {
-        return `${this.constructor.name}(bn=${this.bn.toString()})`
+        return `${this.constructor.name}(bn=${this.bn.toString()})`;
     }
 
     /** @description performs integer wrap around in-place */
