@@ -3,19 +3,6 @@
 This package extends [bn.js](https://github.com/indutny/bn.js/) to implement 
 Solidity integer types and operations. It is useful for replicating public Solidity contract interactions, particularly when developing autonomous agents and DeFi programs.
 
-## Table of Contents
-* [Features](#features)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Documentation](#documentation)
-+ [Types](#types)
-    - [Creation](#creation)
-    - [Maximum and minimum](#maximum-and-minimum)
-+ [Arithmetics](#arithmetics)
-+ [Unchecked mode](#unchecked-mode)
-* [Example](#example)
-+ [Unchecked](#unchecked)
-
 ## Features
 - ✅ Compatible with Solidity 0.8.17
 - ✅ Comprehensive Solidity integer types
@@ -25,6 +12,18 @@ Solidity integer types and operations. It is useful for replicating public Solid
 - ✅ Type safety checks
 - ✅ Provides arithmetic, bit, shift & comparison operators
 
+## Table of Contents
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Documentation](#documentation)
+* [Types](#types)
+    - [Creation](#creation)
+    - [Maximum and minimum](#maximum-and-minimum)
+* [Arithmetics](#arithmetics)
+* [Unchecked mode](#unchecked-mode)
+* [Example](#example)
++ [Unchecked](#unchecked)
 
 ## Installation
 
