@@ -138,22 +138,31 @@ export abstract class BaseNumber {
         return this.clone().imul(b);
     }
 
+    idiv(b: this): this {
+        this.bn = binaryOp(this, b, "div");
+        return this._checkBounds();
+    }
+
     div(b: this): this {
-        let r = this.clone();
-        r.bn = binaryOp(r, b, "div");
-        return r._checkBounds();
+        return this.clone().idiv(b);
+    }
+
+    imod(b: this): this {
+        this.bn = binaryOp(this, b, "mod");
+        return this._checkBounds();
     }
 
     mod(b: this): this {
-        let r = this.clone();
-        r.bn = binaryOp(r, b, "mod");
-        return r._checkBounds();
+        return this.clone().imod(b);
+    }
+
+    ipow(b: this): this {
+        this.bn = binaryOp(this, b, "pow");
+        return this._checkBounds();
     }
 
     pow(b: this): this {
-        let r = this.clone();
-        r.bn = binaryOp(r, b, "pow");
-        return r._checkBounds();
+        return this.clone().ipow(b);
     }
 
     // shift
