@@ -5,8 +5,8 @@ import { isUnchecked } from "../unchecked";
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 
-/** @description checks if a & b are of the same type */
-function _checkSameType(a: any, b: any, opname: string) {
+/** @description assert a & b are of the same type */
+function _assertSameType(a: any, b: any, opname: string) {
     let atype = a.constructor.name;
     let btype = b.constructor.name;
     if (atype != btype) {
@@ -22,7 +22,7 @@ export function binaryOp<T extends BaseNumber>(
     b: T, 
     opname: keyof BN,
 ): any {
-    _checkSameType(a, b, opname);
+    _assertSameType(a, b, opname);
     // @ts-ignore // ignores [opname]
     return a.bn[opname](b.bn); 
 }
