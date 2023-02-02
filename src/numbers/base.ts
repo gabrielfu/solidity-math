@@ -52,13 +52,18 @@ function _assertNonNegative(b: number, opname: string) {
 }
 
 
+/** @description assert a has larger bitlen */
+function _assertLargerType<T extends BaseNumber>(a: T, b: T, opname: string) {
+    if (a._bitlen < b._bitlen) {
+        throw new TypeError(`Operation ${opname} cannot be performed as ${a.constructor.name} type is smaller than ${b.constructor.name}`);
+    }
+}
+
+
 /** @description cast a to b's type if b has larger bitlen */
 function _castToLargerType<T extends BaseNumber>(a: T, b: T) {
-    return a._bitlen >= b._bitlen 
-        // @ts-ignore
-        ? a.constructor._new(a.bn) 
-        // @ts-ignore
-        : b.constructor._new(a.bn);
+    // @ts-ignore
+    return a._bitlen >= b._bitlen ? a : b.constructor._new(a.bn);
 }
 
 
@@ -155,47 +160,54 @@ export abstract class BaseNumber {
     // arithmetic
 
     iadd(b: this): this {
+        _assertLargerType(this, b, "iadd");
         _assertSameSignedNess(this, b, "add");
         binaryOp(this, b, "iadd");
         return this._checkBounds();
     }
 
     add(b: this): this {
-        let r = this.clone().iadd(b);
-        return _castToLargerType(r, b);
+        console.log(b);
+        b = _castToLargerType(b, this);
+        console.log(b);
+
+        return this.clone().iadd(b);
     }
 
     isub(b: this): this {
+        _assertLargerType(this, b, "isub");
         _assertSameSignedNess(this, b, "sub");
         binaryOp(this, b, "isub");
         return this._checkBounds();
     }
 
     sub(b: this): this {
-        let r = this.clone().isub(b);
-        return _castToLargerType(r, b);
+        b = _castToLargerType(b, this);
+        return this.clone().isub(b);
     }
 
     imul(b: this): this {
+        _assertLargerType(this, b, "imul");
         _assertSameSignedNess(this, b, "mul");
         binaryOp(this, b, "imul");
         return this._checkBounds();
     }
 
     mul(b: this): this {
-        let r = this.clone().imul(b);
-        return _castToLargerType(r, b);
+        b = _castToLargerType(b, this);
+        return this.clone().imul(b);
     }
 
     idiv(b: this): this {
+        _assertLargerType(this, b, "idiv");
         _assertSameSignedNess(this, b, "div");
         this.bn = binaryOp(this, b, "div");
         return this._checkBounds();
     }
 
     div(b: this): this {
-        let r = this.clone().idiv(b);
-        return _castToLargerType(r, b);
+        b = _castToLargerType(b, this);
+        return this.clone().idiv(b);
     }
 
     imod(b: this): this {
