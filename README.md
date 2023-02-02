@@ -21,7 +21,6 @@ Solidity integer types and operations. It is useful for replicating public Solid
 * [Documentation](#documentation)
     + [Types](#types)
     + [Operations](#operations)
-    + [Number Creation](#number-creation)
     + [Maximum and minimum](#maximum-and-minimum)
     + [Unchecked Mode](#unchecked-mode)
 * [Example](#example)
@@ -86,7 +85,21 @@ console.log(a.sub(b)); // RangeError: Value under/overflow outside of unchecked 
 | `Uint232`  | `Int232` |
 | `Uint240`  | `Int240` |
 | `Uint248`  | `Int248` |
-| `uint256`  | `int256` |
+| `Uint256`  | `Int256` |
+
+Each class also has a lowercase alias function for creating new numbers.
+You can use the class constructor `new Uint256()` or the alias function `uint256()`, which are equivalent.
+The created instance type will be `Uint256`.
+
+```typescript
+import { Uint256, uint256 } from "solidity-math";
+
+// these two are equivalent
+let a = new Uint256(100);
+let b = uint256(100);
+
+a.eq(b); // true
+```
 
 ### Operations
 Non unary operations must be performed on two Numbers of the same type, e.g.: 
@@ -127,20 +140,6 @@ a = a.add(b); // solidity: a = a + b
 | `a.eq(b)`        | Equal to                 | `a == b`            |                 | 
 | `a.neq(b)`       | Not equal to             | `a != b`            |                 | 
 
-
-### Number Creation
-You can use the class constructor `new Uint256()` or the alias function `uint256()`, which are equivalent.
-The same also applies to signed integer classes.
-
-```typescript
-import { Uint256, uint256 } from "solidity-math";
-
-// these two are equivalent
-let a = new Uint256(100);
-let b = uint256(100);
-
-a.eq(b); // true
-```
 
 ### Maximum and Minimum
 For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to access the minimum and maximum value representable by the type.
