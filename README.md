@@ -35,14 +35,15 @@ Solidity integer types and operations. It is useful for replicating public Solid
 import { Uint256, uint256, unchecked } from "solidity-math";
 
 let a = new Uint256(10); // create new Uint256 number
-let b = uint256(10); // same as above, alias function
+let b = uint256(20); // another way to create new Uint256 number
 
-console.log(a.eq(b)); // true
-console.log(a.add(b)); // Uint256(bn=20)
+console.log(a.add(b)); // Uint256(bn=30)
 unchecked(() => {
-    console.log(a.sub(b).sub(b)); // Uint256(bn=115792089237316195423570985008687907853269984665640564039457584007913129639926)
+    // overflows and wrapped
+    let c = Uint256.max().add(uint256(1)).sub(b).add(a);
+    console.log(a.sub(b).eq(c)); // true
 });
-console.log(a.sub(b).sub(b)); // RangeError: Value under/overflow outside of unchecked mode: Uint256(bn=-10) 
+console.log(a.sub(b)); // RangeError: Value under/overflow outside of unchecked mode: Uint256(bn=-10) 
 ```
 
 ## Documentation
