@@ -4,6 +4,8 @@ import { BaseNumber, BNInput } from "./base";
 
 /** @description Signed integer base class */
 export abstract class BaseInt extends BaseNumber {
+    static _signed: Boolean = true;
+
     static get _ubound() {
         return C._getBitValues(this._bitlen).intmax;
     }

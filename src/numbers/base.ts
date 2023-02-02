@@ -6,7 +6,7 @@ import { isUnchecked } from "../unchecked";
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 
 /** @description assert a & b are of the same type */
-function _assertSameType(a: any, b: any, opname: string) {
+function _assertSameType<T extends BaseNumber>(a: T, b: T, opname: string) {
     let atype = a.constructor.name;
     let btype = b.constructor.name;
     if (atype != btype) {
@@ -16,13 +16,43 @@ function _assertSameType(a: any, b: any, opname: string) {
     }
 }
 
-/** @description performs binary operation with type safety check */
-export function binaryOp<T extends BaseNumber>(
-    a: T,
-    b: T, 
-    opname: keyof BN,
-): any {
-    _assertSameType(a, b, opname);
+/** @description assert a & b are of the same signedness */
+function _assertSameSignedNess<T extends BaseNumber>(a: T, b: T, opname: string) {
+    // @ts-ignore
+    if (a.constructor._signed != b.constructor._signed) {
+        throw new TypeError(
+            // @ts-ignore
+            `Operator ${opname} not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
+        );
+    }
+}
+
+/** @description assert b is unsigned */
+function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
+    // @ts-ignore
+    if (b.constructor._signed) {
+        throw new TypeError(`Operation ${opname} cannot be performed with signed type ${b.constructor.name}`);
+    }
+}
+
+/** @description assert b is signed */
+function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
+    // @ts-ignore
+    if (!b.constructor._signed) {
+        throw new TypeError(`Operation ${opname} cannot be performed with unsigned type ${b.constructor.name}`);
+    }
+}
+
+/** @description assert b >= 0 */
+function _assertNonNegative(b: number, opname: string) {
+    // @ts-ignore
+    if (b < 0) {
+        throw new TypeError(`Operation ${opname} cannot be performed with negative value ${b}`);
+    }
+}
+
+/** @description performs binary operation */
+export function binaryOp<T extends BaseNumber>(a: T, b: T, opname: keyof BN): any {
     // @ts-ignore // ignores [opname]
     return a.bn[opname](b.bn); 
 }
@@ -36,6 +66,8 @@ export abstract class BaseNumber {
     static _ubound: BN;
     /** @description min representable number of this type */
     static _lbound: BN;
+    /** @description whether this type is signed or unsigned */
+    static _signed: Boolean;
 
     constructor(number: BNInput) {
         this.bn = new BN(number);
@@ -112,8 +144,9 @@ export abstract class BaseNumber {
     // arithmetic
 
     iadd(b: this): this {
+        _assertSameSignedNess(this, b, "add");
         binaryOp(this, b, "iadd");
-        return this._checkBounds();;
+        return this._checkBounds();
     }
 
     add(b: this): this {
@@ -121,8 +154,9 @@ export abstract class BaseNumber {
     }
 
     isub(b: this): this {
+        _assertSameSignedNess(this, b, "sub");
         binaryOp(this, b, "isub");
-        return this._checkBounds();;
+        return this._checkBounds();
     }
 
     sub(b: this): this {
@@ -130,8 +164,9 @@ export abstract class BaseNumber {
     }
 
     imul(b: this): this {
+        _assertSameSignedNess(this, b, "mul");
         binaryOp(this, b, "imul");
-        return this._checkBounds();;
+        return this._checkBounds();
     }
 
     mul(b: this): this {
@@ -139,6 +174,7 @@ export abstract class BaseNumber {
     }
 
     idiv(b: this): this {
+        _assertSameSignedNess(this, b, "div");
         this.bn = binaryOp(this, b, "div");
         return this._checkBounds();
     }
@@ -148,6 +184,7 @@ export abstract class BaseNumber {
     }
 
     imod(b: this): this {
+        _assertSameSignedNess(this, b, "mod");
         this.bn = binaryOp(this, b, "mod");
         return this._checkBounds();
     }
@@ -157,12 +194,15 @@ export abstract class BaseNumber {
     }
 
     pow(b: this): this {
+        _assertUnsigned(b, "pow");
         let r = this.clone();
         r.bn = binaryOp(r, b, "pow");
         return r._checkBounds();
     }
 
     addmod(b: this, m: this): this {
+        _assertSameSignedNess(this, b, "addmod");
+        _assertSameSignedNess(this, m, "addmod");
         let r = this.clone();
         r.bn = binaryOp(r, b, "add");
         r.bn = binaryOp(r, m, "mod");
@@ -170,6 +210,8 @@ export abstract class BaseNumber {
     }
 
     mulmod(b: this, m: this): this {
+        _assertSameSignedNess(this, b, "mulmod");
+        _assertSameSignedNess(this, m, "mulmod");
         let r = this.clone();
         r.bn = binaryOp(r, b, "mul");
         r.bn = binaryOp(r, m, "mod");
@@ -181,8 +223,10 @@ export abstract class BaseNumber {
 
     ishln(b: this | number): this {
         if (typeof b != "number") {
+            _assertUnsigned(b, "shln");
             b = b.bn.toNumber();
         }
+        _assertNonNegative(b, "shln");
         this.bn.iushln(b);
         return this;
     }
@@ -195,8 +239,10 @@ export abstract class BaseNumber {
 
     ishrn(b: this | number): this {
         if (typeof b != "number") {
+            _assertUnsigned(b, "shrn");
             b = b.bn.toNumber();
         }
+        _assertNonNegative(b, "shrn");
         this.bn.iushrn(b);
         return this;
     }
@@ -210,6 +256,7 @@ export abstract class BaseNumber {
     // bit
 
     iand(b: this): this {
+        _assertSameSignedNess(this, b, "and");
         binaryOp(this, b, "iuand");
         return this;
     }
@@ -219,6 +266,7 @@ export abstract class BaseNumber {
     }
 
     ior(b: this): this {
+        _assertSameSignedNess(this, b, "or");
         binaryOp(this, b, "iuor");
         return this;
     }
@@ -228,6 +276,7 @@ export abstract class BaseNumber {
     }
 
     ixor(b: this): this {
+        _assertSameSignedNess(this, b, "xor");
         binaryOp(this, b, "iuxor");
         return this;
     }
@@ -249,26 +298,32 @@ export abstract class BaseNumber {
     // comparison
 
     gt(b: this): Boolean {
+        _assertSameSignedNess(this, b, "gt");
         return binaryOp(this, b, "gt");
     }
 
     lt(b: this): Boolean {
+        _assertSameSignedNess(this, b, "lt");
         return binaryOp(this, b, "lt");
     }
 
     gte(b: this): Boolean {
+        _assertSameSignedNess(this, b, "gte");
         return binaryOp(this, b, "gte");
     }
 
     lte(b: this): Boolean {
+        _assertSameSignedNess(this, b, "lte");
         return binaryOp(this, b, "lte");
     }
 
     eq(b: this): Boolean {
+        _assertSameSignedNess(this, b, "eq");
         return binaryOp(this, b, "eq");
     }
 
     neq(b: this): Boolean {
+        _assertSameSignedNess(this, b, "neq");
         return !binaryOp(this, b, "eq");
     }
 }
