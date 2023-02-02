@@ -116,29 +116,41 @@ a.iadd(b); // solidity: a += b
 a = a.add(b); // solidity: a = a + b
 ```
 
-| Method           | Description              | Solidity Equivalent | In-place version |
-|------------------|--------------------------|---------------------|------------------|
-| `a.add(b)`       | Add                      | `a + b`             | ✅              | 
-| `a.sub(b)`       | Subtract                 | `a - b`             | ✅              | 
-| `a.mul(b)`       | Multiply                 | `a * b`             | ✅              | 
-| `a.div(b)`       | Divide                   | `a / b`             | ✅              | 
-| `a.mod(b)`       | Modulo                   | `a % b`             | ✅              | 
-| `a.pow(b)`       | Exponentiation           | `a ** b`            |                 | 
-| `a.neg()`        | Negation, for `Int` only     | `-a`                |                 |
-| `a.addmod(b, m)` | Add then modulo          | `assembly { addmod(a, b, m) }` |       |
-| `a.mulmod(b, m)` | Multiply then modulo     | `assembly { mulmod(a, b, m) }` |       |
-| `a.shln(b)`      | Shift left               | `a << b`            | ✅              | 
-| `a.shrn(b)`      | Shift right              | `a >> b`            | ✅              | 
-| `a.and(b)`       | Bitwise and              | `a & b`             | ✅              | 
-| `a.or(b)`        | Bitwise or               | `a \| b`            | ✅              | 
-| `a.xor(b)`       | Bitwise xor              | `a ^ b`             | ✅              | 
-| `a.not()`        | Bitwise negation         | `~a`                |                 | 
-| `a.gt(b)`        | Greater than             | `a > b`             |                 | 
-| `a.lt(b)`        | Less than                | `a < b`             |                 | 
-| `a.gte(b)`       | Greater than or equal to | `a >= b`            |                 | 
-| `a.lte(b)`       | Less than or equal to    | `a <= b`            |                 | 
-| `a.eq(b)`        | Equal to                 | `a == b`            |                 | 
-| `a.neq(b)`       | Not equal to             | `a != b`            |                 | 
+Restrictions:
+| Symbol    | Description                                  |
+|---------- |----------------------------------------------|
+| A         | `a` must be unsigned                         | 
+| B         | `b` must be unsigned                         | 
+| ≌         | `a` & `b` must have the same signedness      | 
+| ≥         | `a` must have same or larger type than `b`   | 
+
+List of operations supported:
+| Method           | Description              | Solidity Equivalent | Restriction | In-place restriction |
+|------------------|--------------------------|---------------------|-------------|----------------------|
+| `a.add(b)`       | Add                      | `a + b`             | ≌           | ≌, ≥                |
+| `a.sub(b)`       | Subtract                 | `a - b`             | ≌           | ≌, ≥                |
+| `a.mul(b)`       | Multiply                 | `a * b`             | ≌           | ≌, ≥                |
+| `a.div(b)`       | Divide                   | `a / b`             | ≌           | ≌, ≥                |
+| `a.mod(b)`       | Modulo                   | `a % b`             | ≌           | ≌, ≥                |
+| `a.pow(b)`       | Exponentiation           | `a ** b`            | B            | no in-place         |
+| `a.neg()`        | Negation, for `Int` only | `-a`                | A            | no in-place         |
+| `a.addmod(b, m)` | Add then modulo          | `assembly { addmod(a, b, m) }` | ≌     | no in-place    |
+| `a.mulmod(b, m)` | Multiply then modulo     | `assembly { mulmod(a, b, m) }` | ≌     | no in-place    |
+| `a.shln(b)`      | Shift left               | `a << b`            | B            | B                   |
+| `a.shrn(b)`      | Shift right              | `a >> b`            | B            | B                   |
+| `a.and(b)`       | Bitwise and              | `a & b`             | ≌           | ≌, ≥                |
+| `a.or(b)`        | Bitwise or               | `a \| b`            | ≌           | ≌, ≥                |
+| `a.xor(b)`       | Bitwise xor              | `a ^ b`             | ≌           | ≌, ≥                |
+| `a.not()`        | Bitwise negation         | `~a`                |               | no in-place        |
+| `a.gt(b)`        | Greater than             | `a > b`             | ≌            | no in-place         |
+| `a.lt(b)`        | Less than                | `a < b`             | ≌            | no in-place         |
+| `a.gte(b)`       | Greater than or equal to | `a >= b`            | ≌            | no in-place         |
+| `a.lte(b)`       | Less than or equal to    | `a <= b`            | ≌            | no in-place         |
+| `a.eq(b)`        | Equal to                 | `a == b`            | ≌            | no in-place         |
+| `a.neq(b)`       | Not equal to             | `a != b`            | ≌            | no in-place         |
+
+Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
+`a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
 
 
 ### Maximum and Minimum

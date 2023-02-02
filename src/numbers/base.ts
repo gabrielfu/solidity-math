@@ -51,8 +51,19 @@ function _assertNonNegative(b: number, opname: string) {
     }
 }
 
+
+/** @description cast a to b's type if b has larger bitlen */
+function _castToLargerType<T extends BaseNumber>(a: T, b: T) {
+    return a._bitlen >= b._bitlen 
+        // @ts-ignore
+        ? a.constructor._new(a.bn) 
+        // @ts-ignore
+        : b.constructor._new(a.bn);
+}
+
+
 /** @description performs binary operation */
-export function binaryOp<T extends BaseNumber>(a: T, b: T, opname: keyof BN): any {
+function binaryOp<T extends BaseNumber>(a: T, b: T, opname: keyof BN): any {
     // @ts-ignore // ignores [opname]
     return a.bn[opname](b.bn); 
 }
@@ -150,7 +161,8 @@ export abstract class BaseNumber {
     }
 
     add(b: this): this {
-        return this.clone().iadd(b);
+        let r = this.clone().iadd(b);
+        return _castToLargerType(r, b);
     }
 
     isub(b: this): this {
@@ -160,7 +172,8 @@ export abstract class BaseNumber {
     }
 
     sub(b: this): this {
-        return this.clone().isub(b);
+        let r = this.clone().isub(b);
+        return _castToLargerType(r, b);
     }
 
     imul(b: this): this {
@@ -170,7 +183,8 @@ export abstract class BaseNumber {
     }
 
     mul(b: this): this {
-        return this.clone().imul(b);
+        let r = this.clone().imul(b);
+        return _castToLargerType(r, b);
     }
 
     idiv(b: this): this {
@@ -180,7 +194,8 @@ export abstract class BaseNumber {
     }
 
     div(b: this): this {
-        return this.clone().idiv(b);
+        let r = this.clone().idiv(b);
+        return _castToLargerType(r, b);
     }
 
     imod(b: this): this {
