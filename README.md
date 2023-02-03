@@ -44,6 +44,7 @@ console.log(a.add(b)); // Uint256(bn=30)
 // compatibility with other types
 console.log(a.add(20)); // Uint256(bn=30)
 console.log(a.add("20")); // Uint256(bn=30)
+console.log(a.lte(0)); // false
 
 // unchecked mode
 // overflowing will wrap around
