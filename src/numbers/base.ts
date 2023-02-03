@@ -22,7 +22,7 @@ function _assertSameSignedNess<T extends BaseNumber>(a: T, b: T, opname: string)
     if (a.constructor._signed != b.constructor._signed) {
         throw new TypeError(
             // @ts-ignore
-            `Operator ${opname} not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
+            `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
         );
     }
 }
@@ -31,7 +31,7 @@ function _assertSameSignedNess<T extends BaseNumber>(a: T, b: T, opname: string)
 function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
     // @ts-ignore
     if (b.constructor._signed) {
-        throw new TypeError(`Operation ${opname} cannot be performed with signed type ${b.constructor.name}`);
+        throw new TypeError(`Operation "${opname}" cannot be performed with signed type ${b.constructor.name}`);
     }
 }
 
@@ -39,7 +39,7 @@ function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
 function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
     // @ts-ignore
     if (!b.constructor._signed) {
-        throw new TypeError(`Operation ${opname} cannot be performed with unsigned type ${b.constructor.name}`);
+        throw new TypeError(`Operation "${opname}" cannot be performed with unsigned type ${b.constructor.name}`);
     }
 }
 
@@ -47,7 +47,7 @@ function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
 function _assertNonNegative(b: number, opname: string) {
     // @ts-ignore
     if (b < 0) {
-        throw new TypeError(`Operation ${opname} cannot be performed with negative value ${b}`);
+        throw new TypeError(`Operation "${opname}" cannot be performed with negative value ${b}`);
     }
 }
 
@@ -55,7 +55,7 @@ function _assertNonNegative(b: number, opname: string) {
 /** @description assert a has larger bitlen */
 function _assertLargerType<T extends BaseNumber>(a: T, b: T, opname: string) {
     if (a._bitlen < b._bitlen) {
-        throw new TypeError(`Operation ${opname} cannot be performed as ${a.constructor.name} type is smaller than ${b.constructor.name}`);
+        throw new TypeError(`Operation "${opname}" cannot be performed as ${a.constructor.name} type is smaller than ${b.constructor.name}`);
     }
 }
 
@@ -87,6 +87,7 @@ export abstract class BaseNumber {
 
     constructor(number: BNInput) {
         this.bn = new BN(number);
+        this._checkBounds();
     }
 
     /** @description bit length (size) of this type */
@@ -153,8 +154,21 @@ export abstract class BaseNumber {
             return this._iwraparound();
         } 
         else {
-            throw new RangeError(`Value under/overflow outside of unchecked mode: ${util.inspect(this)}`);
+            throw new RangeError(`Value under/overflow: ${util.inspect(this)}`);
         }
+    }
+
+    /** @description cast to another BaseNumber subclass type */
+    as(b: typeof BaseNumber): BaseNumber {
+        // _assertSameSignedNess()
+        return b._new(this.bn);
+    }
+
+    /** @description cast to another BaseNumber subclass type */
+    like(b: BaseNumber): BaseNumber {
+        _assertSameSignedNess(this, b, "like");
+        // @ts-ignore
+        return b.constructor._new(this.bn);
     }
 
     // arithmetic

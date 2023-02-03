@@ -42,7 +42,7 @@ unchecked(() => {
     let c = Uint256.max().add(uint256(1)).sub(b).add(a);
     console.log(a.sub(b).eq(c)); // true
 });
-console.log(a.sub(b)); // RangeError: Value under/overflow outside of unchecked mode: Uint256(bn=-10) 
+console.log(a.sub(b)); // RangeError: Value under/overflow: Uint256(bn=-10) 
 ```
 
 ## Documentation
@@ -105,7 +105,7 @@ a.eq(b); // true
 Non unary operations must be performed on two Numbers of the same type, e.g.: 
 ```typescript
 uint256(1).add(uint256(2)); // valid
-uint256(1).add(uint128(2)); // invalid, error raised
+uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
 ```
 
 Some operations also have an in-place version, which have an `i` prefix 
