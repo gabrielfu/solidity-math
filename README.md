@@ -17,16 +17,18 @@ Solidity integer types and operations. It is useful for replicating public Solid
 
 ## Table of Contents
 * [Features](#features)
+* [Table of Contents](#table-of-contents)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Documentation](#documentation)
-    + [Types](#types)
-    + [Operations](#operations)
-    + [Maximum and minimum](#maximum-and-minimum)
-    + [Unchecked Mode](#unchecked-mode)
+  + [Types](#types)
+  + [Operations](#operations)
+  + [Maximum and Minimum](#maximum-and-minimum)
+  + [Unchecked Mode](#unchecked-mode)
+  + [Casting](#casting)
 * [Example](#example)
-    + [Unchecked Arithmetic](#unchecked-arithmetic)
-    + [Muldiv](#muldiv)
+  + [Unchecked Arithmetic](#unchecked-arithmetic)
+  + [Muldiv](#muldiv)
 
 ## Installation
 
