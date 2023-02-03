@@ -27,6 +27,17 @@ function _assertSameSignedNess<T1 extends BaseNumber, T2 extends BaseNumber>(a: 
     }
 }
 
+/** @description assert a & b are of the same signedness */
+function _assertSameSignedNessType<T extends BaseNumber>(a: T, btype: typeof BaseNumber, opname: string) {
+    // @ts-ignore
+    if (a.constructor._signed != btype._signed) {
+        throw new TypeError(
+            // @ts-ignore
+            `Operator "${opname}" not compatible with types ${a.constructor.name} and ${btype.name}.`
+        );
+    }
+}
+
 /** @description assert b is unsigned */
 function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
     // @ts-ignore
@@ -162,9 +173,9 @@ export abstract class BaseNumber {
     }
 
     /** @description cast to another BaseNumber subclass type */
-    as<T extends BaseNumber>(b: typeof BaseNumber): T {
-        // TODO: _assertSameSignedNess()
-        return b._new(this.bn);
+    as<T extends BaseNumber>(btype: typeof BaseNumber): T {
+        _assertSameSignedNessType(this, btype, "as");
+        return btype._new(this.bn);
     }
 
     /** @description cast to another BaseNumber subclass type */
