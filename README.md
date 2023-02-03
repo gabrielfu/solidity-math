@@ -87,6 +87,8 @@ console.log(a.sub(b)); // RangeError: Value under/overflow: Uint256(bn=-10)
 | `Uint248`  | `Int248` |
 | `Uint256`  | `Int256` |
 
+The base class of all classes is `BaseNumber`, which cannot be imported or instantiated.
+
 Each class also has a lowercase alias function for creating new numbers.
 You can use the class constructor `new Uint256()` or the alias function `uint256()`, which are equivalent.
 The created instance type will be `Uint256`.
@@ -124,7 +126,7 @@ Restrictions:
 | ≌         | `a` & `b` must have the same signedness      | 
 | ≥         | `a` must have same or larger type than `b`   | 
 
-List of operations supported:
+List of Solidity operations supported:
 | Method           | In-place method  | Solidity Equivalent | Restriction | In-place restriction |
 |------------------|------------------|---------------------|-------------|----------------------|
 | `a.add(b)`       | `a.iadd(b)`      | `a + b`             | ≌           | ≌, ≥                |
@@ -151,6 +153,26 @@ List of operations supported:
 
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
+
+Other supported functions:
+
+*BaseNumber*.**max**() => *BaseNumber*
+- Returns the maximum representable value of this class.
+
+*BaseNumber*.**min**() => *BaseNumber*
+- Returns the minimum representable value of this class.
+
+*baseNumber*.**min**() => *typeof baseNumber*
+- Returns a clone of *baseNumber*.
+
+*baseNumber*.**as**(*btype: typeof BaseNumber*) => *BaseNumber*
+- Returns a new instance of type *btype* and the value of *baseNumber*.
+
+*baseNumber*.**like**(*b: BaseNumber*) => *BaseNumber*
+- Returns a new instance of same type as *b* and the value of *baseNumber*.
+
+*baseNumber*.**toString**(*base: number*) => *string*
+- Returns the base-string and pad with zeroes. 
 
 
 ### Maximum and Minimum
