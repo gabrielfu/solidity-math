@@ -155,25 +155,14 @@ Note that for out-of-place arithmetic and bitwise operators, the output will alw
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
 
 Other supported functions:
-
-*BaseNumber*.**max**() => *BaseNumber*
-- Returns the maximum representable value of this class.
-
-*BaseNumber*.**min**() => *BaseNumber*
-- Returns the minimum representable value of this class.
-
-*baseNumber*.**min**() => *typeof baseNumber*
-- Returns a clone of *baseNumber*.
-
-*baseNumber*.**as**(*btype: typeof BaseNumber*) => *BaseNumber*
-- Returns a new instance of type *btype* and the value of *baseNumber*.
-
-*baseNumber*.**like**(*b: BaseNumber*) => *BaseNumber*
-- Returns a new instance of same type as *b* and the value of *baseNumber*.
-
-*baseNumber*.**toString**(*base: number*) => *string*
-- Returns the base-string and pad with zeroes. 
-
+| Method                     | Return type   | Description                                                      |
+|----------------------------|---------------|------------------------------------------------------------------|
+| `BaseNumber.max()`         | `BaseNumber`  | Returns the maximum representable value of this class.           |
+| `BaseNumber.min()`         | `BaseNumber`  | Returns the minimum representable value of this class.           |
+| `a.clone()`                | `typeof a`    | Returns a clone of *a*.                                 |
+| `a.as(btype)`              | `btype`       | Returns a new instance of type *btype* and the value of *a*.     |
+| `a.like(b)`                | `typeof b`    | Returns a new instance of same type as *b* and the value of *a*. |
+| `a.toString(base: number)` | `string`      | Returns the base-string and pad with zeroes.                     |
 
 ### Maximum and Minimum
 For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to access the minimum and maximum value representable by the type.
