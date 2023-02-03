@@ -185,12 +185,12 @@ To be implemented.
 ### Unchecked Arithmetic
 ```solidity
 // Solidity code
-uint256 x;
-uint256 y;
+uint256 x = type(uint256).max;
+uint256 y = 1;
 uint256 z;
 
 unchecked {
-    z = x - y;
+    z = x + y; // 0
 }
 ```
 
@@ -198,13 +198,13 @@ unchecked {
 // Typescript equivalent
 import { uint256, unchecked } from "solidity-math";
 
-let x = uint256(0);
-let y = uint256(0);
+let x = Uint256.max();
+let y = uint256(1);
 let z = uint256(0);
 
 unchecked(() => {
-    z = x.sub(y);
-});
+    z = x.add(y); // Uint256(bn=0)
+})
 ```
 
 ### Muldiv
