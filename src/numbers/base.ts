@@ -1,9 +1,11 @@
 import * as BN from "bn.js";
 import * as util from "util";
 import { isUnchecked } from "../unchecked";
+import * as C from "../constants";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
+export type Input = BNInput | BaseNumber;
 
 /** @description assert a & b are of the same type */
 function _assertSameType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
@@ -62,6 +64,13 @@ function _assertNonNegative(b: number, opname: string) {
     }
 }
 
+/** @description assert b >= 0 */
+function _assertBNNonNegative(b: BN, opname: string) {
+    // @ts-ignore
+    if (b.lt(C.BN0)) {
+        throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
+    }
+}
 
 /** @description assert a has larger bitlen */
 function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
@@ -69,7 +78,6 @@ function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
         throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
     }
 }
-
 
 /** 
  * @description 
@@ -87,6 +95,23 @@ function _castToLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
     return [a.clone(), b.clone()];
 }
 
+/** @description creates new BaseNumber instance if needed */
+function _newNumberIfNeeded(number: Input, fallbackClass: BaseNumber): BaseNumber {
+    if (number instanceof BaseNumber) {
+        return number;
+    }
+    // @ts-ignore
+    return fallbackClass.constructor._new(number);
+}
+
+/** @description creates new BN instance if needed */
+function _newBNIfNeeded(number: Input): BN {
+    if (number instanceof BaseNumber) {
+        return number.bn;
+    }
+    return new BN(number);
+}
+
 export abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
@@ -99,8 +124,13 @@ export abstract class BaseNumber {
     /** @description whether this type is signed or unsigned */
     static _signed: Boolean;
 
-    constructor(number: BNInput) {
-        this.bn = new BN(number);
+    constructor(number: Input) {
+        if (number instanceof BaseNumber) {
+            this.bn = number.bn.clone();
+        }
+        else {
+            this.bn = new BN(number);
+        }
         this._checkBounds();
     }
 
@@ -121,8 +151,8 @@ export abstract class BaseNumber {
     }
 
     /** @description constructor as static function supporting subclasses */
-    static _new<T extends BaseNumber>(number: BNInput): T {
-        return new (this as unknown as new(_number: BNInput) => T)(number);
+    static _new<T extends BaseNumber>(number: Input): T {
+        return new (this as unknown as new(_number: Input) => T)(number);
     }
 
     /** @description max representable number of this type */
@@ -187,84 +217,97 @@ export abstract class BaseNumber {
 
     // arithmetic
 
-    iadd(b: this): this {
+    iadd(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "iadd");
         _assertLargerType(this, b, "iadd");
         this.bn.iadd(b.bn);
         return this._checkBounds();
     }
 
-    add(b: this): this {
+    add(b: Input): BaseNumber {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "add");
         let [r, _b] = _castToLargerType(this, b);
         r.bn.iadd(b.bn);
         return r._checkBounds();
     }
 
-    isub(b: this): this {
+    isub(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "isub");
         _assertLargerType(this, b, "isub");
         this.bn.isub(b.bn);
         return this._checkBounds();
     }
 
-    sub(b: this): this {
+    sub(b: Input): BaseNumber {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "sub");
         let [r, _b] = _castToLargerType(this, b);
         r.bn.isub(b.bn);
         return r._checkBounds();
     }
 
-    imul(b: this): this {
+    imul(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "imul");
         _assertLargerType(this, b, "imul");
         this.bn.imul(b.bn);
         return this._checkBounds();
     }
 
-    mul(b: this): this {
+    mul(b: Input): BaseNumber {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
         let [r, _b] = _castToLargerType(this, b);
         r.bn.imul(b.bn);
         return r._checkBounds();
     }
 
-    idiv(b: this): this {
+    idiv(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "idiv");
         _assertLargerType(this, b, "idiv");
         this.bn = this.bn.div(b.bn);
         return this._checkBounds();
     }
 
-    div(b: this): this {
+    div(b: Input): BaseNumber {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
         let [r, _b] = _castToLargerType(this, b);
         r.bn = r.bn.div(b.bn);
         return r._checkBounds();
     }
 
-    imod(b: this): this {
+    imod(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "imod");
         _assertLargerType(this, b, "imod");
         this.bn = this.bn.mod(b.bn);
         return this._checkBounds();
     }
 
-    mod(b: this): this {
+    mod(b: Input): BaseNumber {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mod");
         let [r, _b] = _castToLargerType(this, b);
         r.bn = r.bn.mod(b.bn);
         return r._checkBounds();
     }
 
-    pow(b: this): this {
-        _assertUnsigned(b, "pow");
+    pow(b: Input): this {
+        b = _newBNIfNeeded(b);
+        _assertBNNonNegative(b, "pow");
         let r = this.clone();
-        r.bn = r.bn.pow(b.bn);
+        r.bn = r.bn.pow(b);
         return r._checkBounds();
     }
 
-    addmod(b: this, m: this): this {
+    addmod(b: Input, m: Input): this {
+        b = _newNumberIfNeeded(b, this);
+        m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "addmod");
         _assertSameSignedNess(this, m, "addmod");
         let r = this.clone();
@@ -272,7 +315,9 @@ export abstract class BaseNumber {
         return r._checkBounds();
     }
 
-    mulmod(b: this, m: this): this {
+    mulmod(b: Input, m: Input): this {
+        b = _newNumberIfNeeded(b, this);
+        m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "mulmod");
         _assertSameSignedNess(this, m, "mulmod");
         let r = this.clone();
@@ -283,7 +328,7 @@ export abstract class BaseNumber {
     // shift
     // never under / overflows
 
-    ishln(b: this | number): this {
+    ishln(b: BaseNumber | number): this {
         if (typeof b != "number") {
             _assertUnsigned(b, "shln");
             b = b.bn.toNumber();
@@ -293,13 +338,13 @@ export abstract class BaseNumber {
         return this._iwraparound();
     }
 
-    shln(b: this | number): this {
+    shln(b: BaseNumber | number): this {
         let r = this.clone();
         r.ishln(b);
         return r._iwraparound();
     }
 
-    ishrn(b: this | number): this {
+    ishrn(b: BaseNumber | number): this {
         if (typeof b != "number") {
             _assertUnsigned(b, "shrn");
             b = b.bn.toNumber();
@@ -309,7 +354,7 @@ export abstract class BaseNumber {
         return this._iwraparound();
     }
 
-    shrn(b: this | number): this {
+    shrn(b: BaseNumber | number): this {
         let r = this.clone();
         r.ishrn(b);
         return r._iwraparound();
@@ -372,32 +417,38 @@ export abstract class BaseNumber {
 
     // comparison
 
-    gt(b: this): Boolean {
+    gt(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "gt");
         return this.bn.gt(b.bn);
     }
 
-    lt(b: this): Boolean {
+    lt(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "lt");
         return this.bn.lt(b.bn);
     }
 
-    gte(b: this): Boolean {
+    gte(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "gte");
         return this.bn.gte(b.bn);
     }
 
-    lte(b: this): Boolean {
+    lte(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "lte");
         return this.bn.lte(b.bn);
     }
 
-    eq(b: this): Boolean {
+    eq(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "eq");
         return this.bn.eq(b.bn);
     }
 
-    neq(b: this): Boolean {
+    neq(b: Input): Boolean {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "neq");
         return !this.bn.eq(b.bn);
     }
