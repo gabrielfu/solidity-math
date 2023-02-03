@@ -125,29 +125,29 @@ Restrictions:
 | ≥         | `a` must have same or larger type than `b`   | 
 
 List of operations supported:
-| Method           | Description              | Solidity Equivalent | Restriction | In-place restriction |
-|------------------|--------------------------|---------------------|-------------|----------------------|
-| `a.add(b)`       | Add                      | `a + b`             | ≌           | ≌, ≥                |
-| `a.sub(b)`       | Subtract                 | `a - b`             | ≌           | ≌, ≥                |
-| `a.mul(b)`       | Multiply                 | `a * b`             | ≌           | ≌, ≥                |
-| `a.div(b)`       | Divide                   | `a / b`             | ≌           | ≌, ≥                |
-| `a.mod(b)`       | Modulo                   | `a % b`             | ≌           | ≌, ≥                |
-| `a.pow(b)`       | Exponentiation           | `a ** b`            | B            | no in-place         |
-| `a.neg()`        | Negation, for `Int` only | `-a`                | A            | no in-place         |
-| `a.addmod(b, m)` | Add then modulo          | `assembly { addmod(a, b, m) }` | ≌     | no in-place    |
-| `a.mulmod(b, m)` | Multiply then modulo     | `assembly { mulmod(a, b, m) }` | ≌     | no in-place    |
-| `a.shln(b)`      | Shift left               | `a << b`            | B            | B                   |
-| `a.shrn(b)`      | Shift right              | `a >> b`            | B            | B                   |
-| `a.and(b)`       | Bitwise and              | `a & b`             | ≌           | ≌, ≥                |
-| `a.or(b)`        | Bitwise or               | `a \| b`            | ≌           | ≌, ≥                |
-| `a.xor(b)`       | Bitwise xor              | `a ^ b`             | ≌           | ≌, ≥                |
-| `a.not()`        | Bitwise negation         | `~a`                |               | no in-place        |
-| `a.gt(b)`        | Greater than             | `a > b`             | ≌            | no in-place         |
-| `a.lt(b)`        | Less than                | `a < b`             | ≌            | no in-place         |
-| `a.gte(b)`       | Greater than or equal to | `a >= b`            | ≌            | no in-place         |
-| `a.lte(b)`       | Less than or equal to    | `a <= b`            | ≌            | no in-place         |
-| `a.eq(b)`        | Equal to                 | `a == b`            | ≌            | no in-place         |
-| `a.neq(b)`       | Not equal to             | `a != b`            | ≌            | no in-place         |
+| Method           | In-place method  | Solidity Equivalent | Restriction | In-place restriction |
+|------------------|------------------|---------------------|-------------|----------------------|
+| `a.add(b)`       | `a.iadd(b)`      | `a + b`             | ≌           | ≌, ≥                |
+| `a.sub(b)`       | `a.isub(b)`      | `a - b`             | ≌           | ≌, ≥                |
+| `a.mul(b)`       | `a.imul(b)`      | `a * b`             | ≌           | ≌, ≥                |
+| `a.div(b)`       | `a.idiv(b)`      | `a / b`             | ≌           | ≌, ≥                |
+| `a.mod(b)`       | `a.imod(b)`      | `a % b`             | ≌           | ≌, ≥                |
+| `a.pow(b)`       |                  | `a ** b`            | B            |                     |
+| `a.neg()`        |                  | `-a`                | A            |                     |
+| `a.addmod(b, m)` |                  | `assembly { addmod(a, b, m) }` | ≌     |                 |
+| `a.mulmod(b, m)` |                  | `assembly { mulmod(a, b, m) }` | ≌     |                 |
+| `a.shln(b)`      | `a.ishln(b)`     | `a << b`            | B            | B                   |
+| `a.shrn(b)`      | `a.ishrn(b)`     | `a >> b`            | B            | B                   |
+| `a.and(b)`       | `a.iand(b)`      | `a & b`             | ≌           | ≌, ≥                |
+| `a.or(b)`        | `a.ior(b)`       | `a \| b`            | ≌           | ≌, ≥                |
+| `a.xor(b)`       | `a.ixor(b)`      | `a ^ b`             | ≌           | ≌, ≥                |
+| `a.not()`        |                  | `~a`                |               |                    |
+| `a.gt(b)`        |                  | `a > b`             | ≌            |                     |
+| `a.lt(b)`        |                  | `a < b`             | ≌            |                     |
+| `a.gte(b)`       |                  | `a >= b`            | ≌            |                     |
+| `a.lte(b)`       |                  | `a <= b`            | ≌            |                     |
+| `a.eq(b)`        |                  | `a == b`            | ≌            |                     |
+| `a.neq(b)`       |                  | `a != b`            | ≌            |                     |
 
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
