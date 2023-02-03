@@ -6,7 +6,7 @@ import { isUnchecked } from "../unchecked";
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 
 /** @description assert a & b are of the same type */
-function _assertSameType<T extends BaseNumber>(a: T, b: T, opname: string) {
+function _assertSameType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
     let atype = a.constructor.name;
     let btype = b.constructor.name;
     if (atype != btype) {
@@ -17,7 +17,7 @@ function _assertSameType<T extends BaseNumber>(a: T, b: T, opname: string) {
 }
 
 /** @description assert a & b are of the same signedness */
-function _assertSameSignedNess<T extends BaseNumber>(a: T, b: T, opname: string) {
+function _assertSameSignedNess<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
     // @ts-ignore
     if (a.constructor._signed != b.constructor._signed) {
         throw new TypeError(
@@ -53,17 +53,27 @@ function _assertNonNegative(b: number, opname: string) {
 
 
 /** @description assert a has larger bitlen */
-function _assertLargerType<T extends BaseNumber>(a: T, b: T, opname: string) {
+function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
     if (a._bitlen < b._bitlen) {
         throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
     }
 }
 
 
-/** @description cast a to b's type if b has larger bitlen */
-function _castToLargerType<T extends BaseNumber>(a: T, b: T) {
+/** 
+ * @description 
+ * Cast both a and b to the larger type among the two.
+ * Returns new instances.
+ */
+function _castToLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2): (T1|T2)[] {
     // @ts-ignore
-    return a._bitlen >= b._bitlen ? a : b.constructor._new(a.bn);
+    if (a._bitlen > b._bitlen) {
+        return [a.clone(), b.like(a)];
+    } 
+    if (a._bitlen < b._bitlen) {
+        return [a.like(b), b.clone()];
+    } 
+    return [a.clone(), b.clone()];
 }
 
 
@@ -159,13 +169,13 @@ export abstract class BaseNumber {
     }
 
     /** @description cast to another BaseNumber subclass type */
-    as(b: typeof BaseNumber): BaseNumber {
-        // _assertSameSignedNess()
+    as<T extends BaseNumber>(b: typeof BaseNumber): T {
+        // TODO: _assertSameSignedNess()
         return b._new(this.bn);
     }
 
     /** @description cast to another BaseNumber subclass type */
-    like(b: BaseNumber): BaseNumber {
+    like<T extends BaseNumber>(b: T): T {
         _assertSameSignedNess(this, b, "like");
         // @ts-ignore
         return b.constructor._new(this.bn);
@@ -174,70 +184,79 @@ export abstract class BaseNumber {
     // arithmetic
 
     iadd(b: this): this {
+        _assertSameSignedNess(this, b, "iadd");
         _assertLargerType(this, b, "iadd");
-        _assertSameSignedNess(this, b, "add");
-        binaryOp(this, b, "iadd");
+        this.bn.iadd(b.bn);
         return this._checkBounds();
     }
 
     add(b: this): this {
-        console.log(b);
-        b = _castToLargerType(b, this);
-        console.log(b);
-
-        return this.clone().iadd(b);
+        _assertSameSignedNess(this, b, "add");
+        let [r, _b] = _castToLargerType(this, b);
+        r.bn.iadd(b.bn);
+        return r._checkBounds();
     }
 
     isub(b: this): this {
+        _assertSameSignedNess(this, b, "isub");
         _assertLargerType(this, b, "isub");
-        _assertSameSignedNess(this, b, "sub");
         binaryOp(this, b, "isub");
         return this._checkBounds();
     }
 
     sub(b: this): this {
-        b = _castToLargerType(b, this);
-        return this.clone().isub(b);
+        _assertSameSignedNess(this, b, "sub");
+        let [r, _b] = _castToLargerType(this, b);
+        r.bn.isub(b.bn);
+        return r._checkBounds();
     }
 
     imul(b: this): this {
+        _assertSameSignedNess(this, b, "imul");
         _assertLargerType(this, b, "imul");
-        _assertSameSignedNess(this, b, "mul");
-        binaryOp(this, b, "imul");
+        this.bn.imul(b.bn);
         return this._checkBounds();
     }
 
     mul(b: this): this {
-        b = _castToLargerType(b, this);
-        return this.clone().imul(b);
+        _assertSameSignedNess(this, b, "mul");
+        let [r, _b] = _castToLargerType(this, b);
+        r.bn.imul(b.bn);
+        return r._checkBounds();
     }
 
     idiv(b: this): this {
+        _assertSameSignedNess(this, b, "idiv");
         _assertLargerType(this, b, "idiv");
-        _assertSameSignedNess(this, b, "div");
-        this.bn = binaryOp(this, b, "div");
+        this.bn = this.bn.div(b.bn);
         return this._checkBounds();
     }
 
     div(b: this): this {
-        b = _castToLargerType(b, this);
-        return this.clone().idiv(b);
+        _assertSameSignedNess(this, b, "mul");
+        let [r, _b] = _castToLargerType(this, b);
+        r.bn = r.bn.div(b.bn);
+        return r._checkBounds();
     }
 
     imod(b: this): this {
-        _assertSameSignedNess(this, b, "mod");
-        this.bn = binaryOp(this, b, "mod");
+        _assertSameSignedNess(this, b, "imod");
+        _assertLargerType(this, b, "imod");
+        this.bn = this.bn.mod(b.bn);
         return this._checkBounds();
     }
 
     mod(b: this): this {
-        return this.clone().imod(b);
+        _assertSameSignedNess(this, b, "mod");
+        let [r, _b] = _castToLargerType(this, b);
+        r.bn = r.bn.mod(b.bn);
+        return r._checkBounds();
     }
 
     pow(b: this): this {
         _assertUnsigned(b, "pow");
         let r = this.clone();
-        r.bn = binaryOp(r, b, "pow");
+        r.bn = r.bn.pow(b.bn);
         return r._checkBounds();
     }
 
@@ -245,8 +264,7 @@ export abstract class BaseNumber {
         _assertSameSignedNess(this, b, "addmod");
         _assertSameSignedNess(this, m, "addmod");
         let r = this.clone();
-        r.bn = binaryOp(r, b, "add");
-        r.bn = binaryOp(r, m, "mod");
+        r.bn = r.bn.add(b.bn).mod(m.bn);
         return r._checkBounds();
     }
 
@@ -254,8 +272,7 @@ export abstract class BaseNumber {
         _assertSameSignedNess(this, b, "mulmod");
         _assertSameSignedNess(this, m, "mulmod");
         let r = this.clone();
-        r.bn = binaryOp(r, b, "mul");
-        r.bn = binaryOp(r, m, "mod");
+        r.bn = r.bn.mul(b.bn).mod(m.bn);
         return r._checkBounds();
     }
 
