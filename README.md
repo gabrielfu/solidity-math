@@ -42,7 +42,7 @@ unchecked(() => {
     let c = Uint256.max().add(uint256(1)).sub(b).add(a);
     console.log(a.sub(b).eq(c)); // true
 });
-console.log(a.sub(b)); // RangeError: Value under/overflow outside of unchecked mode: Uint256(bn=-10) 
+console.log(a.sub(b)); // RangeError: Value under/overflow: Uint256(bn=-10) 
 ```
 
 ## Documentation
@@ -105,7 +105,7 @@ a.eq(b); // true
 Non unary operations must be performed on two Numbers of the same type, e.g.: 
 ```typescript
 uint256(1).add(uint256(2)); // valid
-uint256(1).add(uint128(2)); // invalid, error raised
+uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
 ```
 
 Some operations also have an in-place version, which have an `i` prefix 
@@ -185,12 +185,12 @@ To be implemented.
 ### Unchecked Arithmetic
 ```solidity
 // Solidity code
-uint256 x;
-uint256 y;
+uint256 x = type(uint256).max;
+uint256 y = 1;
 uint256 z;
 
 unchecked {
-    z = x - y;
+    z = x + y; // 0
 }
 ```
 
@@ -198,13 +198,13 @@ unchecked {
 // Typescript equivalent
 import { uint256, unchecked } from "solidity-math";
 
-let x = uint256(0);
-let y = uint256(0);
+let x = Uint256.max();
+let y = uint256(1);
 let z = uint256(0);
 
 unchecked(() => {
-    z = x.sub(y);
-});
+    z = x.add(y); // Uint256(bn=0)
+})
 ```
 
 ### Muldiv
