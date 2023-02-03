@@ -104,7 +104,6 @@ The base class of all classes is `BaseNumber`, which cannot be imported or insta
 Each class also has a lowercase alias function for creating new numbers.
 You can use the class constructor `new Uint256()` or the alias function `uint256()`, which are equivalent.
 The created instance type will be `Uint256`.
-
 ```typescript
 import { Uint256, uint256 } from "solidity-math";
 
@@ -116,18 +115,17 @@ a.eq(b); // true
 ```
 
 ### Operations
-Non unary operations must be performed on two Numbers of the same type, e.g.: 
+There are restrictions on the types of operands, as enforced by Solidity:
 ```typescript
 uint256(1).add(uint256(2)); // valid
 uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
 ```
 
-Some operations also have an in-place version, which have an `i` prefix 
-before the method name, e.g.:
+However, the operand can also regular JS number, string, or another BN:
 ```typescript
-// these two lines are equivalent
-a.iadd(b); // solidity: a += b
-a = a.add(b); // solidity: a = a + b
+uint256(1).add(2); // Uint256(bn=3)
+uint256(1).add("3"); // Uint256(bn=4)
+uint256(1).add(new BN(4)); // Uint256(bn=5)
 ```
 
 Restrictions:
@@ -178,7 +176,6 @@ Other supported functions:
 
 ### Maximum and Minimum
 For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to access the minimum and maximum value representable by the type.
-
 ```typescript
 import { Uint256 } from "solidity-math";
 
@@ -201,7 +198,16 @@ For the purpose of this package, you should also perform Solidity inline assembl
 in `unchecked` mode.
 
 ### Casting
-To be implemented.
+Casting between unsigned & signed types are not allowed.
+```typescript
+let a = uint256(10);
+// Cast a to type Uint64
+let b = a.as(Uint64);
+console.log(b); // Uint64(bn=10)
+// Cast b to same type as a
+let c = b.like(a);
+console.log(c); // Uint256(bn=10)
+```
 
 ## Example
 
@@ -237,7 +243,6 @@ It is also included in [Uniswap V3 FullMath.sol](https://github.com/Uniswap/v3-c
 Below is the Typescript equivalent function. Note that the original code is in Solidity <0.8.0, 
 which allows `-uint256(denominator)`. To use this package, 
 we need to perform `uint256(0).sub(denominator)` in unchecked mode.
-
 ```typescript
 import { unchecked, uint256, Uint256 } from "./build/src/index";
 
