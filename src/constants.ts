@@ -1,4 +1,4 @@
-import * as BN from "bn.js";
+import BN from "bn.js";
 
 export const BN0 = new BN(0);
 export const BN1 = new BN(1);

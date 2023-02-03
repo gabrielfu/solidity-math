@@ -5,6 +5,8 @@
     "module": "commonjs",
     "rootDir": ".",
     "outDir": "build",
+    "allowSyntheticDefaultImports": true,  
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,

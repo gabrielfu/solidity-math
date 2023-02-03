@@ -1,4 +1,4 @@
-import * as BN from "bn.js";
+import BN from "bn.js";
 import * as C from "../constants";
 import { BaseNumber, BNInput } from "./base";
 

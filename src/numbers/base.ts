@@ -1,5 +1,5 @@
-import * as BN from "bn.js";
-import * as util from "util";
+import BN from "bn.js";
+import util from "util";
 import { isUnchecked } from "../unchecked";
 import * as C from "../constants";
 
