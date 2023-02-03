@@ -11,7 +11,8 @@ Solidity integer types and operations. It is useful for replicating public Solid
 - ✅ Inline assembly functions: `addmod()` & `mulmod()`
 - ✅ Checked & unchecked modes
 - ✅ Type safety checks
-- Type casting (coming soon)
+- ✅ Type casting
+- ✅ Flexible right operand type (e.g. `uint256(20).add(10)`)
 - Test coverage (coming soon)
 
 ## Table of Contents
@@ -33,16 +34,26 @@ Solidity integer types and operations. It is useful for replicating public Solid
 ```typescript
 import { Uint256, uint256, unchecked } from "solidity-math";
 
+// creating new numbers
 let a = new Uint256(10); // create new Uint256 number
 let b = uint256(20); // another way to create new Uint256 number
 
+// arithmetic
 console.log(a.add(b)); // Uint256(bn=30)
+
+// compatibility with other types
+console.log(a.add(20)); // Uint256(bn=30)
+console.log(a.add("20")); // Uint256(bn=30)
+
+// unchecked mode
+// overflowing will wrap around
 unchecked(() => {
-    // overflows and wrapped
-    let c = Uint256.max().add(uint256(1)).sub(b).add(a);
-    console.log(a.sub(b).eq(c)); // true
+    let c = Uint256.max().add(11);
+    console.log(a.eq(c)); // true
 });
-console.log(a.sub(b)); // RangeError: Value under/overflow: Uint256(bn=-10) 
+
+// normal mode will throw error
+console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(bn=-20) 
 ```
 
 ## Documentation
