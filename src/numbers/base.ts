@@ -76,13 +76,6 @@ function _castToLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
     return [a.clone(), b.clone()];
 }
 
-
-/** @description performs binary operation */
-function binaryOp<T extends BaseNumber>(a: T, b: T, opname: keyof BN): any {
-    // @ts-ignore // ignores [opname]
-    return a.bn[opname](b.bn); 
-}
-
 export abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
@@ -200,7 +193,7 @@ export abstract class BaseNumber {
     isub(b: this): this {
         _assertSameSignedNess(this, b, "isub");
         _assertLargerType(this, b, "isub");
-        binaryOp(this, b, "isub");
+        this.bn.isub(b.bn);
         return this._checkBounds();
     }
 
@@ -286,13 +279,13 @@ export abstract class BaseNumber {
         }
         _assertNonNegative(b, "shln");
         this.bn.iushln(b);
-        return this;
+        return this._iwraparound();
     }
 
     shln(b: this | number): this {
         let r = this.clone();
         r.ishln(b);
-        return r;
+        return r._iwraparound();
     }
 
     ishrn(b: this | number): this {
@@ -302,45 +295,58 @@ export abstract class BaseNumber {
         }
         _assertNonNegative(b, "shrn");
         this.bn.iushrn(b);
-        return this;
+        return this._iwraparound();
     }
 
     shrn(b: this | number): this {
         let r = this.clone();
         r.ishrn(b);
-        return r;
+        return r._iwraparound();
     }
 
     // bit
 
     iand(b: this): this {
-        _assertSameSignedNess(this, b, "and");
-        binaryOp(this, b, "iuand");
-        return this;
+        _assertSameSignedNess(this, b, "iand");
+        _assertLargerType(this, b, "iand");
+        this.bn.iuand(b.bn);
+        // and() will take the smallest bit len and don't need to wrap
+        return this; 
     }
 
     and(b: this): this {
-        return this.clone().iand(b);
+        _assertSameSignedNess(this, b, "and");
+        let r = this.clone();
+        r.bn.iuand(b.bn);
+        return r;
     }
 
     ior(b: this): this {
-        _assertSameSignedNess(this, b, "or");
-        binaryOp(this, b, "iuor");
-        return this;
+        _assertSameSignedNess(this, b, "ior");
+        _assertLargerType(this, b, "ior");
+        this.bn.iuor(b.bn);
+        return this._iwraparound();
     }
 
     or(b: this): this {
-        return this.clone().ior(b);
+        _assertSameSignedNess(this, b, "or");
+        let r = this.clone();
+        r.bn.iuor(b.bn);
+        return r._iwraparound();
     }
 
     ixor(b: this): this {
-        _assertSameSignedNess(this, b, "xor");
-        binaryOp(this, b, "iuxor");
-        return this;
+        _assertSameSignedNess(this, b, "ixor");
+        _assertLargerType(this, b, "ixor");
+        this.bn.iuxor(b.bn);
+        return this._iwraparound();
     }
 
     xor(b: this): this {
-        return this.clone().ixor(b);
+        _assertSameSignedNess(this, b, "xor");
+        let r = this.clone();
+        r.bn.iuxor(b.bn);
+        return r._iwraparound();
     }
 
     inot(): this {
@@ -357,31 +363,31 @@ export abstract class BaseNumber {
 
     gt(b: this): Boolean {
         _assertSameSignedNess(this, b, "gt");
-        return binaryOp(this, b, "gt");
+        return this.bn.gt(b.bn);
     }
 
     lt(b: this): Boolean {
         _assertSameSignedNess(this, b, "lt");
-        return binaryOp(this, b, "lt");
+        return this.bn.lt(b.bn);
     }
 
     gte(b: this): Boolean {
         _assertSameSignedNess(this, b, "gte");
-        return binaryOp(this, b, "gte");
+        return this.bn.gte(b.bn);
     }
 
     lte(b: this): Boolean {
         _assertSameSignedNess(this, b, "lte");
-        return binaryOp(this, b, "lte");
+        return this.bn.lte(b.bn);
     }
 
     eq(b: this): Boolean {
         _assertSameSignedNess(this, b, "eq");
-        return binaryOp(this, b, "eq");
+        return this.bn.eq(b.bn);
     }
 
     neq(b: this): Boolean {
         _assertSameSignedNess(this, b, "neq");
-        return !binaryOp(this, b, "eq");
+        return !this.bn.eq(b.bn);
     }
 }
