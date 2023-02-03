@@ -31,7 +31,7 @@ function _assertSameSignedNess<T extends BaseNumber>(a: T, b: T, opname: string)
 function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
     // @ts-ignore
     if (b.constructor._signed) {
-        throw new TypeError(`Operation "${opname}" cannot be performed with signed type ${b.constructor.name}`);
+        throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
     }
 }
 
@@ -39,7 +39,7 @@ function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
 function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
     // @ts-ignore
     if (!b.constructor._signed) {
-        throw new TypeError(`Operation "${opname}" cannot be performed with unsigned type ${b.constructor.name}`);
+        throw new TypeError(`Operator "${opname}" not compatible with unsigned type ${b.constructor.name}`);
     }
 }
 
@@ -47,7 +47,7 @@ function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
 function _assertNonNegative(b: number, opname: string) {
     // @ts-ignore
     if (b < 0) {
-        throw new TypeError(`Operation "${opname}" cannot be performed with negative value ${b}`);
+        throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
     }
 }
 
@@ -55,7 +55,7 @@ function _assertNonNegative(b: number, opname: string) {
 /** @description assert a has larger bitlen */
 function _assertLargerType<T extends BaseNumber>(a: T, b: T, opname: string) {
     if (a._bitlen < b._bitlen) {
-        throw new TypeError(`Operation "${opname}" cannot be performed as ${a.constructor.name} type is smaller than ${b.constructor.name}`);
+        throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
     }
 }
 
