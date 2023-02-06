@@ -1,0 +1,28 @@
+{
+    "name": "@gabrielfu/solidity-math",
+    "version": "0.0.1",
+    "description": "Solidity number types in Javascript",
+    "main": "lib.commonjs/index.js",
+    "module": "lib.es6/index.js",
+    "sideEffects": false,
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/gabrielfu/solidity-math.git"
+    },
+    "files": [
+      "lib",
+      "CHANGELOG.md",
+      "LICENSE",
+      "package.json",
+      "README.md"
+    ],
+    "keywords": [
+      "solidity"
+    ],
+    "author": "gabrielfu",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/gabrielfu/solidity-math/issues"
+    },
+    "homepage": "https://github.com/gabrielfu/solidity-math"
+  }
