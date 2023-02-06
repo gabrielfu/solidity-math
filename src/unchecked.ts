@@ -13,7 +13,7 @@
 import { With } from "./contextlib";
 
 /** @description unique switch flag indicating whether we are in unchecked mode */
-let _UNCHECKED: boolean = false;
+let _UNCHECKED = false;
 
 /** @description context manager *class* to trigger unchecked mode */
 class UncheckedContextManager {

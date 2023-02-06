@@ -9,8 +9,8 @@ export type Input = BNInput | BaseNumber;
 
 /** @description assert a & b are of the same type */
 function _assertSameType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
-    let atype = a.constructor.name;
-    let btype = b.constructor.name;
+    const atype = a.constructor.name;
+    const btype = b.constructor.name;
     if (atype != btype) {
         throw new TypeError(
             `Operator ${opname} not compatible with types ${atype} and ${btype}.`
@@ -116,7 +116,7 @@ export abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
     /** @description bit length (size) of this type */
-    static _bitlen: number = 0;
+    static _bitlen = 0;
     /** @description max representable number of this type */
     static _ubound: BN;
     /** @description min representable number of this type */
@@ -228,7 +228,7 @@ export abstract class BaseNumber {
     add(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "add");
-        let [r, _b] = _castToLargerType(this, b);
+        const [r, _b] = _castToLargerType(this, b);
         r.bn.iadd(b.bn);
         return r._checkBounds();
     }
@@ -244,7 +244,7 @@ export abstract class BaseNumber {
     sub(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "sub");
-        let [r, _b] = _castToLargerType(this, b);
+        const [r, _b] = _castToLargerType(this, b);
         r.bn.isub(b.bn);
         return r._checkBounds();
     }
@@ -260,7 +260,7 @@ export abstract class BaseNumber {
     mul(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        let [r, _b] = _castToLargerType(this, b);
+        const [r, _b] = _castToLargerType(this, b);
         r.bn.imul(b.bn);
         return r._checkBounds();
     }
@@ -276,7 +276,7 @@ export abstract class BaseNumber {
     div(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        let [r, _b] = _castToLargerType(this, b);
+        const [r, _b] = _castToLargerType(this, b);
         r.bn = r.bn.div(b.bn);
         return r._checkBounds();
     }
@@ -292,7 +292,7 @@ export abstract class BaseNumber {
     mod(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mod");
-        let [r, _b] = _castToLargerType(this, b);
+        const [r, _b] = _castToLargerType(this, b);
         r.bn = r.bn.mod(b.bn);
         return r._checkBounds();
     }
@@ -300,7 +300,7 @@ export abstract class BaseNumber {
     pow(b: Input): this {
         b = _newBNIfNeeded(b);
         _assertBNNonNegative(b, "pow");
-        let r = this.clone();
+        const r = this.clone();
         r.bn = r.bn.pow(b);
         return r._checkBounds();
     }
@@ -310,7 +310,7 @@ export abstract class BaseNumber {
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "addmod");
         _assertSameSignedNess(this, m, "addmod");
-        let r = this.clone();
+        const r = this.clone();
         r.bn = r.bn.add(b.bn).mod(m.bn);
         return r._checkBounds();
     }
@@ -320,7 +320,7 @@ export abstract class BaseNumber {
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "mulmod");
         _assertSameSignedNess(this, m, "mulmod");
-        let r = this.clone();
+        const r = this.clone();
         r.bn = r.bn.mul(b.bn).mod(m.bn);
         return r._checkBounds();
     }
@@ -339,7 +339,7 @@ export abstract class BaseNumber {
     }
 
     shln(b: BaseNumber | number): this {
-        let r = this.clone();
+        const r = this.clone();
         r.ishln(b);
         return r._iwraparound();
     }
@@ -355,7 +355,7 @@ export abstract class BaseNumber {
     }
 
     shrn(b: BaseNumber | number): this {
-        let r = this.clone();
+        const r = this.clone();
         r.ishrn(b);
         return r._iwraparound();
     }
@@ -372,7 +372,7 @@ export abstract class BaseNumber {
 
     and(b: this): this {
         _assertSameSignedNess(this, b, "and");
-        let r = this.clone();
+        const r = this.clone();
         r.bn.iuand(b.bn);
         return r;
     }
@@ -386,7 +386,7 @@ export abstract class BaseNumber {
 
     or(b: this): this {
         _assertSameSignedNess(this, b, "or");
-        let r = this.clone();
+        const r = this.clone();
         r.bn.iuor(b.bn);
         return r._iwraparound();
     }
@@ -400,7 +400,7 @@ export abstract class BaseNumber {
 
     xor(b: this): this {
         _assertSameSignedNess(this, b, "xor");
-        let r = this.clone();
+        const r = this.clone();
         r.bn.iuxor(b.bn);
         return r._iwraparound();
     }

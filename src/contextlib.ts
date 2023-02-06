@@ -40,19 +40,19 @@ interface ContextManager<T = unknown> {
  * @param manager the context manager for this context
  * @param body the body function for this context*/
 export function With<T, R = unknown>(manager: ContextManager<T>, body: (val: T) => R): Result<R> {
-    const val = manager.enter()
-    let result: Success<R> | undefined
+    const val = manager.enter();
+    let result: Success<R> | undefined;
     try {
-        result = {result: body(val)}
+        result = {result: body(val)};
     } catch (error) {
         if (manager.exit(error) !== true) {
-            throw error
+            throw error;
         }
         return {
             error,
-            suppressed: true
-        }
+            suppressed: true,
+        };
     }
-    manager.exit()
-    return result
+    manager.exit();
+    return result;
 }

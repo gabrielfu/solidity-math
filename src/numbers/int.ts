@@ -4,7 +4,7 @@ import { BaseNumber, BNInput } from "./base";
 
 /** @description Signed integer base class */
 export abstract class BaseInt extends BaseNumber {
-    static _signed: boolean = true;
+    static _signed = true;
 
     static get _ubound() {
         return C._getBitValues(this._bitlen).intmax;
@@ -18,7 +18,7 @@ export abstract class BaseInt extends BaseNumber {
      * @description performs signed integer wraparound in-place
      */
     _iwraparound(): this {
-        let range = this._ubound.sub(this._lbound).add(C.BN1);
+        const range = this._ubound.sub(this._lbound).add(C.BN1);
         this.bn = this.bn.sub(this._lbound).mod(range);
         if (this.bn.isNeg()) {
             this.bn = this.bn.add(this._ubound).add(C.BN1);
@@ -30,7 +30,7 @@ export abstract class BaseInt extends BaseNumber {
     }
 
     neg() {
-        let r = this.clone();
+        const r = this.clone();
         r.bn = r.bn.neg();
         return r._checkBounds();
     }
