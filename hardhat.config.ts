@@ -7,19 +7,19 @@ const config: HardhatUserConfig = {
         settings: {
             optimizer: {
                 enabled: true,
-                runs: 20
+                runs: 20,
             },
             outputSelection: {
                 "*": {
-                    "*": ["storageLayout"]
-                }
-            }
-        }
+                    "*": ["storageLayout"],
+                },
+            },
+        },
     },
     paths: {
         sources: "./tests/contracts",
         tests: "./tests/scripts",
-    }
+    },
 };
 
 export default config;

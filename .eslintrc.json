@@ -12,6 +12,7 @@
   "rules": { 
     "comma-dangle": [1, "always-multiline"],
     "no-console": "warn",
-    "semi": "error"
+    "semi": "error",
+    "@typescript-eslint/ban-ts-comment": "off"
   }
 }

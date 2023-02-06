@@ -23,7 +23,6 @@ function _assertSameSignedNess<T1 extends BaseNumber, T2 extends BaseNumber>(a: 
     // @ts-ignore
     if (a.constructor._signed != b.constructor._signed) {
         throw new TypeError(
-            // @ts-ignore
             `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
         );
     }
@@ -34,7 +33,6 @@ function _assertSameSignedNessType<T extends BaseNumber>(a: T, btype: typeof Bas
     // @ts-ignore
     if (a.constructor._signed != btype._signed) {
         throw new TypeError(
-            // @ts-ignore
             `Operator "${opname}" not compatible with types ${a.constructor.name} and ${btype.name}.`
         );
     }
@@ -58,7 +56,6 @@ function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
 
 /** @description assert b >= 0 */
 function _assertNonNegative(b: number, opname: string) {
-    // @ts-ignore
     if (b < 0) {
         throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
     }
@@ -66,7 +63,6 @@ function _assertNonNegative(b: number, opname: string) {
 
 /** @description assert b >= 0 */
 function _assertBNNonNegative(b: BN, opname: string) {
-    // @ts-ignore
     if (b.lt(C.BN0)) {
         throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
     }
@@ -85,7 +81,6 @@ function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
  * Returns new instances.
  */
 function _castToLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2): (T1|T2)[] {
-    // @ts-ignore
     if (a._bitlen > b._bitlen) {
         return [a.clone(), b.like(a)];
     } 
@@ -172,12 +167,12 @@ export abstract class BaseNumber {
     }
 
     /** @description string representation of underlying value */
-    toString(base=10) {
+    toString(base=10): string {
         return this.bn.toString(base);
     }
 
     /** @description string representation of instance */
-    [util.inspect.custom]() {
+    [util.inspect.custom](): string {
         return `${this.constructor.name}(bn=${this.bn.toString()})`;
     }
 
@@ -228,7 +223,7 @@ export abstract class BaseNumber {
     add(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "add");
-        const [r, _b] = _castToLargerType(this, b);
+        const [r ] = _castToLargerType(this, b);
         r.bn.iadd(b.bn);
         return r._checkBounds();
     }
@@ -244,7 +239,7 @@ export abstract class BaseNumber {
     sub(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "sub");
-        const [r, _b] = _castToLargerType(this, b);
+        const [r ] = _castToLargerType(this, b);
         r.bn.isub(b.bn);
         return r._checkBounds();
     }
@@ -260,7 +255,7 @@ export abstract class BaseNumber {
     mul(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        const [r, _b] = _castToLargerType(this, b);
+        const [r ] = _castToLargerType(this, b);
         r.bn.imul(b.bn);
         return r._checkBounds();
     }
@@ -276,7 +271,7 @@ export abstract class BaseNumber {
     div(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        const [r, _b] = _castToLargerType(this, b);
+        const [r ] = _castToLargerType(this, b);
         r.bn = r.bn.div(b.bn);
         return r._checkBounds();
     }
@@ -292,7 +287,7 @@ export abstract class BaseNumber {
     mod(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mod");
-        const [r, _b] = _castToLargerType(this, b);
+        const [r ] = _castToLargerType(this, b);
         r.bn = r.bn.mod(b.bn);
         return r._checkBounds();
     }
