@@ -13,7 +13,7 @@
 import { With } from "./contextlib";
 
 /** @description unique switch flag indicating whether we are in unchecked mode */
-var _UNCHECKED: Boolean = false;
+let _UNCHECKED: boolean = false;
 
 /** @description context manager *class* to trigger unchecked mode */
 class UncheckedContextManager {
@@ -35,6 +35,6 @@ export function unchecked(callback: (val: void) => unknown): void {
 }
 
 /** @description returns true if unchecked mode is on */
-export function isUnchecked(): Boolean {
+export function isUnchecked(): boolean {
     return _UNCHECKED;
 }

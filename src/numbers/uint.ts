@@ -4,7 +4,7 @@ import { BaseNumber, BNInput } from "./base";
 
 /** @description Unsigned integer base class */
 abstract class BaseUint extends BaseNumber {
-    static _signed: Boolean = false;
+    static _signed: boolean = false;
 
     static get _ubound() {
         return C._getBitValues(this._bitlen).uintmax;

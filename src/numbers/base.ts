@@ -122,7 +122,7 @@ export abstract class BaseNumber {
     /** @description min representable number of this type */
     static _lbound: BN;
     /** @description whether this type is signed or unsigned */
-    static _signed: Boolean;
+    static _signed: boolean;
 
     constructor(number: Input) {
         if (number instanceof BaseNumber) {
@@ -417,37 +417,37 @@ export abstract class BaseNumber {
 
     // comparison
 
-    gt(b: Input): Boolean {
+    gt(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "gt");
         return this.bn.gt(b.bn);
     }
 
-    lt(b: Input): Boolean {
+    lt(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "lt");
         return this.bn.lt(b.bn);
     }
 
-    gte(b: Input): Boolean {
+    gte(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "gte");
         return this.bn.gte(b.bn);
     }
 
-    lte(b: Input): Boolean {
+    lte(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "lte");
         return this.bn.lte(b.bn);
     }
 
-    eq(b: Input): Boolean {
+    eq(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "eq");
         return this.bn.eq(b.bn);
     }
 
-    neq(b: Input): Boolean {
+    neq(b: Input): boolean {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "neq");
         return !this.bn.eq(b.bn);
