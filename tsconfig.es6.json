@@ -4,7 +4,8 @@
     "target": "ES5",
     "lib": ["ES2020"],
     "declaration": true,
-    "outDir": "./dist/lib/es6",
+    "outDir": "./dist/lib.es6",
+    "esModuleInterop": true,
     "moduleResolution": "node"
   },
   "include": ["src/**/*"],

@@ -3,8 +3,9 @@
       "module": "commonjs",
       "target": "ES5",
       "declaration": true,
-      "outDir": "./dist/lib/commonjs",
+      "outDir": "./dist/lib.commonjs",
       "moduleResolution": "node",
+      "esModuleInterop": true,
       "lib": ["ES2020", "DOM"]
     },
     "include": ["src/**/*"],
