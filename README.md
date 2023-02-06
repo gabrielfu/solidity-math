@@ -123,7 +123,7 @@ uint256(1).add(uint256(2)); // valid
 uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
 ```
 
-However, the operand can also regular JS number, string, or another BN:
+However, the right operand can also be a regular JS number, string, or another BN:
 ```typescript
 uint256(1).add(2); // Uint256(bn=3)
 uint256(1).add("3"); // Uint256(bn=4)
