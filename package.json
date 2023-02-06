@@ -1,11 +1,24 @@
 {
   "name": "solidity-math",
+  "version": "0.0.1",
   "description": "Solidity number types in Javascript",
+  "main": "lib.commonjs/index.js",
+  "module": "lib.es6/index.js",
   "scripts": {
-    "compile": "npm run lint && rm -rf dist/lib.commonjs && rm -rf dist/lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
-    "compile-windows": "npm run lint && (if exist dist\\lib.commonjs rmdir /s /q dist\\lib.commonjs) && (if exist dist\\lib.es6 rmdir /s /q dist\\lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
-    "lint": "eslint . --ext .ts"
+    "compile": "npm run lint && rm -rf lib.commonjs && rm -rf lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
+    "compile-windows": "npm run lint && (if exist lib.commonjs rmdir /s /q lib.commonjs) && (if exist lib.es6 rmdir /s /q lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
+    "lint": "eslint . --ext .ts",
+    "publish": "cd dist && npm publish"
   },
+  "files": [
+    "lib.commonjs",
+    "lib.es6",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gabrielfu/solidity-math.git"
