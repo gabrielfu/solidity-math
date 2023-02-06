@@ -1,1 +1,5 @@
-build/
+build
+dist
+node_modules
+coverage
+tests

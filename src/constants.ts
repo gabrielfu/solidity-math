@@ -1,4 +1,4 @@
-import * as BN from "bn.js";
+import BN from "bn.js";
 
 export const BN0 = new BN(0);
 export const BN1 = new BN(1);
@@ -15,11 +15,11 @@ interface bitValues {
 }
 
 function _computeValues(bitlen: number): bitValues {
-    let bn = new BN(bitlen);
-    let powerOf2 = BN2.pow(bn);
-    let uintmax = powerOf2.sub(BN1);
-    let intmax = powerOf2.div(BN2).sub(BN1);
-    let intmin = powerOf2.div(BN2).neg();
+    const bn = new BN(bitlen);
+    const powerOf2 = BN2.pow(bn);
+    const uintmax = powerOf2.sub(BN1);
+    const intmax = powerOf2.div(BN2).sub(BN1);
+    const intmin = powerOf2.div(BN2).neg();
     return { bn, powerOf2, uintmax, intmax, intmin };
 }
 

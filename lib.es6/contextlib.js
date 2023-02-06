@@ -1,32 +1,6 @@
 // extracted from: 
 // https://github.com/Mcsavvy/contextlib/blob/7209bfa124679426c57e50698b7737e027c436ff/src/contextlib.ts
 // failed to import this module, so decided to extract here
-
-export interface Success<T> {
-    result: T
-    suppressed?: false
-}
-
-export interface Failure {
-    error: unknown
-    suppressed: true
-}
-
-export type Result<T> = Success<T> | Failure
-
-interface ContextManager<T = unknown> {
-    /**this method is called when the context is being entered, the return value is
-     * passes to the context body as argument
-     */
-    enter: () => T
-    /**this method is called whe the context is being left
-     * if an error is throw in the context body, the error
-     * is passed to this method. return a true value to suppress
-     * the error
-     */
-    exit: (err?: unknown) => unknown
-}
-
 /**
  * The With function manages context, it enters the given context on invocation
  * and exits the context on return.
@@ -39,17 +13,18 @@ interface ContextManager<T = unknown> {
  * within the callback, exit will be called w/o args.
  * @param manager the context manager for this context
  * @param body the body function for this context*/
-export function With<T, R = unknown>(manager: ContextManager<T>, body: (val: T) => R): Result<R> {
-    const val = manager.enter();
-    let result: Success<R> | undefined;
+export function With(manager, body) {
+    var val = manager.enter();
+    var result;
     try {
-        result = {result: body(val)};
-    } catch (error) {
+        result = { result: body(val) };
+    }
+    catch (error) {
         if (manager.exit(error) !== true) {
             throw error;
         }
         return {
-            error,
+            error: error,
             suppressed: true,
         };
     }

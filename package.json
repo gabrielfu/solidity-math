@@ -1,24 +1,43 @@
 {
   "name": "solidity-math",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
+  "version": "0.0.1",
+  "description": "Solidity number types in Javascript",
+  "main": "lib.commonjs/index.js",
+  "module": "lib.es6/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "gts lint",
-    "clean": "gts clean",
-    "compile": "tsc",
-    "fix": "gts fix",
-    "prepare": "npm.cmd run compile",
-    "pretest": "npm.cmd run compile",
-    "posttest": "npm.cmd run lint"
+    "compile": "npm run lint && rm -rf lib.commonjs && rm -rf lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
+    "compile-windows": "npm run lint && (if exist lib.commonjs rmdir /s /q lib.commonjs) && (if exist lib.es6 rmdir /s /q lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
+    "lint": "eslint . --ext .ts",
+    "publish": "cd dist && npm publish"
   },
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "lib.commonjs",
+    "lib.es6",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielfu/solidity-math.git"
+  },
+  "keywords": [
+    "solidity"
+  ],
+  "author": "gabrielfu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabrielfu/solidity-math/issues"
+  },
+  "homepage": "https://github.com/gabrielfu/solidity-math",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@types/node": "^14.11.2",
-    "gts": "^3.1.1",
+    "eslint": "^7.17.0",
     "hardhat": "^2.12.6",
     "ts-node": "^10.9.1",
     "typescript": "~4.7.0"

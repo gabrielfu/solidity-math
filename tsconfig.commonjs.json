@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "ES5",
+      "declaration": true,
+      "outDir": "./lib.commonjs",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "lib": ["ES2020", "DOM"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+  }
