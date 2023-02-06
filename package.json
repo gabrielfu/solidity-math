@@ -7,8 +7,7 @@
   "scripts": {
     "compile": "npm run lint && rm -rf lib.commonjs && rm -rf lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
     "compile-windows": "npm run lint && (if exist lib.commonjs rmdir /s /q lib.commonjs) && (if exist lib.es6 rmdir /s /q lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
-    "lint": "eslint . --ext .ts",
-    "publish": "cd dist && npm publish"
+    "lint": "eslint . --ext .ts"
   },
   "files": [
     "lib.commonjs",
