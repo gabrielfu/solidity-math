@@ -9,10 +9,11 @@ Solidity integer types and operations. It is useful for replicating public Solid
     - Unsigned integers: `uint8`, `uint16`, ..., `uint256`
     - Signed integers: `int8`, `int16`, ..., `int256`
 - ✅ Inline assembly functions: `addmod()` & `mulmod()`
-- ✅ Checked & unchecked modes
+- ✅ Unchecked arithmetic
 - ✅ Type safety checks
 - ✅ Type casting
 - ✅ Flexible right operand type (e.g. `uint256(20).add(10)`)
+- ✅ Support for CommonJS & ES6
 
 ## Table of Contents
 * [Features](#features)
