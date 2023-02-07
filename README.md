@@ -41,11 +41,11 @@ let a = new Uint256(10); // create new Uint256 number
 let b = uint256(20); // another way to create new Uint256 number
 
 // arithmetic
-console.log(a.add(b)); // Uint256(bn=30)
+console.log(a.add(b)); // Uint256(30)
 
 // compatibility with other types
-console.log(a.add(20)); // Uint256(bn=30)
-console.log(a.add("20")); // Uint256(bn=30)
+console.log(a.add(20)); // Uint256(30)
+console.log(a.add("20")); // Uint256(30)
 console.log(a.lte(0)); // false
 
 // unchecked mode
@@ -56,7 +56,7 @@ unchecked(() => {
 });
 
 // normal mode will throw error
-console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(bn=-20) 
+console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(-20) 
 ```
 
 ## Documentation
@@ -125,9 +125,9 @@ uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with type
 
 However, the right operand can also be a regular JS number, string, or another BN:
 ```typescript
-uint256(1).add(2); // Uint256(bn=3)
-uint256(1).add("3"); // Uint256(bn=4)
-uint256(1).add(new BN(4)); // Uint256(bn=5)
+uint256(1).add(2); // Uint256(3)
+uint256(1).add("3"); // Uint256(4)
+uint256(1).add(new BN(4)); // Uint256(5)
 ```
 
 Restrictions:
@@ -182,7 +182,7 @@ For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to
 import { Uint256 } from "solidity-math";
 
 let a = Uint256.max();
-console.log(a); // Uint256(bn=115792089237316195423570985008687907853269984665640564039457584007913129639935)
+console.log(a); // Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639935)
 ```
 
 ### Unchecked Mode
@@ -205,10 +205,10 @@ Casting between unsigned & signed types are not allowed.
 let a = uint256(10);
 // Cast a to type Uint64
 let b = a.as(Uint64);
-console.log(b); // Uint64(bn=10)
+console.log(b); // Uint64(10)
 // Cast b to same type as a
 let c = b.like(a);
-console.log(c); // Uint256(bn=10)
+console.log(c); // Uint256(10)
 ```
 
 ## Example
@@ -234,7 +234,7 @@ let y = uint256(1);
 let z = uint256(0);
 
 unchecked(() => {
-    z = x.add(y); // Uint256(bn=0)
+    z = x.add(y); // Uint256(0)
 })
 ```
 
@@ -298,5 +298,5 @@ let a = uint256(14718); // create new Uint256 number
 let b = uint256(13812); // same as above, alias function
 let denominator = uint256(151231); // same as above, alias function
 
-console.log(muldiv(a, b, denominator)); // Uint256(bn=1344)
+console.log(muldiv(a, b, denominator)); // Uint256(1344)
 ```

@@ -173,7 +173,7 @@ export abstract class BaseNumber {
 
     /** @description string representation of instance */
     [util.inspect.custom](): string {
-        return `${this.constructor.name}(bn=${this.bn.toString()})`;
+        return `${this.constructor.name}(${this.bn.toString()})`;
     }
 
     /** @description performs integer wrap around in-place */

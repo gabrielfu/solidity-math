@@ -146,7 +146,7 @@ var BaseNumber = /** @class */ (function () {
     };
     /** @description string representation of instance */
     BaseNumber.prototype[util.inspect.custom] = function () {
-        return "".concat(this.constructor.name, "(bn=").concat(this.bn.toString(), ")");
+        return "".concat(this.constructor.name, "(").concat(this.bn.toString(), ")");
     };
     /**
      * @description Checks if `this` has under/overflowed and takes action.
