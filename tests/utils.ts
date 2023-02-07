@@ -1,5 +1,7 @@
 import hre from "hardhat";
+import { expect } from "chai";
 import { CompileFailedError, CompileResult, compileSourceString } from "solc-typed-ast";
+import { solidity } from "..";
 
 
 /** @description compile solidity source code */
@@ -41,4 +43,22 @@ export async function deploySource(body: string) {
     const Contract = await hre.ethers.getContractFactory(abi, bytecode);
     const contract = await Contract.deploy();
     return { contract, owner, otherAccount };
+}
+
+
+export async function testMethod(contractMethod: Function, jsMethod: Function) {
+    expect(await contractMethod()).to.equal(jsMethod());
+}
+
+export async function testUncheckedMethod(contractMethod: Function, jsMethod: Function) {
+    let expected: any = null;
+    solidity.unchecked(() => {
+        expected = jsMethod();
+    })
+    expect(await contractMethod()).to.equal(expected);
+}
+
+export async function testRevertMethod(contractMethod: Function, jsMethod: Function) {
+    await expect(contractMethod()).to.be.reverted;
+    expect(jsMethod).to.throw();
 }
