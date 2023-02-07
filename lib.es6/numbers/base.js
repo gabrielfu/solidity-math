@@ -163,7 +163,7 @@ var BaseNumber = /** @class */ (function () {
             return this._iwraparound();
         }
         else {
-            throw new RangeError("Value under/overflow: ".concat(util.inspect(this)));
+            throw new RangeError("Value overflow: ".concat(util.inspect(this)));
         }
     };
     /** @description cast to another BaseNumber subclass type */

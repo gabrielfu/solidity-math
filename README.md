@@ -23,6 +23,7 @@ Solidity integer types and operations. It is useful for replicating public Solid
   + [Types](#types)
   + [Operations](#operations)
   + [Maximum and Minimum](#maximum-and-minimum)
+  + [Overflow](#overflow)
   + [Unchecked Mode](#unchecked-mode)
   + [Casting](#casting)
 * [Example](#example)
@@ -55,7 +56,7 @@ unchecked(() => {
 });
 
 // normal mode will overflow
-console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(-20) 
+console.log(a.sub(30)); // RangeError: Value overflow: Uint256(-20) 
 ```
 
 Default import:
@@ -201,6 +202,15 @@ import { Uint256 } from "solidity-math";
 
 const a = Uint256.max();
 console.log(a); // Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639935)
+```
+
+### Overflow
+Same as in Solidity, by default, all arithmetic operations are checked for overflow:
+```typescript
+import { uint16 } from "solidity-math";
+
+const a = uint16(65535);
+a.add(1); // RangeError: Value overflow: Uint16(65536)
 ```
 
 ### Unchecked Mode

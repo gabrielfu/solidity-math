@@ -194,7 +194,7 @@ export abstract class BaseNumber {
             return this._iwraparound();
         } 
         else {
-            throw new RangeError(`Value under/overflow: ${util.inspect(this)}`);
+            throw new RangeError(`Value overflow: ${util.inspect(this)}`);
         }
     }
 
