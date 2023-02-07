@@ -326,6 +326,40 @@ describe("uint256", function () {
             )
         });
     });
+
+    describe("mulmod()", function () {
+        const body = `
+            function func(uint256 a, uint256 b, uint256 c) public pure returns (uint256 r) { assembly { r := mulmod(a, b, c) } }
+        `;
+        const promise = deploySource(body);
+
+        it("should mulmod numbers", async function () {
+            const a = "205";
+            const b = "199";
+            const c = "10";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => contract.func(a, b, c),
+                () => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+            )
+        });
+        it("should throw error outside of unchecked mode", async function () {
+            const a = "205";
+            const b = "199";
+            const c = "10";
+            expect(() => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c))).to.throw();
+        });
+        it("should mulmod big numbers", async function () {
+            const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639930";
+            const c = "100";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => contract.func(a, b, c),
+                () => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+            )
+        });
+    });
 });
 
 
@@ -343,6 +377,22 @@ describe("uint16", function () {
             testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
                 () => solidity.uint16(a).addmod(solidity.uint16(b), solidity.uint256(c)).toString(),
+            )
+        });
+    });
+    describe("mulmod()", function () {
+        const body = `
+            function func(uint16 a, uint16 b, uint256 c) public pure returns (uint16 r) { assembly { r := mulmod(a, b, c) } }
+        `;
+        const promise = deploySource(body);
+        it("should wraparound", async function () {
+            const a = "65535";
+            const b = "65535";
+            const c = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => { return (await contract.func(a, b, c)).toString() },
+                () => solidity.uint16(a).mulmod(solidity.uint16(b), solidity.uint256(c)).toString(),
             )
         });
     });
