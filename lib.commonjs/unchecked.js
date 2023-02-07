@@ -3,7 +3,7 @@
  * Usage:
  *
  * ``` code
- * import { unchecked } from "./unchecked";
+ * import { unchecked } from "solidity-math";
  *
  * unchecked(() => {
  *   // perform your unchecked solidity math
