@@ -2,6 +2,7 @@ import BN from "bn.js";
 import util from "util";
 import { isUnchecked } from "../unchecked";
 import * as C from "../constants";
+import { Uint256 } from "./uint";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
@@ -293,10 +294,10 @@ export abstract class BaseNumber {
     }
 
     pow(b: Input): this {
-        b = _newBNIfNeeded(b);
-        _assertBNNonNegative(b, "pow");
+        b = _newNumberIfNeeded(b, Uint256.min());
+        _assertUnsigned(b, "pow");
         const r = this.clone();
-        r.bn = r.bn.pow(b);
+        r.bn = r.bn.pow(b.bn);
         return r._checkBounds();
     }
 

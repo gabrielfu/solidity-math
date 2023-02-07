@@ -31,6 +31,7 @@ var bn_js_1 = __importDefault(require("bn.js"));
 var util_1 = __importDefault(require("util"));
 var unchecked_1 = require("../unchecked");
 var C = __importStar(require("../constants"));
+var uint_1 = require("./uint");
 /** @description assert a & b are of the same type */
 function _assertSameType(a, b, opname) {
     var atype = a.constructor.name;
@@ -277,10 +278,10 @@ var BaseNumber = /** @class */ (function () {
         return r._checkBounds();
     };
     BaseNumber.prototype.pow = function (b) {
-        b = _newBNIfNeeded(b);
-        _assertBNNonNegative(b, "pow");
+        b = _newNumberIfNeeded(b, uint_1.Uint256.min());
+        _assertUnsigned(b, "pow");
         var r = this.clone();
-        r.bn = r.bn.pow(b);
+        r.bn = r.bn.pow(b.bn);
         return r._checkBounds();
     };
     BaseNumber.prototype.addmod = function (b, m) {

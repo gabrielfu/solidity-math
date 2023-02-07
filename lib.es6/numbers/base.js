@@ -2,6 +2,7 @@ import BN from "bn.js";
 import util from "util";
 import { isUnchecked } from "../unchecked";
 import * as C from "../constants";
+import { Uint256 } from "./uint";
 /** @description assert a & b are of the same type */
 function _assertSameType(a, b, opname) {
     var atype = a.constructor.name;
@@ -248,10 +249,10 @@ var BaseNumber = /** @class */ (function () {
         return r._checkBounds();
     };
     BaseNumber.prototype.pow = function (b) {
-        b = _newBNIfNeeded(b);
-        _assertBNNonNegative(b, "pow");
+        b = _newNumberIfNeeded(b, Uint256.min());
+        _assertUnsigned(b, "pow");
         var r = this.clone();
-        r.bn = r.bn.pow(b);
+        r.bn = r.bn.pow(b.bn);
         return r._checkBounds();
     };
     BaseNumber.prototype.addmod = function (b, m) {
