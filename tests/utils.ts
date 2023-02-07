@@ -3,7 +3,6 @@ import { expect } from "chai";
 import { CompileFailedError, CompileResult, compileSourceString } from "solc-typed-ast";
 import { solidity } from "..";
 
-
 /** @description compile solidity source code */
 async function compileSource(body: string) {
     let result: CompileResult;
@@ -44,7 +43,6 @@ export async function deploySource(body: string) {
     const contract = await Contract.deploy();
     return { contract, owner, otherAccount };
 }
-
 
 export async function testMethod(contractMethod: Function, jsMethod: Function) {
     expect(await contractMethod()).to.equal(jsMethod());

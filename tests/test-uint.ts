@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { expect } from "chai";
-import { solidity, unchecked } from "..";
+import { solidity } from "..";
 import { deploySource, testMethod, testRevertMethod, testUncheckedMethod } from "./utils";
 
 describe("uint256", function () {
