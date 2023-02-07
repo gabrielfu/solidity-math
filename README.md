@@ -165,6 +165,16 @@ List of Solidity operations supported:
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
 
+The below comparison methods will return a `BaseNumber` class instead of boolean:
+| Method           | Restriction |
+|------------------|-------------|
+| `a.gt_(b)`        | ≌           |
+| `a.lt_(b)`        | ≌           |
+| `a.gte_(b)`       | ≌           |
+| `a.lte_(b)`       | ≌           |
+| `a.eq_(b)`        | ≌           |
+| `a.neq_(b)`       | ≌           |
+
 Other supported functions:
 | Method                     | Return type   | Description                                                      |
 |----------------------------|---------------|------------------------------------------------------------------|
@@ -245,14 +255,17 @@ Below is the Typescript equivalent function. Note that the original code is in S
 which allows `-uint256(denominator)`. To use this package, 
 we need to perform `uint256(0).sub(denominator)` in unchecked mode.
 ```typescript
-import { unchecked, uint256, Uint256 } from "./build/src/index";
+import { unchecked, uint256, Uint256 } from "solidity-math";
 
 function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
     if (!denominator.gt(uint256(0))) {
         throw new Error;
     }
 
-    let mm = a.mulmod(b, Uint256.max());
+    let mm = uint256(0);
+    unchecked(() => {
+        mm = a.mulmod(b, Uint256.max());
+    });
     let prod0 = a.mul(b);
     let prod1 = mm.sub(prod0).sub(uint256(+(a.lt(b))));
 
@@ -264,7 +277,10 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
         throw new Error;
     }
 
-    let remainder = a.mulmod(b, denominator);
+    let remainder = uint256(0);
+    unchecked(() => {
+        remainder = a.mulmod(b, denominator);
+    });
     prod1 = prod1.sub(uint256(+(remainder.gt(prod0))));
     prod0 = prod0.sub(remainder);
 

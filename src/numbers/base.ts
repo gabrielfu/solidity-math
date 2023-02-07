@@ -454,4 +454,35 @@ export abstract class BaseNumber {
         _assertSameSignedNess(this, b, "neq");
         return !this.bn.eq(b.bn);
     }
+    // comparison as value
+
+    gt_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.gt(b)));
+    }
+
+    lt_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.lt(b)));
+    }
+
+    gte_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.gte(b)));
+    }
+
+    lte_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.lte(b)));
+    }
+
+    eq_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.eq(b)));
+    }
+
+    neq_(b: Input): this {
+        // @ts-ignore
+        return this.constructor._new(+(this.neq(b)));
+    }
 }

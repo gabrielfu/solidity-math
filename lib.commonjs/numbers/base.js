@@ -415,6 +415,31 @@ var BaseNumber = /** @class */ (function () {
         _assertSameSignedNess(this, b, "neq");
         return !this.bn.eq(b.bn);
     };
+    // comparison as value
+    BaseNumber.prototype.gt_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.gt(b)));
+    };
+    BaseNumber.prototype.lt_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.lt(b)));
+    };
+    BaseNumber.prototype.gte_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.gte(b)));
+    };
+    BaseNumber.prototype.lte_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.lte(b)));
+    };
+    BaseNumber.prototype.eq_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.eq(b)));
+    };
+    BaseNumber.prototype.neq_ = function (b) {
+        // @ts-ignore
+        return this.constructor._new(+(this.neq(b)));
+    };
     /** @description bit length (size) of this type */
     BaseNumber._bitlen = 0;
     return BaseNumber;

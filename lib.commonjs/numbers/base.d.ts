@@ -78,4 +78,10 @@ export declare abstract class BaseNumber {
     lte(b: Input): boolean;
     eq(b: Input): boolean;
     neq(b: Input): boolean;
+    gt_(b: Input): this;
+    lt_(b: Input): this;
+    gte_(b: Input): this;
+    lte_(b: Input): this;
+    eq_(b: Input): this;
+    neq_(b: Input): this;
 }
