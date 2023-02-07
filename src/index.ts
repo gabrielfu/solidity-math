@@ -1,3 +1,4 @@
-export * from "./numbers/uint";
-export * from "./numbers/int";
-export { unchecked } from "./unchecked";
+import * as solidity from "./solidity";
+
+export { solidity };
+export * from "./solidity";
