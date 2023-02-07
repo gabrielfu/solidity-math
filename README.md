@@ -53,8 +53,17 @@ unchecked(() => {
     console.log(a.eq(c)); // true
 });
 
-// normal mode will throw error
+// normal mode will overflow
 console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(-20) 
+```
+
+Default import:
+```typescript
+import SM from ".";
+
+const a = new SM.Uint256(10);
+const b = SM.uint256(20);
+const c = SM.unchecked(() => SM.Uint256.max().add(11));
 ```
 
 ## Documentation

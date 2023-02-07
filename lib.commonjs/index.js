@@ -26,7 +26,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.solidity = void 0;
-var solidity = __importStar(require("./solidity"));
-exports.solidity = solidity;
-__exportStar(require("./solidity"), exports);
+var SM = __importStar(require("./sm"));
+exports.default = SM;
+__exportStar(require("./sm"), exports);

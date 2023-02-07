@@ -1,3 +1,3 @@
-import * as solidity from "./solidity";
-export { solidity };
-export * from "./solidity";
+import * as SM from "./sm";
+export default SM;
+export * from "./sm";
