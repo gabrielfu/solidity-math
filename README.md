@@ -36,8 +36,8 @@ Solidity integer types and operations. It is useful for replicating public Solid
 import { Uint256, uint256, unchecked } from "solidity-math";
 
 // creating new numbers
-let a = new Uint256(10); // create new Uint256 number
-let b = uint256(20); // another way to create new Uint256 number
+const a = new Uint256(10); // create new Uint256 number
+const b = uint256(20); // another way to create new Uint256 number
 
 // arithmetic
 console.log(a.add(b)); // Uint256(30)
@@ -50,7 +50,7 @@ console.log(a.lte(0)); // false
 // unchecked mode
 // overflowing will wrap around
 unchecked(() => {
-    let c = Uint256.max().add(11);
+    const c = Uint256.max().add(11);
     console.log(a.eq(c)); // true
 });
 
@@ -109,8 +109,8 @@ The created instance type will be `Uint256`.
 import { Uint256, uint256 } from "solidity-math";
 
 // these two are equivalent
-let a = new Uint256(100);
-let b = uint256(100);
+const a = new Uint256(100);
+const b = uint256(100);
 
 a.eq(b); // true
 ```
@@ -190,7 +190,7 @@ For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to
 ```typescript
 import { Uint256 } from "solidity-math";
 
-let a = Uint256.max();
+const a = Uint256.max();
 console.log(a); // Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639935)
 ```
 
@@ -211,18 +211,21 @@ in `unchecked` mode.
 ### Casting
 Casting between unsigned & signed types are not allowed.
 ```typescript
-let a = uint256(10);
+const a = uint256(10);
+
 // Cast a to type Uint64
-let b = a.as(Uint64);
+const b = a.as(Uint64);
 console.log(b); // Uint64(10)
+
 // Cast b to same type as a
-let c = b.like(a);
+const c = b.like(a);
 console.log(c); // Uint256(10)
 ```
 
 ## Example
 
 ### Unchecked Arithmetic
+Simply put your calculations as a callback function inside `unchecked()`:
 ```solidity
 // Solidity code
 uint256 x = type(uint256).max;
@@ -238,13 +241,22 @@ unchecked {
 // Typescript equivalent
 import { uint256, unchecked } from "solidity-math";
 
-let x = Uint256.max();
-let y = uint256(1);
+const x = Uint256.max();
+const y = uint256(1);
 let z = uint256(0);
 
 unchecked(() => {
     z = x.add(y); // Uint256(0)
 })
+```
+
+You can also directly access the return value of your callback function:
+```typescript
+import { uint256, unchecked } from "solidity-math";
+
+const x = Uint256.max();
+const y = uint256(1);
+const z = unchecked(() => x.add(y)); // Uint256(0)
 ```
 
 ### Muldiv
@@ -262,10 +274,7 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
         throw new Error;
     }
 
-    let mm = uint256(0);
-    unchecked(() => {
-        mm = a.mulmod(b, Uint256.max());
-    });
+    const mm = unchecked(() => a.mulmod(b, Uint256.max()));
     let prod0 = a.mul(b);
     let prod1 = mm.sub(prod0).sub(uint256(+(a.lt(b))));
 
@@ -277,10 +286,7 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
         throw new Error;
     }
 
-    let remainder = uint256(0);
-    unchecked(() => {
-        remainder = a.mulmod(b, denominator);
-    });
+    const remainder = unchecked(() => a.mulmod(b, denominator));
     prod1 = prod1.sub(uint256(+(remainder.gt(prod0))));
     prod0 = prod0.sub(remainder);
 

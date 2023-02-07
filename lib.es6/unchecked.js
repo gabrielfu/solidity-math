@@ -15,8 +15,9 @@ var _UNCHECKED = false;
 export function unchecked(callback) {
     _UNCHECKED = true;
     var e = null;
+    var result = null;
     try {
-        callback();
+        result = callback();
     }
     catch (error) {
         e = error;
@@ -26,6 +27,7 @@ export function unchecked(callback) {
         console.error("Encounter error in unchecked mode: ".concat(callback.toString()));
         throw e;
     }
+    return result;
 }
 /** @description returns true if unchecked mode is on */
 export function isUnchecked() {

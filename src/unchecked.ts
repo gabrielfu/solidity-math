@@ -14,11 +14,12 @@
 let _UNCHECKED = false;
 
 /** @description Performs the callback function under unchecked mode */
-export function unchecked(callback: () => void): void {
+export function unchecked<T>(callback: () => T): T {
     _UNCHECKED = true;
     let e: any = null;
+    let result: any = null;
     try {
-        callback();
+        result = callback();
     } catch (error) {
         e = error;
     }
@@ -27,6 +28,7 @@ export function unchecked(callback: () => void): void {
         console.error(`Encounter error in unchecked mode: ${callback.toString()}`);
         throw e;
     }
+    return result;
 }
 
 /** @description returns true if unchecked mode is on */
