@@ -24,6 +24,7 @@ export function unchecked(callback: () => void): void {
     }
     _UNCHECKED = false;
     if (e != null) {
+        console.error(`Encounter error in unchecked mode: ${callback.toString()}`);
         throw e;
     }
 }

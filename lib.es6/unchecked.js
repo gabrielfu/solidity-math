@@ -23,6 +23,7 @@ export function unchecked(callback) {
     }
     _UNCHECKED = false;
     if (e != null) {
+        console.error("Encounter error in unchecked mode: ".concat(callback.toString()));
         throw e;
     }
 }
