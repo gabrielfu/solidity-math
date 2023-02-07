@@ -10,6 +10,6 @@
  * ```
  */
 /** @description Performs the callback function under unchecked mode */
-export declare function unchecked(callback: (val: void) => unknown): void;
+export declare function unchecked(callback: () => void): void;
 /** @description returns true if unchecked mode is on */
 export declare function isUnchecked(): boolean;
