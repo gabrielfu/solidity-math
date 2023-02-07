@@ -31,6 +31,7 @@ Solidity integer types and operations. It is useful for replicating public Solid
 ## Installation
 
 ## Usage
+Named import:
 ```typescript
 import { Uint256, uint256, unchecked } from "solidity-math";
 
@@ -59,7 +60,7 @@ console.log(a.sub(30)); // RangeError: Value under/overflow: Uint256(-20)
 
 Default import:
 ```typescript
-import SM from ".";
+import SM from "solidity-math";
 
 const a = new SM.Uint256(10);
 const b = SM.uint256(20);
