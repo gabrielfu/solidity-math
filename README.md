@@ -26,7 +26,6 @@ Solidity integer types and operations. It is useful for replicating public Solid
   + [Unchecked Mode](#unchecked-mode)
   + [Casting](#casting)
 * [Example](#example)
-  + [Unchecked Arithmetic](#unchecked-arithmetic)
   + [Muldiv](#muldiv)
 
 ## Installation
@@ -195,36 +194,7 @@ console.log(a); // Uint256(11579208923731619542357098500868790785326998466564056
 ```
 
 ### Unchecked Mode
-To mimic Solidity `unchecked` arithmetic:
-```typescript
-import { unchecked } from "solidity-math";
-
-unchecked(() => {
-    // your calcuations
-    ...
-});
-```
-
-For the purpose of this package, you should also perform Solidity inline assembly `assembly { ... }` 
-in `unchecked` mode.
-
-### Casting
-Casting between unsigned & signed types are not allowed.
-```typescript
-const a = uint256(10);
-
-// Cast a to type Uint64
-const b = a.as(Uint64);
-console.log(b); // Uint64(10)
-
-// Cast b to same type as a
-const c = b.like(a);
-console.log(c); // Uint256(10)
-```
-
-## Example
-
-### Unchecked Arithmetic
+You can replicate Solidity's [unchecked](https://docs.soliditylang.org/en/v0.8.17/control-structures.html#unchecked) behaviour. 
 Simply put your calculations as a callback function inside `unchecked()`:
 ```solidity
 // Solidity code
@@ -258,6 +228,25 @@ const x = Uint256.max();
 const y = uint256(1);
 const z = unchecked(() => x.add(y)); // Uint256(0)
 ```
+
+For the purpose of this package, you should also perform Solidity inline assembly `assembly { ... }` 
+in `unchecked` mode.
+
+### Casting
+Casting between unsigned & signed types are not allowed.
+```typescript
+const a = uint256(10);
+
+// Cast a to type Uint64
+const b = a.as(Uint64);
+console.log(b); // Uint64(10)
+
+// Cast b to same type as a
+const c = b.like(a);
+console.log(c); // Uint256(10)
+```
+
+## Example
 
 ### Muldiv
 [muldiv](https://xn--2-umb.com/21/muldiv/index.html) is an algorithm that calculates `floor(a * b / denominator)`.
