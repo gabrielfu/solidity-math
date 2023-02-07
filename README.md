@@ -207,10 +207,10 @@ console.log(a); // Uint256(11579208923731619542357098500868790785326998466564056
 ### Overflow
 Same as in Solidity, by default, all arithmetic operations are checked for overflow:
 ```typescript
-import { uint16 } from "solidity-math";
+import { uint256 } from "solidity-math";
 
-const a = uint16(65535);
-a.add(1); // RangeError: Value overflow: Uint16(65536)
+const a = uint256("115792089237316195423570985008687907853269984665640564039457584007913129639935");
+a.add(1); // RangeError: Value overflow: Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639936)
 ```
 
 ### Unchecked Mode
