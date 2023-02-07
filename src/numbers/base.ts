@@ -364,7 +364,8 @@ export abstract class BaseNumber {
 
     // bit
 
-    iand(b: this): this {
+    iand(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "iand");
         _assertLargerType(this, b, "iand");
         this.bn.iuand(b.bn);
@@ -372,35 +373,40 @@ export abstract class BaseNumber {
         return this; 
     }
 
-    and(b: this): this {
+    and(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "and");
         const r = this.clone();
         r.bn.iuand(b.bn);
         return r;
     }
 
-    ior(b: this): this {
+    ior(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "ior");
         _assertLargerType(this, b, "ior");
         this.bn.iuor(b.bn);
         return this._iwraparound();
     }
 
-    or(b: this): this {
+    or(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "or");
         const r = this.clone();
         r.bn.iuor(b.bn);
         return r._iwraparound();
     }
 
-    ixor(b: this): this {
+    ixor(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "ixor");
         _assertLargerType(this, b, "ixor");
         this.bn.iuxor(b.bn);
         return this._iwraparound();
     }
 
-    xor(b: this): this {
+    xor(b: Input): this {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "xor");
         const r = this.clone();
         r.bn.iuxor(b.bn);

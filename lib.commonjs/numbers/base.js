@@ -340,6 +340,7 @@ var BaseNumber = /** @class */ (function () {
     };
     // bit
     BaseNumber.prototype.iand = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "iand");
         _assertLargerType(this, b, "iand");
         this.bn.iuand(b.bn);
@@ -347,30 +348,35 @@ var BaseNumber = /** @class */ (function () {
         return this;
     };
     BaseNumber.prototype.and = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "and");
         var r = this.clone();
         r.bn.iuand(b.bn);
         return r;
     };
     BaseNumber.prototype.ior = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "ior");
         _assertLargerType(this, b, "ior");
         this.bn.iuor(b.bn);
         return this._iwraparound();
     };
     BaseNumber.prototype.or = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "or");
         var r = this.clone();
         r.bn.iuor(b.bn);
         return r._iwraparound();
     };
     BaseNumber.prototype.ixor = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "ixor");
         _assertLargerType(this, b, "ixor");
         this.bn.iuxor(b.bn);
         return this._iwraparound();
     };
     BaseNumber.prototype.xor = function (b) {
+        b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "xor");
         var r = this.clone();
         r.bn.iuxor(b.bn);

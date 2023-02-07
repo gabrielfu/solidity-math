@@ -64,12 +64,12 @@ export declare abstract class BaseNumber {
     shln(b: BaseNumber | number): this;
     ishrn(b: BaseNumber | number): this;
     shrn(b: BaseNumber | number): this;
-    iand(b: this): this;
-    and(b: this): this;
-    ior(b: this): this;
-    or(b: this): this;
-    ixor(b: this): this;
-    xor(b: this): this;
+    iand(b: Input): this;
+    and(b: Input): this;
+    ior(b: Input): this;
+    or(b: Input): this;
+    ixor(b: Input): this;
+    xor(b: Input): this;
     inot(): this;
     not(): this;
     gt(b: Input): boolean;

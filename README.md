@@ -259,15 +259,15 @@ we need to perform `uint256(0).sub(denominator)` in unchecked mode.
 import { unchecked, uint256, Uint256 } from "solidity-math";
 
 function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
-    if (!denominator.gt(uint256(0))) {
+    if (!denominator.gt(0)) {
         throw new Error;
     }
 
     const mm = unchecked(() => a.mulmod(b, Uint256.max()));
     let prod0 = a.mul(b);
-    let prod1 = mm.sub(prod0).sub(uint256(+(a.lt(b))));
+    let prod1 = mm.sub(prod0).sub(a.lt_(b));
 
-    if (prod1.eq(uint256(0))) {
+    if (prod1.eq(0)) {
         return prod0.div(denominator);
     }
 
@@ -276,7 +276,7 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
     }
 
     const remainder = unchecked(() => a.mulmod(b, denominator));
-    prod1 = prod1.sub(uint256(+(remainder.gt(prod0))));
+    prod1 = prod1.sub(remainder.gt_(prod0));
     prod0 = prod0.sub(remainder);
 
     let twos = uint256(0);
@@ -287,12 +287,12 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
         denominator = denominator.div(twos);
 
         prod0 = prod0.div(twos);
-        twos = uint256(0).sub(twos).div(twos).add(uint256(1));
+        twos = uint256(0).sub(twos).div(twos).add(1);
     });
 
     prod0.ior(prod1.mul(twos));
 
-    let inv = denominator.xor(uint256(2)).mul(uint256(3));
+    const inv = denominator.xor(2).mul(3);
     inv.imul(uint256(2).sub(denominator.mul(inv)));
     inv.imul(uint256(2).sub(denominator.mul(inv)));
     inv.imul(uint256(2).sub(denominator.mul(inv)));
@@ -300,13 +300,13 @@ function muldiv(a: Uint256, b: Uint256, denominator: Uint256) {
     inv.imul(uint256(2).sub(denominator.mul(inv)));
     inv.imul(uint256(2).sub(denominator.mul(inv)));
 
-    let result = prod0.mul(inv);
+    const result = prod0.mul(inv);
     return result;
 }
 
-let a = uint256(14718); // create new Uint256 number
-let b = uint256(13812); // same as above, alias function
-let denominator = uint256(151231); // same as above, alias function
+const a = uint256(14718);
+const b = uint256(13812);
+const denominator = uint256(151231);
 
 console.log(muldiv(a, b, denominator)); // Uint256(1344)
 ```
