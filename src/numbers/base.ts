@@ -301,6 +301,9 @@ export abstract class BaseNumber {
     }
 
     addmod(b: Input, m: Input): this {
+        if (!isUnchecked()) {
+            throw new Error("addmod can only be performed in unchecked mode");
+        }
         b = _newNumberIfNeeded(b, this);
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "addmod");
@@ -311,6 +314,9 @@ export abstract class BaseNumber {
     }
 
     mulmod(b: Input, m: Input): this {
+        if (!isUnchecked()) {
+            throw new Error("mulmod can only be performed in unchecked mode");
+        }
         b = _newNumberIfNeeded(b, this);
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "mulmod");

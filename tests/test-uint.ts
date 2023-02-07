@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { expect } from "chai";
-import { solidity } from "..";
+import { solidity, unchecked } from "..";
 import { deploySource, testMethod, testRevertMethod, testUncheckedMethod } from "./utils";
 
 describe("uint256", function () {
@@ -34,6 +34,11 @@ describe("uint256", function () {
             const num = new BN(12345);
             expect(solidity.uint256(num).toString()).to.equal("12345");
         });
+
+        it("should not accept overflowed string", async function () {
+            const num = "115792089237316195423570985008687907853269984665640564039457584007913129639936";
+            expect(() => solidity.uint256(num)).to.throw();
+        });
     });
 
     describe("min() & max()", function () {
@@ -59,7 +64,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a + b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a + b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should add numbers", async function () {
             const a = "200";
@@ -104,7 +109,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a - b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a - b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should subtract numbers", async function () {
             const a = "200";
@@ -149,7 +154,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a * b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a * b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should multiply numbers", async function () {
             const a = "200";
@@ -194,7 +199,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a / b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a / b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should divide numbers", async function () {
             const a = "200";
@@ -221,7 +226,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a % b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a % b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should modulo numbers", async function () {
             const a = "205";
@@ -248,7 +253,7 @@ describe("uint256", function () {
             function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a ** b; }
             function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a ** b; } }
         `;
-        const promise = deploySource(body);        
+        const promise = deploySource(body);
 
         it("should raise numbers to power", async function () {
             const a = "200";
@@ -287,5 +292,58 @@ describe("uint256", function () {
             )
         });
     });
+
+    describe("addmod()", function () {
+        const body = `
+            function func(uint256 a, uint256 b, uint256 c) public pure returns (uint256 r) { assembly { r := addmod(a, b, c) } }
+        `;
+        const promise = deploySource(body);
+
+        it("should addmod numbers", async function () {
+            const a = "205";
+            const b = "199";
+            const c = "10";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => contract.func(a, b, c),
+                () => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+            )
+        });
+        it("should throw error outside of unchecked mode", async function () {
+            const a = "205";
+            const b = "199";
+            const c = "10";
+            expect(() => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c))).to.throw();
+        });
+        it("should addmod big numbers", async function () {
+            const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639930";
+            const c = "100";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => contract.func(a, b, c),
+                () => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+            )
+        });
+    });
 });
 
+
+describe("uint16", function () {
+    describe("addmod()", function () {
+        const body = `
+            function func(uint16 a, uint16 b, uint256 c) public pure returns (uint16 r) { assembly { r := addmod(a, b, c) } }
+        `;
+        const promise = deploySource(body);
+        it("should wraparound", async function () {
+            const a = "65535";
+            const b = "65535";
+            const c = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => { return (await contract.func(a, b, c)).toString() },
+                () => solidity.uint16(a).addmod(solidity.uint16(b), solidity.uint256(c)).toString(),
+            )
+        });
+    });
+});

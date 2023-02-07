@@ -255,6 +255,9 @@ var BaseNumber = /** @class */ (function () {
         return r._checkBounds();
     };
     BaseNumber.prototype.addmod = function (b, m) {
+        if (!isUnchecked()) {
+            throw new Error("addmod can only be performed in unchecked mode");
+        }
         b = _newNumberIfNeeded(b, this);
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "addmod");
@@ -264,6 +267,9 @@ var BaseNumber = /** @class */ (function () {
         return r._checkBounds();
     };
     BaseNumber.prototype.mulmod = function (b, m) {
+        if (!isUnchecked()) {
+            throw new Error("mulmod can only be performed in unchecked mode");
+        }
         b = _newNumberIfNeeded(b, this);
         m = _newNumberIfNeeded(m, this);
         _assertSameSignedNess(this, b, "mulmod");
