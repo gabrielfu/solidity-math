@@ -13,7 +13,6 @@ Solidity integer types and operations. It is useful for replicating public Solid
 - ✅ Type safety checks
 - ✅ Type casting
 - ✅ Flexible right operand type (e.g. `uint256(20).add(10)`)
-- Test coverage (coming soon)
 
 ## Table of Contents
 * [Features](#features)
