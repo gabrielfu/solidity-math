@@ -23,36 +23,72 @@ describe("uint256", function () {
 
     describe("add()", function () {
         const body = `
-            function add(uint256 a, uint256 b) public pure returns (uint256 r) { r = a + b; }
-            function addUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a + b; } }
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a + b; }
+            function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a + b; } }
         `;
         const promise = deploySource(body);        
 
         it("should add numbers", async function () {
-            const a = "10";
-            const b = "200";
+            const a = "200";
+            const b = "10";
             const { contract } = await promise;
             testMethod(
-                async () => contract.add(a, b),
+                async () => contract.func(a, b),
                 () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
             )
         });
         it("should overflow", async function () {
-            const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
-            const b = "12345";
+            const a = "12345";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
             const { contract } = await promise;
             testRevertMethod(
-                async () => contract.add(a, b),
+                async () => contract.func(a, b),
                 () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
             )
         });
         it("should wraparound unchecked", async function () {
-            const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
-            const b = "12345";
+            const a = "12345";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
             const { contract } = await promise;
             testUncheckedMethod(
-                async () => contract.addUnchecked(a, b),
+                async () => contract.funcUnchecked(a, b),
                 () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
+            )
+        });
+    });
+
+    describe("sub()", function () {
+        const body = `
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a - b; }
+            function funcUnchecked(uint256 a, uint256 b) public pure returns (uint256 r) { unchecked { r = a - b; } }
+        `;
+        const promise = deploySource(body);        
+
+        it("should subtract numbers", async function () {
+            const a = "200";
+            const b = "10";
+            const { contract } = await promise;
+            testMethod(
+                async () => contract.func(a, b),
+                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
+            )
+        });
+        it("should overflow", async function () {
+            const a = "12345";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const { contract } = await promise;
+            testRevertMethod(
+                async () => contract.func(a, b),
+                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
+            )
+        });
+        it("should wraparound unchecked", async function () {
+            const a = "12345";
+            const b = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+            const { contract } = await promise;
+            testUncheckedMethod(
+                async () => contract.funcUnchecked(a, b),
+                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
             )
         });
     });
