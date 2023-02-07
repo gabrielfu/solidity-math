@@ -209,7 +209,7 @@ unchecked {
 
 ```typescript
 // Typescript equivalent
-import { uint256, unchecked } from "solidity-math";
+import { Uint256, uint256, unchecked } from "solidity-math";
 
 const x = Uint256.max();
 const y = uint256(1);
@@ -222,7 +222,7 @@ unchecked(() => {
 
 You can also directly access the return value of your callback function:
 ```typescript
-import { uint256, unchecked } from "solidity-math";
+import { Uint256, uint256, unchecked } from "solidity-math";
 
 const x = Uint256.max();
 const y = uint256(1);
