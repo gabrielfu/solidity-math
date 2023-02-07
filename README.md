@@ -200,16 +200,15 @@ For any type, e.g. `Uint256`, you can use `Uint256.min()` and `Uint256.max()` to
 ```typescript
 import { Uint256 } from "solidity-math";
 
-const a = Uint256.max();
-console.log(a); // Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639935)
+const a = Uint256.max(); // Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639935)
 ```
 
 ### Overflow
 Same as in Solidity, by default, all arithmetic operations are checked for overflow:
 ```typescript
-import { uint256 } from "solidity-math";
+import { Uint256 } from "solidity-math";
 
-const a = uint256("115792089237316195423570985008687907853269984665640564039457584007913129639935");
+const a = Uint256.max();
 a.add(1); // RangeError: Value overflow: Uint256(115792089237316195423570985008687907853269984665640564039457584007913129639936)
 ```
 
@@ -218,12 +217,9 @@ You can replicate Solidity's [unchecked](https://docs.soliditylang.org/en/v0.8.1
 Simply put your calculations as a callback function inside `unchecked()`:
 ```solidity
 // Solidity code
-uint256 x = type(uint256).max;
-uint256 y = 1;
-uint256 z;
-
+uint256 a;
 unchecked {
-    z = x + y; // 0
+    a = type(uint256).max + 1; // 0
 }
 ```
 
@@ -231,22 +227,17 @@ unchecked {
 // Typescript equivalent
 import { Uint256, uint256, unchecked } from "solidity-math";
 
-const x = Uint256.max();
-const y = uint256(1);
-let z = uint256(0);
-
+let a = uint256(0);
 unchecked(() => {
-    z = x.add(y); // Uint256(0)
+    a = Uint256.max().add(1); // Uint256(0)
 })
 ```
 
 You can also directly access the return value of your callback function:
 ```typescript
-import { Uint256, uint256, unchecked } from "solidity-math";
+import { Uint256, unchecked } from "solidity-math";
 
-const x = Uint256.max();
-const y = uint256(1);
-const z = unchecked(() => x.add(y)); // Uint256(0)
+const a = unchecked(() => Uint256.max().add(1)); // Uint256(0)
 ```
 
 For the purpose of this package, you should also perform Solidity inline assembly `assembly { ... }` 
