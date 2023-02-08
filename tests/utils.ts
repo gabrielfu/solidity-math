@@ -1,7 +1,7 @@
 import hre from "hardhat";
 import { expect } from "chai";
 import { CompileFailedError, CompileResult, compileSourceString } from "solc-typed-ast";
-import { solidity } from "..";
+import SM from "..";
 
 /** @description compile solidity source code */
 async function compileSource(body: string) {
@@ -50,7 +50,7 @@ export async function testMethod(contractMethod: Function, jsMethod: Function) {
 
 export async function testUncheckedMethod(contractMethod: Function, jsMethod: Function) {
     let expected: any = null;
-    solidity.unchecked(() => {
+    SM.unchecked(() => {
         expected = jsMethod();
     })
     expect(await contractMethod()).to.equal(expected);
