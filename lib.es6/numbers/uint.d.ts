@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import { BaseNumber, BNInput } from "./base";
 /** @description Unsigned integer base class */
-declare abstract class BaseUint extends BaseNumber {
+export declare abstract class BaseUint extends BaseNumber {
     static _signed: boolean;
     static get _ubound(): BN;
     static get _lbound(): BN;
@@ -138,4 +138,3 @@ export declare const uint232: (number: BNInput) => Uint232;
 export declare const uint240: (number: BNInput) => Uint240;
 export declare const uint248: (number: BNInput) => Uint248;
 export declare const uint256: (number: BNInput) => Uint256;
-export {};

@@ -38,8 +38,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uint144 = exports.uint136 = exports.uint128 = exports.uint120 = exports.uint112 = exports.uint104 = exports.uint96 = exports.uint88 = exports.uint80 = exports.uint72 = exports.uint64 = exports.uint56 = exports.uint48 = exports.uint40 = exports.uint32 = exports.uint24 = exports.uint16 = exports.uint8 = exports.Uint256 = exports.Uint248 = exports.Uint240 = exports.Uint232 = exports.Uint224 = exports.Uint216 = exports.Uint208 = exports.Uint200 = exports.Uint192 = exports.Uint184 = exports.Uint176 = exports.Uint168 = exports.Uint160 = exports.Uint152 = exports.Uint144 = exports.Uint136 = exports.Uint128 = exports.Uint120 = exports.Uint112 = exports.Uint104 = exports.Uint96 = exports.Uint88 = exports.Uint80 = exports.Uint72 = exports.Uint64 = exports.Uint56 = exports.Uint48 = exports.Uint40 = exports.Uint32 = exports.Uint24 = exports.Uint16 = exports.Uint8 = void 0;
-exports.uint256 = exports.uint248 = exports.uint240 = exports.uint232 = exports.uint224 = exports.uint216 = exports.uint208 = exports.uint200 = exports.uint192 = exports.uint184 = exports.uint176 = exports.uint168 = exports.uint160 = exports.uint152 = void 0;
+exports.uint136 = exports.uint128 = exports.uint120 = exports.uint112 = exports.uint104 = exports.uint96 = exports.uint88 = exports.uint80 = exports.uint72 = exports.uint64 = exports.uint56 = exports.uint48 = exports.uint40 = exports.uint32 = exports.uint24 = exports.uint16 = exports.uint8 = exports.Uint256 = exports.Uint248 = exports.Uint240 = exports.Uint232 = exports.Uint224 = exports.Uint216 = exports.Uint208 = exports.Uint200 = exports.Uint192 = exports.Uint184 = exports.Uint176 = exports.Uint168 = exports.Uint160 = exports.Uint152 = exports.Uint144 = exports.Uint136 = exports.Uint128 = exports.Uint120 = exports.Uint112 = exports.Uint104 = exports.Uint96 = exports.Uint88 = exports.Uint80 = exports.Uint72 = exports.Uint64 = exports.Uint56 = exports.Uint48 = exports.Uint40 = exports.Uint32 = exports.Uint24 = exports.Uint16 = exports.Uint8 = exports.BaseUint = void 0;
+exports.uint256 = exports.uint248 = exports.uint240 = exports.uint232 = exports.uint224 = exports.uint216 = exports.uint208 = exports.uint200 = exports.uint192 = exports.uint184 = exports.uint176 = exports.uint168 = exports.uint160 = exports.uint152 = exports.uint144 = void 0;
 var C = __importStar(require("../constants"));
 var base_1 = require("./base");
 /** @description Unsigned integer base class */
@@ -75,6 +75,7 @@ var BaseUint = /** @class */ (function (_super) {
     BaseUint._signed = false;
     return BaseUint;
 }(base_1.BaseNumber));
+exports.BaseUint = BaseUint;
 var Uint8 = /** @class */ (function (_super) {
     __extends(Uint8, _super);
     function Uint8() {

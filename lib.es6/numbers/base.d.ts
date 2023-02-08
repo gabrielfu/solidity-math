@@ -5,6 +5,9 @@ import util from "util";
 /** @description valid types to construct a new BN from */
 export declare type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 export declare type Input = BNInput | BaseNumber;
+export declare type ConcreteNumberClass = {
+    new (number: Input): BaseNumber;
+};
 export declare abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
@@ -23,6 +26,8 @@ export declare abstract class BaseNumber {
     get _ubound(): BN;
     /** @description min representable number of this type */
     get _lbound(): BN;
+    /** @description bit length (size) of this type */
+    get _signed(): boolean;
     /** @description constructor as static function supporting subclasses */
     static _new<T extends BaseNumber>(number: Input): T;
     /** @description max representable number of this type */
@@ -57,13 +62,13 @@ export declare abstract class BaseNumber {
     div(b: Input): BaseNumber;
     imod(b: Input): this;
     mod(b: Input): BaseNumber;
-    pow(b: Input): this;
+    pow(b: Input): BaseNumber;
     addmod(b: Input, m: Input): this;
     mulmod(b: Input, m: Input): this;
-    ishln(b: BaseNumber | number): this;
-    shln(b: BaseNumber | number): this;
-    ishrn(b: BaseNumber | number): this;
-    shrn(b: BaseNumber | number): this;
+    ishln(b: Input): this;
+    shln(b: Input): this;
+    ishrn(b: Input): this;
+    shrn(b: Input): this;
     iand(b: Input): this;
     and(b: Input): this;
     ior(b: Input): this;

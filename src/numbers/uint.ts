@@ -3,7 +3,7 @@ import * as C from "../constants";
 import { BaseNumber, BNInput } from "./base";
 
 /** @description Unsigned integer base class */
-abstract class BaseUint extends BaseNumber {
+export abstract class BaseUint extends BaseNumber {
     static _signed = false;
 
     static get _ubound(): BN {
