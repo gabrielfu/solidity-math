@@ -108,6 +108,8 @@ function _newBNIfNeeded(number: Input): BN {
     return new BN(number);
 }
 
+export type ConcreteNumberClass = { new (_: any): BaseNumber };
+
 export abstract class BaseNumber {
     /** @description underlying BN */
     bn: BN;
@@ -144,6 +146,11 @@ export abstract class BaseNumber {
     get _lbound(): BN {
         // @ts-ignore
         return this.constructor._lbound;
+    }
+    /** @description bit length (size) of this type */
+    get _signed(): boolean {
+        // @ts-ignore
+        return this.constructor._signed;
     }
 
     /** @description constructor as static function supporting subclasses */
