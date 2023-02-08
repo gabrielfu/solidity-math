@@ -57,14 +57,13 @@ function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
     }
 }
 
-/** @description returns the larger bit len among `a` & `b` */
-function _findLargerBitlen(a: BaseNumber, b: BaseNumber) {
-    return Math.max(a._bitlen, b._bitlen);
-}
-
-/** @description cast `a` to a different bitlen class */
-function _changeBitLen(a: BaseNumber, bitlen: number) {
-    const cls = classFactory(bitlen * (a._signed ? -1 : 1))
+/** 
+ * @description returns a new BaseNumber instance for out of place operations, 
+ * with the larger bitlen between `a` & `b`.
+ */
+function _newOutOfPlaceNumber(a: BaseNumber, b: Input): BaseNumber {
+    const bitlen = b instanceof BaseNumber ? Math.max(a._bitlen, b._bitlen) : a._bitlen;
+    const cls = classFactory(bitlen * (a._signed ? -1 : 1));
     return new cls(a.bn);
 }
 
@@ -119,7 +118,7 @@ function _restrictionUnsignedB(a: BaseNumber, b: Input, opname: string) {
 
 function _restrictionBNInBounds(a: BaseNumber, b: Input) {
     if (!(b instanceof BaseNumber)) {
-        let bn = new BN(b);
+        const bn = new BN(b);
         if (bn.lt(a._lbound) || bn.gt(a._ubound)) {
             throw new TypeError(`Right operand ${b} does not fit into type ${a.constructor.name}`);
         }
@@ -244,82 +243,92 @@ export abstract class BaseNumber {
     // arithmetic
 
     iadd(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "iadd");
-        _assertLargerType(this, b, "iadd");
-        this.bn.iadd(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "iadd");
+        _restrictionLargerBitlen(this, b, "iadd");
+        const bn = _getBN(b);
+        this.bn.iadd(bn);
         return this._checkBounds();
     }
 
     add(b: Input): BaseNumber {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "add");
-        const r = _changeBitLen(this, _findLargerBitlen(this, b));
-        r.bn.iadd(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "add");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
+        r.bn.iadd(bn);
         return r._checkBounds();
     }
 
     isub(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "isub");
-        _assertLargerType(this, b, "isub");
-        this.bn.isub(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "isub");
+        _restrictionLargerBitlen(this, b, "isub");
+        const bn = _getBN(b);
+        this.bn.isub(bn);
         return this._checkBounds();
     }
 
     sub(b: Input): BaseNumber {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "sub");
-        const r = _changeBitLen(this, _findLargerBitlen(this, b));
-        r.bn.isub(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "sub");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
+        r.bn.isub(bn);
         return r._checkBounds();
     }
 
     imul(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "imul");
-        _assertLargerType(this, b, "imul");
-        this.bn.imul(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "imul");
+        _restrictionLargerBitlen(this, b, "imul");
+        const bn = _getBN(b);
+        this.bn.imul(bn);
         return this._checkBounds();
     }
 
     mul(b: Input): BaseNumber {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "mul");
-        const r = _changeBitLen(this, _findLargerBitlen(this, b));
-        r.bn.imul(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "mul");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
+        r.bn.imul(bn);
         return r._checkBounds();
     }
 
     idiv(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "idiv");
-        _assertLargerType(this, b, "idiv");
-        this.bn = this.bn.div(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "idiv");
+        _restrictionLargerBitlen(this, b, "idiv");
+        const bn = _getBN(b);
+        this.bn = this.bn.div(bn);
         return this._checkBounds();
     }
 
     div(b: Input): BaseNumber {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "mul");
-        const r = _changeBitLen(this, _findLargerBitlen(this, b));
-        r.bn = r.bn.div(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "sub");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
+        r.bn = r.bn.div(bn);
         return r._checkBounds();
     }
 
     imod(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "imod");
-        _assertLargerType(this, b, "imod");
-        this.bn = this.bn.mod(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "imod");
+        _restrictionLargerBitlen(this, b, "imod");
+        const bn = _getBN(b);
+        this.bn = this.bn.mod(bn);
         return this._checkBounds();
     }
 
     mod(b: Input): BaseNumber {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "mod");
-        const r = _changeBitLen(this, _findLargerBitlen(this, b));
-        r.bn = r.bn.mod(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "mod");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
+        r.bn = r.bn.mod(bn);
         return r._checkBounds();
     }
 
