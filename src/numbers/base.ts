@@ -299,7 +299,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "addmod");
         _restrictionSameSignedness(this, m, "addmod");
         const bbn = _getBN(b);
-        const mbn = _getBN(b);
+        const mbn = _getBN(m);
         const r = this.clone();
         r.bn = r.bn.add(bbn).mod(mbn);
         return r._checkBounds();
@@ -312,7 +312,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "mulmod");
         _restrictionSameSignedness(this, m, "mulmod");
         const bbn = _getBN(b);
-        const mbn = _getBN(b);
+        const mbn = _getBN(m);
         const r = this.clone();
         r.bn = r.bn.mul(bbn).mod(mbn);
         return r._checkBounds();

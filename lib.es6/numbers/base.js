@@ -258,7 +258,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "addmod");
         _restrictionSameSignedness(this, m, "addmod");
         var bbn = _getBN(b);
-        var mbn = _getBN(b);
+        var mbn = _getBN(m);
         var r = this.clone();
         r.bn = r.bn.add(bbn).mod(mbn);
         return r._checkBounds();
@@ -270,7 +270,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "mulmod");
         _restrictionSameSignedness(this, m, "mulmod");
         var bbn = _getBN(b);
-        var mbn = _getBN(b);
+        var mbn = _getBN(m);
         var r = this.clone();
         r.bn = r.bn.mul(bbn).mod(mbn);
         return r._checkBounds();
