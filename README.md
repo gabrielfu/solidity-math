@@ -127,7 +127,7 @@ a.eq(b); // true
 ```
 
 ### Operations
-There are restrictions on the types of operands, as enforced by Solidity:
+There are restrictions on the types of operands, as enforced by Solidity.
 ```typescript
 uint256(1).add(uint256(2)); // valid
 uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
@@ -136,7 +136,9 @@ int256(1).pow(int256(-1)); // TypeError: Operator "pow" not compatible with sign
 uint256(-1); // RangeError: Value overflow: Uint256(-1)
 ```
 
-However, the right operand can also be a regular JS number, string, or another BN:
+The right operand can also be a regular JS number, string, or another BN.
+However, it must fit into the range of left operand type,
+and must stay compliant of Solidity restrictions.
 ```typescript
 uint256(1).add(2); // Uint256(3)
 uint256(1).add("3"); // Uint256(4)
