@@ -48,6 +48,7 @@ var BaseUint = /** @class */ (function (_super) {
     BaseUint._signed = false;
     return BaseUint;
 }(BaseNumber));
+export { BaseUint };
 var Uint8 = /** @class */ (function (_super) {
     __extends(Uint8, _super);
     function Uint8() {

@@ -152,6 +152,15 @@ var BaseNumber = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(BaseNumber.prototype, "_signed", {
+        /** @description bit length (size) of this type */
+        get: function () {
+            // @ts-ignore
+            return this.constructor._signed;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /** @description constructor as static function supporting subclasses */
     BaseNumber._new = function (number) {
         return new this(number);
