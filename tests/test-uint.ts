@@ -1,43 +1,43 @@
 import BN from "bn.js";
 import { expect } from "chai";
-import { solidity } from "..";
+import SM from "..";
 import { deploySource, testMethod, testRevertMethod, testUncheckedMethod } from "./utils";
 
 describe("uint256", function () {
     describe("constructor", function () {
         it("should accept integer", async function () {
             const num = Math.pow(2, 53) - 1;
-            expect(solidity.uint256(num).toString()).to.equal(num.toString());
+            expect(SM.uint256(num).toString()).to.equal(num.toString());
         });
 
         it("should accept max safe integer", async function () {
             const num = Math.pow(2, 53) - 1;
-            expect(solidity.uint256(num).toString()).to.equal(num.toString());
+            expect(SM.uint256(num).toString()).to.equal(num.toString());
         });
 
         it("should not accept unsafe integer", async function () {
             const num = Math.pow(2, 53);
-            expect(() => solidity.uint256(num)).to.throw();
+            expect(() => SM.uint256(num)).to.throw();
         });
 
         it("should accept string", async function () {
             const num = "587321402409830431832093";
-            expect(solidity.uint256(num).toString()).to.equal(num.toString());
+            expect(SM.uint256(num).toString()).to.equal(num.toString());
         });
 
         it("should accept hex", async function () {
             const num = 0x12345;
-            expect(solidity.uint256(num).toString()).to.equal("74565");
+            expect(SM.uint256(num).toString()).to.equal("74565");
         });
 
         it("should accept BN", async function () {
             const num = new BN(12345);
-            expect(solidity.uint256(num).toString()).to.equal("12345");
+            expect(SM.uint256(num).toString()).to.equal("12345");
         });
 
         it("should not accept overflowed string", async function () {
             const num = "115792089237316195423570985008687907853269984665640564039457584007913129639936";
-            expect(() => solidity.uint256(num)).to.throw();
+            expect(() => SM.uint256(num)).to.throw();
         });
     });
 
@@ -50,12 +50,12 @@ describe("uint256", function () {
 
         it("should have the correct min()", async function () {
             const { contract } = await promise;
-            expect(await contract.min()).to.equal(solidity.Uint256.min().toString());
+            expect(await contract.min()).to.equal(SM.Uint256.min().toString());
         });
 
         it("should have the correct max()", async function () {
             const { contract } = await promise;
-            expect(await contract.max()).to.equal(solidity.Uint256.max().toString());
+            expect(await contract.max()).to.equal(SM.Uint256.max().toString());
         });
     });
 
@@ -72,7 +72,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).add(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -81,7 +81,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).add(b).toString(),
+                () => SM.uint256(a).add(b).toString(),
             )
         });
         it("should overflow", async function () {
@@ -90,7 +90,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testRevertMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).add(SM.uint256(b)).toString(),
             )
         });
         it("should wraparound unchecked", async function () {
@@ -99,7 +99,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
-                () => solidity.uint256(a).add(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).add(SM.uint256(b)).toString(),
             )
         });
     });
@@ -117,7 +117,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).sub(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -126,7 +126,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).sub(b).toString(),
+                () => SM.uint256(a).sub(b).toString(),
             )
         });
         it("should overflow", async function () {
@@ -135,7 +135,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testRevertMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).sub(SM.uint256(b)).toString(),
             )
         });
         it("should wraparound unchecked", async function () {
@@ -144,7 +144,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
-                () => solidity.uint256(a).sub(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).sub(SM.uint256(b)).toString(),
             )
         });
     });
@@ -162,7 +162,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).mul(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).mul(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -171,7 +171,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).mul(b).toString(),
+                () => SM.uint256(a).mul(b).toString(),
             )
         });
         it("should overflow", async function () {
@@ -180,7 +180,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testRevertMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).mul(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).mul(SM.uint256(b)).toString(),
             )
         });
         it("should wraparound unchecked", async function () {
@@ -189,7 +189,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
-                () => solidity.uint256(a).mul(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).mul(SM.uint256(b)).toString(),
             )
         });
     });
@@ -207,7 +207,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).div(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).div(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -216,7 +216,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).div(b).toString(),
+                () => SM.uint256(a).div(b).toString(),
             )
         });
     });
@@ -234,7 +234,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).mod(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).mod(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -243,7 +243,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).mod(b).toString(),
+                () => SM.uint256(a).mod(b).toString(),
             )
         });
     });
@@ -261,7 +261,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).pow(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).pow(SM.uint256(b)).toString(),
             )
         });
         it("should accept number as right operand", async function () {
@@ -270,7 +270,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).pow(b).toString(),
+                () => SM.uint256(a).pow(b).toString(),
             )
         });
         it("should overflow", async function () {
@@ -279,7 +279,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testRevertMethod(
                 async () => contract.func(a, b),
-                () => solidity.uint256(a).pow(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).pow(SM.uint256(b)).toString(),
             )
         });
         it("should wraparound unchecked", async function () {
@@ -288,7 +288,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
-                () => solidity.uint256(a).pow(solidity.uint256(b)).toString(),
+                () => SM.uint256(a).pow(SM.uint256(b)).toString(),
             )
         });
     });
@@ -306,14 +306,14 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.func(a, b, c),
-                () => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+                () => SM.uint256(a).addmod(SM.uint256(b), SM.uint256(c)).toString(),
             )
         });
         it("should throw error outside of unchecked mode", async function () {
             const a = "205";
             const b = "199";
             const c = "10";
-            expect(() => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c))).to.throw();
+            expect(() => SM.uint256(a).addmod(SM.uint256(b), SM.uint256(c))).to.throw();
         });
         it("should addmod big numbers", async function () {
             const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -322,7 +322,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.func(a, b, c),
-                () => solidity.uint256(a).addmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+                () => SM.uint256(a).addmod(SM.uint256(b), SM.uint256(c)).toString(),
             )
         });
     });
@@ -340,14 +340,14 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.func(a, b, c),
-                () => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+                () => SM.uint256(a).mulmod(SM.uint256(b), SM.uint256(c)).toString(),
             )
         });
         it("should throw error outside of unchecked mode", async function () {
             const a = "205";
             const b = "199";
             const c = "10";
-            expect(() => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c))).to.throw();
+            expect(() => SM.uint256(a).mulmod(SM.uint256(b), SM.uint256(c))).to.throw();
         });
         it("should mulmod big numbers", async function () {
             const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -356,7 +356,7 @@ describe("uint256", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => contract.func(a, b, c),
-                () => solidity.uint256(a).mulmod(solidity.uint256(b), solidity.uint256(c)).toString(),
+                () => SM.uint256(a).mulmod(SM.uint256(b), SM.uint256(c)).toString(),
             )
         });
     });
@@ -376,7 +376,7 @@ describe("uint16", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
-                () => solidity.uint16(a).addmod(solidity.uint16(b), solidity.uint256(c)).toString(),
+                () => SM.uint16(a).addmod(SM.uint16(b), SM.uint256(c)).toString(),
             )
         });
     });
@@ -392,7 +392,7 @@ describe("uint16", function () {
             const { contract } = await promise;
             testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
-                () => solidity.uint16(a).mulmod(solidity.uint16(b), solidity.uint256(c)).toString(),
+                () => SM.uint16(a).mulmod(SM.uint16(b), SM.uint256(c)).toString(),
             )
         });
     });
