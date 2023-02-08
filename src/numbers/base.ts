@@ -116,6 +116,13 @@ function _restrictionBNInBounds(a: BaseNumber, b: Input) {
     }
 }
 
+function _onlyUnchecked(opname: string) {
+    if (!isUnchecked()) {
+        throw new TypeError(`Operator ${opname} can only be performed in unchecked mode`);
+    }
+}
+
+
 /** @description returns a BN instance */
 function _getBN(b: Input): BN {
     return b instanceof BaseNumber ? b.bn : new BN(b);
@@ -323,136 +330,137 @@ export abstract class BaseNumber {
         return r._checkBounds();
     }
 
-    pow(b: Input): this {
-        let bn: BN;
-        if (b instanceof BaseNumber) {
-            _assertUnsigned(b, "pow");
-            bn = b.bn;
-        }
-        else {
-            bn = new BN(b);
-            _assertBNNonNegative(bn, "pow");
-        }
-        const r = this.clone();
+    pow(b: Input): BaseNumber {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(this, b, "pow");
+        const r = _newOutOfPlaceNumber(this, b);
+        const bn = _getBN(b);
         r.bn = r.bn.pow(bn);
         return r._checkBounds();
     }
 
     addmod(b: Input, m: Input): this {
-        if (!isUnchecked()) {
-            throw new Error("addmod can only be performed in unchecked mode");
-        }
-        b = _newNumberIfNeeded(b, this);
-        m = _newNumberIfNeeded(m, this);
-        _assertSameSignedNess(this, b, "addmod");
-        _assertSameSignedNess(this, m, "addmod");
+        _onlyUnchecked("addmod");
+        _restrictionBNInBounds(this, b);
+        _restrictionBNInBounds(this, m);
+        _restrictionSameSignedness(this, b, "addmod");
+        _restrictionSameSignedness(this, m, "addmod");
+        const bbn = _getBN(b);
+        const mbn = _getBN(b);
         const r = this.clone();
-        r.bn = r.bn.add(b.bn).mod(m.bn);
+        r.bn = r.bn.add(bbn).mod(mbn);
         return r._checkBounds();
     }
 
     mulmod(b: Input, m: Input): this {
-        if (!isUnchecked()) {
-            throw new Error("mulmod can only be performed in unchecked mode");
-        }
-        b = _newNumberIfNeeded(b, this);
-        m = _newNumberIfNeeded(m, this);
-        _assertSameSignedNess(this, b, "mulmod");
-        _assertSameSignedNess(this, m, "mulmod");
+        _onlyUnchecked("mulmod");
+        _restrictionBNInBounds(this, b);
+        _restrictionBNInBounds(this, m);
+        _restrictionSameSignedness(this, b, "mulmod");
+        _restrictionSameSignedness(this, m, "mulmod");
+        const bbn = _getBN(b);
+        const mbn = _getBN(b);
         const r = this.clone();
-        r.bn = r.bn.mul(b.bn).mod(m.bn);
+        r.bn = r.bn.mul(bbn).mod(mbn);
         return r._checkBounds();
     }
 
     // shift
-    // never under / overflows
+    // never overflow
 
-    ishln(b: BaseNumber | number): this {
-        if (typeof b != "number") {
-            _assertUnsigned(b, "shln");
-            b = b.bn.toNumber();
-        }
-        _assertNonNegative(b, "shln");
-        this.bn.iushln(b);
+    ishln(b: Input): this {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(this, b, "ishln");
+        const bn = _getBN(b);
+        this.bn.iushln(bn.toNumber());
         return this._iwraparound();
     }
 
-    shln(b: BaseNumber | number): this {
+    shln(b: Input): this {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(this, b, "shln");
+        const bn = _getBN(b);
         const r = this.clone();
-        r.ishln(b);
+        r.bn.iushln(bn.toNumber());
         return r._iwraparound();
     }
 
-    ishrn(b: BaseNumber | number): this {
-        if (typeof b != "number") {
-            _assertUnsigned(b, "shrn");
-            b = b.bn.toNumber();
-        }
-        _assertNonNegative(b, "shrn");
-        this.bn.iushrn(b);
+    ishrn(b: Input): this {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(this, b, "ishrn");
+        const bn = _getBN(b);
+        this.bn.iushrn(bn.toNumber());
         return this._iwraparound();
     }
 
-    shrn(b: BaseNumber | number): this {
+    shrn(b: Input): this {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(this, b, "shrn");
+        const bn = _getBN(b);
         const r = this.clone();
-        r.ishrn(b);
+        r.bn.iushrn(bn.toNumber());
         return r._iwraparound();
     }
 
     // bit
 
     iand(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "iand");
-        _assertLargerType(this, b, "iand");
-        this.bn.iuand(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "iand");
+        _restrictionLargerBitlen(this, b, "iand");
+        const bn = _getBN(b);
+        this.bn.iuand(bn);
         // and() will take the smallest bit len and don't need to wrap
-        return this; 
+        return this;
     }
 
     and(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "and");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "and");
         const r = this.clone();
-        r.bn.iuand(b.bn);
+        const bn = _getBN(b);
+        r.bn.iuand(bn);
         return r;
     }
 
     ior(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "ior");
-        _assertLargerType(this, b, "ior");
-        this.bn.iuor(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "ior");
+        _restrictionLargerBitlen(this, b, "ior");
+        const bn = _getBN(b);
+        this.bn.iuor(bn);
         return this._iwraparound();
     }
 
     or(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "or");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "or");
         const r = this.clone();
-        r.bn.iuor(b.bn);
+        const bn = _getBN(b);
+        r.bn.iuor(bn);
         return r._iwraparound();
     }
 
     ixor(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "ixor");
-        _assertLargerType(this, b, "ixor");
-        this.bn.iuxor(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "ixor");
+        _restrictionLargerBitlen(this, b, "ixor");
+        const bn = _getBN(b);
+        this.bn.iuxor(bn);
         return this._iwraparound();
     }
 
     xor(b: Input): this {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "xor");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "xor");
         const r = this.clone();
-        r.bn.iuxor(b.bn);
+        const bn = _getBN(b);
+        r.bn.iuxor(bn);
         return r._iwraparound();
     }
 
     inot(): this {
-        // @ts-ignore
-        this.bn.inotn(this.constructor._bitlen);
+        this.bn.inotn(this._bitlen);
         return this;
     }
 
@@ -463,39 +471,39 @@ export abstract class BaseNumber {
     // comparison
 
     gt(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "gt");
-        return this.bn.gt(b.bn);
+        _restrictionSameSignedness(this, b, "gt");
+        const bn = _getBN(b);
+        return this.bn.gt(bn);
     }
 
     lt(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "lt");
-        return this.bn.lt(b.bn);
+        _restrictionSameSignedness(this, b, "lt");
+        const bn = _getBN(b);
+        return this.bn.lt(bn);
     }
 
     gte(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "gte");
-        return this.bn.gte(b.bn);
+        _restrictionSameSignedness(this, b, "gte");
+        const bn = _getBN(b);
+        return this.bn.gte(bn);
     }
 
     lte(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "lte");
-        return this.bn.lte(b.bn);
+        _restrictionSameSignedness(this, b, "lte");
+        const bn = _getBN(b);
+        return this.bn.lte(bn);
     }
 
     eq(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "eq");
-        return this.bn.eq(b.bn);
+        _restrictionSameSignedness(this, b, "eq");
+        const bn = _getBN(b);
+        return this.bn.eq(bn);
     }
 
     neq(b: Input): boolean {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "neq");
-        return !this.bn.eq(b.bn);
+        _restrictionSameSignedness(this, b, "neq");
+        const bn = _getBN(b);
+        return !this.bn.eq(bn);
     }
     // comparison as value
 
