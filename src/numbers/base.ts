@@ -2,22 +2,11 @@ import BN from "bn.js";
 import util from "util";
 import { isUnchecked } from "../unchecked";
 import * as C from "../constants";
-import { Uint256 } from "./uint";
+import { classFactory } from "./factory";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 export type Input = BNInput | BaseNumber;
-
-/** @description assert a & b are of the same type */
-function _assertSameType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
-    const atype = a.constructor.name;
-    const btype = b.constructor.name;
-    if (atype != btype) {
-        throw new TypeError(
-            `Operator ${opname} not compatible with types ${atype} and ${btype}.`
-        );
-    }
-}
 
 /** @description assert a & b are of the same signedness */
 function _assertSameSignedNess<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
@@ -47,14 +36,6 @@ function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
     }
 }
 
-/** @description assert b is signed */
-function _assertSigned<T extends BaseNumber>(b: T, opname: string) {
-    // @ts-ignore
-    if (!b.constructor._signed) {
-        throw new TypeError(`Operator "${opname}" not compatible with unsigned type ${b.constructor.name}`);
-    }
-}
-
 /** @description assert b >= 0 */
 function _assertNonNegative(b: number, opname: string) {
     if (b < 0) {
@@ -76,19 +57,15 @@ function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
     }
 }
 
-/** 
- * @description 
- * Cast both a and b to the larger type among the two.
- * Returns new instances.
- */
-function _castToLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2): (T1|T2)[] {
-    if (a._bitlen > b._bitlen) {
-        return [a.clone(), b.like(a)];
-    } 
-    if (a._bitlen < b._bitlen) {
-        return [a.like(b), b.clone()];
-    } 
-    return [a.clone(), b.clone()];
+/** @description returns the larger bit len among `a` & `b` */
+function _findLargerBitlen(a: BaseNumber, b: BaseNumber) {
+    return Math.max(a._bitlen, b._bitlen);
+}
+
+/** @description cast `a` to a different bitlen class */
+function _changeBitLen(a: BaseNumber, bitlen: number) {
+    const cls = classFactory(bitlen * (a._signed ? -1 : 1))
+    return new cls(a.bn);
 }
 
 /** @description creates new BaseNumber instance if needed */
@@ -106,6 +83,52 @@ function _newBNIfNeeded(number: Input): BN {
         return number.bn;
     }
     return new BN(number);
+}
+
+
+function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
+    if (b instanceof BaseNumber) {
+        if (a._signed != b._signed) {
+            throw new TypeError(
+                `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
+            );
+        }
+    }
+}
+
+function _restrictionLargerBitlen(a: BaseNumber, b: Input, opname: string) {
+    if (b instanceof BaseNumber) {
+        if (a._bitlen < b._bitlen) {
+            throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
+        }
+    }
+}
+
+function _restrictionUnsignedB(a: BaseNumber, b: Input, opname: string) {
+    if (b instanceof BaseNumber) {
+        if (b._signed) {
+            throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
+        }
+    }
+    else {
+        if ((new BN(b)).isNeg()) {
+            throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
+        }
+    }
+}
+
+function _restrictionBNInBounds(a: BaseNumber, b: Input) {
+    if (!(b instanceof BaseNumber)) {
+        let bn = new BN(b);
+        if (bn.lt(a._lbound) || bn.gt(a._ubound)) {
+            throw new TypeError(`Right operand ${b} does not fit into type ${a.constructor.name}`);
+        }
+    }
+}
+
+/** @description returns a BN instance */
+function _getBN(b: Input): BN {
+    return b instanceof BaseNumber ? b.bn : new BN(b);
 }
 
 export type ConcreteNumberClass = { new (_: any): BaseNumber };
@@ -231,7 +254,7 @@ export abstract class BaseNumber {
     add(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "add");
-        const [r ] = _castToLargerType(this, b);
+        const r = _changeBitLen(this, _findLargerBitlen(this, b));
         r.bn.iadd(b.bn);
         return r._checkBounds();
     }
@@ -247,7 +270,7 @@ export abstract class BaseNumber {
     sub(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "sub");
-        const [r ] = _castToLargerType(this, b);
+        const r = _changeBitLen(this, _findLargerBitlen(this, b));
         r.bn.isub(b.bn);
         return r._checkBounds();
     }
@@ -263,7 +286,7 @@ export abstract class BaseNumber {
     mul(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        const [r ] = _castToLargerType(this, b);
+        const r = _changeBitLen(this, _findLargerBitlen(this, b));
         r.bn.imul(b.bn);
         return r._checkBounds();
     }
@@ -279,7 +302,7 @@ export abstract class BaseNumber {
     div(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mul");
-        const [r ] = _castToLargerType(this, b);
+        const r = _changeBitLen(this, _findLargerBitlen(this, b));
         r.bn = r.bn.div(b.bn);
         return r._checkBounds();
     }
@@ -295,16 +318,23 @@ export abstract class BaseNumber {
     mod(b: Input): BaseNumber {
         b = _newNumberIfNeeded(b, this);
         _assertSameSignedNess(this, b, "mod");
-        const [r ] = _castToLargerType(this, b);
+        const r = _changeBitLen(this, _findLargerBitlen(this, b));
         r.bn = r.bn.mod(b.bn);
         return r._checkBounds();
     }
 
     pow(b: Input): this {
-        b = _newNumberIfNeeded(b, Uint256.min());
-        _assertUnsigned(b, "pow");
+        let bn: BN;
+        if (b instanceof BaseNumber) {
+            _assertUnsigned(b, "pow");
+            bn = b.bn;
+        }
+        else {
+            bn = new BN(b);
+            _assertBNNonNegative(bn, "pow");
+        }
         const r = this.clone();
-        r.bn = r.bn.pow(b.bn);
+        r.bn = r.bn.pow(bn);
         return r._checkBounds();
     }
 
