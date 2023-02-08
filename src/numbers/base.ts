@@ -2,7 +2,6 @@ import BN from "bn.js";
 import util from "util";
 import { isUnchecked } from "../unchecked";
 import * as C from "../constants";
-import { classFactory } from "./factory";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
@@ -62,9 +61,10 @@ function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, 
  * with the larger bitlen between `a` & `b`.
  */
 function _newOutOfPlaceNumber(a: BaseNumber, b: Input): BaseNumber {
-    const bitlen = b instanceof BaseNumber ? Math.max(a._bitlen, b._bitlen) : a._bitlen;
-    const cls = classFactory(bitlen * (a._signed ? -1 : 1));
-    return new cls(a.bn);
+    if ((b instanceof BaseNumber) && (b._bitlen > a._bitlen)) {
+        return a.like(b);
+    }
+    return a.clone();
 }
 
 /** @description creates new BaseNumber instance if needed */
@@ -75,15 +75,6 @@ function _newNumberIfNeeded(number: Input, fallbackClass: BaseNumber): BaseNumbe
     // @ts-ignore
     return fallbackClass.constructor._new(number);
 }
-
-/** @description creates new BN instance if needed */
-function _newBNIfNeeded(number: Input): BN {
-    if (number instanceof BaseNumber) {
-        return number.bn;
-    }
-    return new BN(number);
-}
-
 
 function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
     if (b instanceof BaseNumber) {

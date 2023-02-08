@@ -5,8 +5,8 @@
   "main": "lib.commonjs/index.js",
   "module": "lib.es6/index.js",
   "scripts": {
-    "compile": "npm run lint && rm -rf lib.commonjs && rm -rf lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
-    "compile-windows": "npm run lint && (if exist lib.commonjs rmdir /s /q lib.commonjs) && (if exist lib.es6 rmdir /s /q lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json",
+    "compile": "npm run lint && rm -rf lib.commonjs && rm -rf lib.es6 && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json && npm run fix",
+    "compile-windows": "npm run lint && (if exist lib.commonjs rmdir /s /q lib.commonjs) && (if exist lib.es6 rmdir /s /q lib.es6) && tsc --build tsconfig.es6.json && tsc --build tsconfig.commonjs.json && npm run fix",
     "lint": "eslint . --ext .ts",
     "fix": "eslint . --ext .ts --fix",
     "test": "npx hardhat test"

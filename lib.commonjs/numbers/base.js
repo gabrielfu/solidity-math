@@ -31,7 +31,6 @@ var bn_js_1 = __importDefault(require("bn.js"));
 var util_1 = __importDefault(require("util"));
 var unchecked_1 = require("../unchecked");
 var C = __importStar(require("../constants"));
-var factory_1 = require("./factory");
 /** @description assert a & b are of the same signedness */
 function _assertSameSignedNess(a, b, opname) {
     // @ts-ignore
@@ -76,9 +75,10 @@ function _assertLargerType(a, b, opname) {
  * with the larger bitlen between `a` & `b`.
  */
 function _newOutOfPlaceNumber(a, b) {
-    var bitlen = b instanceof BaseNumber ? Math.max(a._bitlen, b._bitlen) : a._bitlen;
-    var cls = (0, factory_1.classFactory)(bitlen * (a._signed ? -1 : 1));
-    return new cls(a.bn);
+    if ((b instanceof BaseNumber) && (b._bitlen > a._bitlen)) {
+        return a.like(b);
+    }
+    return a.clone();
 }
 /** @description creates new BaseNumber instance if needed */
 function _newNumberIfNeeded(number, fallbackClass) {
@@ -87,13 +87,6 @@ function _newNumberIfNeeded(number, fallbackClass) {
     }
     // @ts-ignore
     return fallbackClass.constructor._new(number);
-}
-/** @description creates new BN instance if needed */
-function _newBNIfNeeded(number) {
-    if (number instanceof BaseNumber) {
-        return number.bn;
-    }
-    return new bn_js_1.default(number);
 }
 function _restrictionSameSignedness(a, b, opname) {
     if (b instanceof BaseNumber) {
