@@ -6,7 +6,7 @@ import util from "util";
 export declare type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 export declare type Input = BNInput | BaseNumber;
 export declare type ConcreteNumberClass = {
-    new (_: any): BaseNumber;
+    new (number: Input): BaseNumber;
 };
 export declare abstract class BaseNumber {
     /** @description underlying BN */

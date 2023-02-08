@@ -1,7 +1,6 @@
 import BN from "bn.js";
 import util from "util";
 import { isUnchecked } from "../unchecked";
-import * as C from "../constants";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
@@ -74,7 +73,7 @@ function _getBN(b: Input): BN {
     return b instanceof BaseNumber ? b.bn : new BN(b);
 }
 
-export type ConcreteNumberClass = { new (_: any): BaseNumber };
+export type ConcreteNumberClass = { new (number: Input): BaseNumber };
 
 export abstract class BaseNumber {
     /** @description underlying BN */
