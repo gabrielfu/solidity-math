@@ -131,6 +131,9 @@ There are restrictions on the types of operands, as enforced by Solidity:
 ```typescript
 uint256(1).add(uint256(2)); // valid
 uint256(1).add(int256(2)); // TypeError: Operator "add" not compatible with types Uint256 and Int256. 
+uint64(1).iadd(uint256(2)) // TypeError: Operator "iadd" not compatible with Uint64 and a larger type Uint256
+int256(1).pow(int256(-1)); // TypeError: Operator "pow" not compatible with signed type Int256
+uint256(-1); // RangeError: Value overflow: Uint256(-1)
 ```
 
 However, the right operand can also be a regular JS number, string, or another BN:
@@ -138,6 +141,9 @@ However, the right operand can also be a regular JS number, string, or another B
 uint256(1).add(2); // Uint256(3)
 uint256(1).add("3"); // Uint256(4)
 uint256(1).add(new BN(4)); // Uint256(5)
+
+uint256(1).add(-1); // TypeError: Right operand -1 does not fit into type Uint256
+int256(1).pow(-1); // TypeError: Operator "pow" not compatible with negative value -1
 ```
 
 Restrictions:
