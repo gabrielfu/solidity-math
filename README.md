@@ -184,15 +184,23 @@ List of Solidity operations supported:
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
 
-The below comparison methods will return a `BaseNumber` class instead of boolean:
+The below comparison methods will return a `BaseNumber` class (either `1` or `0`) instead of boolean:
 | Method           | Restriction |
 |------------------|-------------|
-| `a.gt_(b)`        | ≌           |
-| `a.lt_(b)`        | ≌           |
-| `a.gte_(b)`       | ≌           |
-| `a.lte_(b)`       | ≌           |
-| `a.eq_(b)`        | ≌           |
-| `a.neq_(b)`       | ≌           |
+| `a.gt_(b)`       | ≌           |
+| `a.lt_(b)`       | ≌           |
+| `a.gte_(b)`      | ≌           |
+| `a.lte_(b)`      | ≌           |
+| `a.eq_(b)`       | ≌           |
+| `a.neq_(b)`      | ≌           |
+
+```typescript
+uint256(10).gt(uint256(2)); // true
+uint256(10).gt(uint256(20)); // false
+
+uint256(10).gt_(uint256(2)); // Uint256(1)
+uint256(10).gt_(uint256(20)); // Uint256(0)
+```
 
 Other supported functions:
 | Method                     | Return type   | Description                                                      |
