@@ -7,55 +7,6 @@ import * as C from "../constants";
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 export type Input = BNInput | BaseNumber;
 
-/** @description assert a & b are of the same signedness */
-function _assertSameSignedNess<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
-    // @ts-ignore
-    if (a.constructor._signed != b.constructor._signed) {
-        throw new TypeError(
-            `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
-        );
-    }
-}
-
-/** @description assert a & b are of the same signedness */
-function _assertSameSignedNessType<T extends BaseNumber>(a: T, btype: typeof BaseNumber, opname: string) {
-    // @ts-ignore
-    if (a.constructor._signed != btype._signed) {
-        throw new TypeError(
-            `Operator "${opname}" not compatible with types ${a.constructor.name} and ${btype.name}.`
-        );
-    }
-}
-
-/** @description assert b is unsigned */
-function _assertUnsigned<T extends BaseNumber>(b: T, opname: string) {
-    // @ts-ignore
-    if (b.constructor._signed) {
-        throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
-    }
-}
-
-/** @description assert b >= 0 */
-function _assertNonNegative(b: number, opname: string) {
-    if (b < 0) {
-        throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
-    }
-}
-
-/** @description assert b >= 0 */
-function _assertBNNonNegative(b: BN, opname: string) {
-    if (b.lt(C.BN0)) {
-        throw new TypeError(`Operator "${opname}" not compatible with negative value ${b}`);
-    }
-}
-
-/** @description assert a has larger bitlen */
-function _assertLargerType<T1 extends BaseNumber, T2 extends BaseNumber>(a: T1, b: T2, opname: string) {
-    if (a._bitlen < b._bitlen) {
-        throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
-    }
-}
-
 /** 
  * @description returns a new BaseNumber instance for out of place operations, 
  * with the larger bitlen between `a` & `b`.
@@ -67,15 +18,7 @@ function _newOutOfPlaceNumber(a: BaseNumber, b: Input): BaseNumber {
     return a.clone();
 }
 
-/** @description creates new BaseNumber instance if needed */
-function _newNumberIfNeeded(number: Input, fallbackClass: BaseNumber): BaseNumber {
-    if (number instanceof BaseNumber) {
-        return number;
-    }
-    // @ts-ignore
-    return fallbackClass.constructor._new(number);
-}
-
+/** @description assert `a` & `b` have the same signedness */
 function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
     if (b instanceof BaseNumber) {
         if (a._signed != b._signed) {
@@ -86,6 +29,7 @@ function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
     }
 }
 
+/** @description assert `a` has larger bitlen than `b` */
 function _restrictionLargerBitlen(a: BaseNumber, b: Input, opname: string) {
     if (b instanceof BaseNumber) {
         if (a._bitlen < b._bitlen) {
@@ -94,7 +38,8 @@ function _restrictionLargerBitlen(a: BaseNumber, b: Input, opname: string) {
     }
 }
 
-function _restrictionUnsignedB(a: BaseNumber, b: Input, opname: string) {
+/** @description assert `b` is unsigned */
+function _restrictionUnsignedB(b: Input, opname: string) {
     if (b instanceof BaseNumber) {
         if (b._signed) {
             throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
@@ -107,6 +52,7 @@ function _restrictionUnsignedB(a: BaseNumber, b: Input, opname: string) {
     }
 }
 
+/** @description assert `b` fits into the range of type `a` */
 function _restrictionBNInBounds(a: BaseNumber, b: Input) {
     if (!(b instanceof BaseNumber)) {
         const bn = new BN(b);
@@ -227,13 +173,21 @@ export abstract class BaseNumber {
 
     /** @description cast to another BaseNumber subclass type */
     as<T extends BaseNumber>(btype: typeof BaseNumber): T {
-        _assertSameSignedNessType(this, btype, "as");
+        if (this._signed != btype._signed) {
+            throw new TypeError(
+                `Cannot cast ${this.constructor.name} to ${btype.name}.`
+            );
+        }
         return btype._new(this.bn);
     }
 
     /** @description cast to another BaseNumber subclass type */
     like<T extends BaseNumber>(b: T): T {
-        _assertSameSignedNess(this, b, "like");
+        if (this._signed != b._signed) {
+            throw new TypeError(
+                `Cannot cast ${this.constructor.name} to ${b.constructor.name}.`
+            );
+        }
         // @ts-ignore
         return b.constructor._new(this.bn);
     }
@@ -332,7 +286,7 @@ export abstract class BaseNumber {
 
     pow(b: Input): BaseNumber {
         _restrictionBNInBounds(this, b);
-        _restrictionUnsignedB(this, b, "pow");
+        _restrictionUnsignedB(b, "pow");
         const r = _newOutOfPlaceNumber(this, b);
         const bn = _getBN(b);
         r.bn = r.bn.pow(bn);
@@ -370,7 +324,7 @@ export abstract class BaseNumber {
 
     ishln(b: Input): this {
         _restrictionBNInBounds(this, b);
-        _restrictionUnsignedB(this, b, "ishln");
+        _restrictionUnsignedB(b, "ishln");
         const bn = _getBN(b);
         this.bn.iushln(bn.toNumber());
         return this._iwraparound();
@@ -378,7 +332,7 @@ export abstract class BaseNumber {
 
     shln(b: Input): this {
         _restrictionBNInBounds(this, b);
-        _restrictionUnsignedB(this, b, "shln");
+        _restrictionUnsignedB(b, "shln");
         const bn = _getBN(b);
         const r = this.clone();
         r.bn.iushln(bn.toNumber());
@@ -387,7 +341,7 @@ export abstract class BaseNumber {
 
     ishrn(b: Input): this {
         _restrictionBNInBounds(this, b);
-        _restrictionUnsignedB(this, b, "ishrn");
+        _restrictionUnsignedB(b, "ishrn");
         const bn = _getBN(b);
         this.bn.iushrn(bn.toNumber());
         return this._iwraparound();
@@ -395,7 +349,7 @@ export abstract class BaseNumber {
 
     shrn(b: Input): this {
         _restrictionBNInBounds(this, b);
-        _restrictionUnsignedB(this, b, "shrn");
+        _restrictionUnsignedB(b, "shrn");
         const bn = _getBN(b);
         const r = this.clone();
         r.bn.iushrn(bn.toNumber());

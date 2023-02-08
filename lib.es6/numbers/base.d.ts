@@ -62,13 +62,13 @@ export declare abstract class BaseNumber {
     div(b: Input): BaseNumber;
     imod(b: Input): this;
     mod(b: Input): BaseNumber;
-    pow(b: Input): this;
+    pow(b: Input): BaseNumber;
     addmod(b: Input, m: Input): this;
     mulmod(b: Input, m: Input): this;
-    ishln(b: BaseNumber | number): this;
-    shln(b: BaseNumber | number): this;
-    ishrn(b: BaseNumber | number): this;
-    shrn(b: BaseNumber | number): this;
+    ishln(b: Input): this;
+    shln(b: Input): this;
+    ishrn(b: Input): this;
+    shrn(b: Input): this;
     iand(b: Input): this;
     and(b: Input): this;
     ior(b: Input): this;

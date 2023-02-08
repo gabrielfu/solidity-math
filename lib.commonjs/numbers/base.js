@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -30,46 +7,6 @@ exports.BaseNumber = void 0;
 var bn_js_1 = __importDefault(require("bn.js"));
 var util_1 = __importDefault(require("util"));
 var unchecked_1 = require("../unchecked");
-var C = __importStar(require("../constants"));
-/** @description assert a & b are of the same signedness */
-function _assertSameSignedNess(a, b, opname) {
-    // @ts-ignore
-    if (a.constructor._signed != b.constructor._signed) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with types ").concat(a.constructor.name, " and ").concat(b.constructor.name, "."));
-    }
-}
-/** @description assert a & b are of the same signedness */
-function _assertSameSignedNessType(a, btype, opname) {
-    // @ts-ignore
-    if (a.constructor._signed != btype._signed) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with types ").concat(a.constructor.name, " and ").concat(btype.name, "."));
-    }
-}
-/** @description assert b is unsigned */
-function _assertUnsigned(b, opname) {
-    // @ts-ignore
-    if (b.constructor._signed) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with signed type ").concat(b.constructor.name));
-    }
-}
-/** @description assert b >= 0 */
-function _assertNonNegative(b, opname) {
-    if (b < 0) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with negative value ").concat(b));
-    }
-}
-/** @description assert b >= 0 */
-function _assertBNNonNegative(b, opname) {
-    if (b.lt(C.BN0)) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with negative value ").concat(b));
-    }
-}
-/** @description assert a has larger bitlen */
-function _assertLargerType(a, b, opname) {
-    if (a._bitlen < b._bitlen) {
-        throw new TypeError("Operator \"".concat(opname, "\" not compatible with ").concat(a.constructor.name, " and a larger type ").concat(b.constructor.name));
-    }
-}
 /**
  * @description returns a new BaseNumber instance for out of place operations,
  * with the larger bitlen between `a` & `b`.
@@ -80,14 +17,7 @@ function _newOutOfPlaceNumber(a, b) {
     }
     return a.clone();
 }
-/** @description creates new BaseNumber instance if needed */
-function _newNumberIfNeeded(number, fallbackClass) {
-    if (number instanceof BaseNumber) {
-        return number;
-    }
-    // @ts-ignore
-    return fallbackClass.constructor._new(number);
-}
+/** @description assert `a` & `b` have the same signedness */
 function _restrictionSameSignedness(a, b, opname) {
     if (b instanceof BaseNumber) {
         if (a._signed != b._signed) {
@@ -95,6 +25,7 @@ function _restrictionSameSignedness(a, b, opname) {
         }
     }
 }
+/** @description assert `a` has larger bitlen than `b` */
 function _restrictionLargerBitlen(a, b, opname) {
     if (b instanceof BaseNumber) {
         if (a._bitlen < b._bitlen) {
@@ -102,7 +33,8 @@ function _restrictionLargerBitlen(a, b, opname) {
         }
     }
 }
-function _restrictionUnsignedB(a, b, opname) {
+/** @description assert `b` is unsigned */
+function _restrictionUnsignedB(b, opname) {
     if (b instanceof BaseNumber) {
         if (b._signed) {
             throw new TypeError("Operator \"".concat(opname, "\" not compatible with signed type ").concat(b.constructor.name));
@@ -114,12 +46,18 @@ function _restrictionUnsignedB(a, b, opname) {
         }
     }
 }
+/** @description assert `b` fits into the range of type `a` */
 function _restrictionBNInBounds(a, b) {
     if (!(b instanceof BaseNumber)) {
         var bn = new bn_js_1.default(b);
         if (bn.lt(a._lbound) || bn.gt(a._ubound)) {
             throw new TypeError("Right operand ".concat(b, " does not fit into type ").concat(a.constructor.name));
         }
+    }
+}
+function _onlyUnchecked(opname) {
+    if (!(0, unchecked_1.isUnchecked)()) {
+        throw new TypeError("Operator ".concat(opname, " can only be performed in unchecked mode"));
     }
 }
 /** @description returns a BN instance */
@@ -217,12 +155,16 @@ var BaseNumber = /** @class */ (function () {
     };
     /** @description cast to another BaseNumber subclass type */
     BaseNumber.prototype.as = function (btype) {
-        _assertSameSignedNessType(this, btype, "as");
+        if (this._signed != btype._signed) {
+            throw new TypeError("Cannot cast ".concat(this.constructor.name, " to ").concat(btype.name, "."));
+        }
         return btype._new(this.bn);
     };
     /** @description cast to another BaseNumber subclass type */
     BaseNumber.prototype.like = function (b) {
-        _assertSameSignedNess(this, b, "like");
+        if (this._signed != b._signed) {
+            throw new TypeError("Cannot cast ".concat(this.constructor.name, " to ").concat(b.constructor.name, "."));
+        }
         // @ts-ignore
         return b.constructor._new(this.bn);
     };
@@ -308,120 +250,121 @@ var BaseNumber = /** @class */ (function () {
         return r._checkBounds();
     };
     BaseNumber.prototype.pow = function (b) {
-        var bn;
-        if (b instanceof BaseNumber) {
-            _assertUnsigned(b, "pow");
-            bn = b.bn;
-        }
-        else {
-            bn = new bn_js_1.default(b);
-            _assertBNNonNegative(bn, "pow");
-        }
-        var r = this.clone();
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(b, "pow");
+        var r = _newOutOfPlaceNumber(this, b);
+        var bn = _getBN(b);
         r.bn = r.bn.pow(bn);
         return r._checkBounds();
     };
     BaseNumber.prototype.addmod = function (b, m) {
-        if (!(0, unchecked_1.isUnchecked)()) {
-            throw new Error("addmod can only be performed in unchecked mode");
-        }
-        b = _newNumberIfNeeded(b, this);
-        m = _newNumberIfNeeded(m, this);
-        _assertSameSignedNess(this, b, "addmod");
-        _assertSameSignedNess(this, m, "addmod");
+        _onlyUnchecked("addmod");
+        _restrictionBNInBounds(this, b);
+        _restrictionBNInBounds(this, m);
+        _restrictionSameSignedness(this, b, "addmod");
+        _restrictionSameSignedness(this, m, "addmod");
+        var bbn = _getBN(b);
+        var mbn = _getBN(b);
         var r = this.clone();
-        r.bn = r.bn.add(b.bn).mod(m.bn);
+        r.bn = r.bn.add(bbn).mod(mbn);
         return r._checkBounds();
     };
     BaseNumber.prototype.mulmod = function (b, m) {
-        if (!(0, unchecked_1.isUnchecked)()) {
-            throw new Error("mulmod can only be performed in unchecked mode");
-        }
-        b = _newNumberIfNeeded(b, this);
-        m = _newNumberIfNeeded(m, this);
-        _assertSameSignedNess(this, b, "mulmod");
-        _assertSameSignedNess(this, m, "mulmod");
+        _onlyUnchecked("mulmod");
+        _restrictionBNInBounds(this, b);
+        _restrictionBNInBounds(this, m);
+        _restrictionSameSignedness(this, b, "mulmod");
+        _restrictionSameSignedness(this, m, "mulmod");
+        var bbn = _getBN(b);
+        var mbn = _getBN(b);
         var r = this.clone();
-        r.bn = r.bn.mul(b.bn).mod(m.bn);
+        r.bn = r.bn.mul(bbn).mod(mbn);
         return r._checkBounds();
     };
     // shift
-    // never under / overflows
+    // never overflow
     BaseNumber.prototype.ishln = function (b) {
-        if (typeof b != "number") {
-            _assertUnsigned(b, "shln");
-            b = b.bn.toNumber();
-        }
-        _assertNonNegative(b, "shln");
-        this.bn.iushln(b);
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(b, "ishln");
+        var bn = _getBN(b);
+        this.bn.iushln(bn.toNumber());
         return this._iwraparound();
     };
     BaseNumber.prototype.shln = function (b) {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(b, "shln");
+        var bn = _getBN(b);
         var r = this.clone();
-        r.ishln(b);
+        r.bn.iushln(bn.toNumber());
         return r._iwraparound();
     };
     BaseNumber.prototype.ishrn = function (b) {
-        if (typeof b != "number") {
-            _assertUnsigned(b, "shrn");
-            b = b.bn.toNumber();
-        }
-        _assertNonNegative(b, "shrn");
-        this.bn.iushrn(b);
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(b, "ishrn");
+        var bn = _getBN(b);
+        this.bn.iushrn(bn.toNumber());
         return this._iwraparound();
     };
     BaseNumber.prototype.shrn = function (b) {
+        _restrictionBNInBounds(this, b);
+        _restrictionUnsignedB(b, "shrn");
+        var bn = _getBN(b);
         var r = this.clone();
-        r.ishrn(b);
+        r.bn.iushrn(bn.toNumber());
         return r._iwraparound();
     };
     // bit
     BaseNumber.prototype.iand = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "iand");
-        _assertLargerType(this, b, "iand");
-        this.bn.iuand(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "iand");
+        _restrictionLargerBitlen(this, b, "iand");
+        var bn = _getBN(b);
+        this.bn.iuand(bn);
         // and() will take the smallest bit len and don't need to wrap
         return this;
     };
     BaseNumber.prototype.and = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "and");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "and");
         var r = this.clone();
-        r.bn.iuand(b.bn);
+        var bn = _getBN(b);
+        r.bn.iuand(bn);
         return r;
     };
     BaseNumber.prototype.ior = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "ior");
-        _assertLargerType(this, b, "ior");
-        this.bn.iuor(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "ior");
+        _restrictionLargerBitlen(this, b, "ior");
+        var bn = _getBN(b);
+        this.bn.iuor(bn);
         return this._iwraparound();
     };
     BaseNumber.prototype.or = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "or");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "or");
         var r = this.clone();
-        r.bn.iuor(b.bn);
+        var bn = _getBN(b);
+        r.bn.iuor(bn);
         return r._iwraparound();
     };
     BaseNumber.prototype.ixor = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "ixor");
-        _assertLargerType(this, b, "ixor");
-        this.bn.iuxor(b.bn);
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "ixor");
+        _restrictionLargerBitlen(this, b, "ixor");
+        var bn = _getBN(b);
+        this.bn.iuxor(bn);
         return this._iwraparound();
     };
     BaseNumber.prototype.xor = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "xor");
+        _restrictionBNInBounds(this, b);
+        _restrictionSameSignedness(this, b, "xor");
         var r = this.clone();
-        r.bn.iuxor(b.bn);
+        var bn = _getBN(b);
+        r.bn.iuxor(bn);
         return r._iwraparound();
     };
     BaseNumber.prototype.inot = function () {
-        // @ts-ignore
-        this.bn.inotn(this.constructor._bitlen);
+        this.bn.inotn(this._bitlen);
         return this;
     };
     BaseNumber.prototype.not = function () {
@@ -429,34 +372,34 @@ var BaseNumber = /** @class */ (function () {
     };
     // comparison
     BaseNumber.prototype.gt = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "gt");
-        return this.bn.gt(b.bn);
+        _restrictionSameSignedness(this, b, "gt");
+        var bn = _getBN(b);
+        return this.bn.gt(bn);
     };
     BaseNumber.prototype.lt = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "lt");
-        return this.bn.lt(b.bn);
+        _restrictionSameSignedness(this, b, "lt");
+        var bn = _getBN(b);
+        return this.bn.lt(bn);
     };
     BaseNumber.prototype.gte = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "gte");
-        return this.bn.gte(b.bn);
+        _restrictionSameSignedness(this, b, "gte");
+        var bn = _getBN(b);
+        return this.bn.gte(bn);
     };
     BaseNumber.prototype.lte = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "lte");
-        return this.bn.lte(b.bn);
+        _restrictionSameSignedness(this, b, "lte");
+        var bn = _getBN(b);
+        return this.bn.lte(bn);
     };
     BaseNumber.prototype.eq = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "eq");
-        return this.bn.eq(b.bn);
+        _restrictionSameSignedness(this, b, "eq");
+        var bn = _getBN(b);
+        return this.bn.eq(bn);
     };
     BaseNumber.prototype.neq = function (b) {
-        b = _newNumberIfNeeded(b, this);
-        _assertSameSignedNess(this, b, "neq");
-        return !this.bn.eq(b.bn);
+        _restrictionSameSignedness(this, b, "neq");
+        var bn = _getBN(b);
+        return !this.bn.eq(bn);
     };
     // comparison as value
     BaseNumber.prototype.gt_ = function (b) {
