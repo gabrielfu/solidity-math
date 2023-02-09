@@ -363,7 +363,7 @@ describe("uint256", function () {
 
     describe("shln()", function () {
         const body = `
-            function func(int256 a, uint256 b) public pure returns (int256 r) { r = a << b; }
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a << b; }
         `;
         const promise = deploySource(body);
 
@@ -398,7 +398,7 @@ describe("uint256", function () {
 
     describe("shrn()", function () {
         const body = `
-            function func(int256 a, uint256 b) public pure returns (int256 r) { r = a >> b; }
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a >> b; }
         `;
         const promise = deploySource(body);
 
@@ -433,7 +433,7 @@ describe("uint256", function () {
 
     describe("and()", function () {
         const body = `
-            function func(int256 a, int256 b) public pure returns (int256 r) { r = a & b; }
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a & b; }
         `;
         const promise = deploySource(body);
 
@@ -462,6 +462,76 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).and(b).toString(),
+            );
+        });
+    });
+
+    describe("or()", function () {
+        const body = `
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a | b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should or numbers", async function () {
+            const a = "140321709321";
+            const b = "8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).or(SM.uint256(b)).toString(),
+            );
+        });
+        it("should accept number as right operand", async function () {
+            const a = "140321709321";
+            const b = 8532174021890421;
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).or(b).toString(),
+            );
+        });
+        it("should not overflow", async function () {
+            const a = "12345678901234567890";
+            const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).or(b).toString(),
+            );
+        });
+    });
+
+    describe("xor()", function () {
+        const body = `
+            function func(uint256 a, uint256 b) public pure returns (uint256 r) { r = a ^ b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should xor numbers", async function () {
+            const a = "140321709321";
+            const b = "8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).xor(SM.uint256(b)).toString(),
+            );
+        });
+        it("should accept number as right operand", async function () {
+            const a = "140321709321";
+            const b = 8532174021890421;
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).xor(b).toString(),
+            );
+        });
+        it("should not overflow", async function () {
+            const a = "12345678901234567890";
+            const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).xor(b).toString(),
             );
         });
     });

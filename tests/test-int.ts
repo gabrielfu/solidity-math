@@ -505,6 +505,94 @@ describe("int256", function () {
             );
         });
     });
+
+    describe("or()", function () {
+        const body = `
+            function func(int256 a, int256 b) public pure returns (int256 r) { r = a | b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should or numbers", async function () {
+            const a = "140321709321";
+            const b = "8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).or(SM.int256(b)).toString(),
+            );
+        });
+        it("should or negative numbers", async function () {
+            const a = "140321709321";
+            const b = "-8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).or(SM.int256(b)).toString(),
+            );
+        });
+        it("should accept number as right operand", async function () {
+            const a = "140321709321";
+            const b = 8532174021890421;
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).or(b).toString(),
+            );
+        });
+        it("should not overflow", async function () {
+            const a = "12345678901234567890";
+            const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).or(b).toString(),
+            );
+        });
+    });
+
+    describe("xor()", function () {
+        const body = `
+            function func(int256 a, int256 b) public pure returns (int256 r) { r = a ^ b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should xor numbers", async function () {
+            const a = "140321709321";
+            const b = "8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).xor(SM.int256(b)).toString(),
+            );
+        });
+        it("should xor negative numbers", async function () {
+            const a = "140321709321";
+            const b = "-8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).xor(SM.int256(b)).toString(),
+            );
+        });
+        it("should accept number as right operand", async function () {
+            const a = "140321709321";
+            const b = 8532174021890421;
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).xor(b).toString(),
+            );
+        });
+        it("should not overflow", async function () {
+            const a = "12345678901234567890";
+            const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).xor(b).toString(),
+            );
+        });
+    });
 });
 
 
