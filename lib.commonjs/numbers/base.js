@@ -359,7 +359,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "iand");
         _restrictionLargerBitlen(this, b, "iand");
         var bn = _getBN(b);
-        this.bn.toTwos(this._bitlen).iuand(bn).fromTwos(this._bitlen);
+        this.bn = this.bn.toTwos(this._bitlen).uand(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         // and() will take the smallest bit len and don't need to wrap
         return this;
     };
@@ -368,7 +368,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "and");
         var r = this.clone();
         var bn = _getBN(b);
-        r.bn.toTwos(this._bitlen).iuand(bn).fromTwos(this._bitlen);
+        r.bn = r.bn.toTwos(this._bitlen).uand(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         return r;
     };
     BaseNumber.prototype.ior = function (b) {
@@ -376,7 +376,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "ior");
         _restrictionLargerBitlen(this, b, "ior");
         var bn = _getBN(b);
-        this.bn.toTwos(this._bitlen).iuor(bn).fromTwos(this._bitlen);
+        this.bn = this.bn.toTwos(this._bitlen).uor(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         return this._iwraparound();
     };
     BaseNumber.prototype.or = function (b) {
@@ -384,7 +384,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "or");
         var r = this.clone();
         var bn = _getBN(b);
-        r.bn.toTwos(this._bitlen).iuor(bn).fromTwos(this._bitlen);
+        r.bn = r.bn.toTwos(this._bitlen).uor(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         return r._iwraparound();
     };
     BaseNumber.prototype.ixor = function (b) {
@@ -392,7 +392,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "ixor");
         _restrictionLargerBitlen(this, b, "ixor");
         var bn = _getBN(b);
-        this.bn.toTwos(this._bitlen).iuxor(bn).fromTwos(this._bitlen);
+        this.bn = this.bn.toTwos(this._bitlen).uxor(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         return this._iwraparound();
     };
     BaseNumber.prototype.xor = function (b) {
@@ -400,7 +400,7 @@ var BaseNumber = /** @class */ (function () {
         _restrictionSameSignedness(this, b, "xor");
         var r = this.clone();
         var bn = _getBN(b);
-        r.bn.toTwos(this._bitlen).iuxor(bn).fromTwos(this._bitlen);
+        r.bn = r.bn.toTwos(this._bitlen).uxor(bn.toTwos(this._bitlen)).fromTwos(this._bitlen);
         return r._iwraparound();
     };
     BaseNumber.prototype.inot = function () {

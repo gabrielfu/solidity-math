@@ -373,38 +373,25 @@ describe("uint256", function () {
             const { contract } = await promise;
             await testMethod(
                 async () => contract.func(a, b),
-                () => SM.int256(a).shln(SM.uint256(b)).toString(),
+                () => SM.uint256(a).shln(SM.uint256(b)).toString(),
             )
             await testMethod(
                 async () => contract.func(a, b),
-                () => SM.int256(a).ishln(SM.uint256(b)).toString(),
-            )
-        });
-        it("should left shift for negative value", async function () {
-            const a = "-204812";
-            const b = "10";
-            const { contract } = await promise;
-            await testMethod(
-                async () => contract.func(a, b),
-                () => SM.int256(a).shln(SM.uint256(b)).toString(),
-            )
-            await testMethod(
-                async () => contract.func(a, b),
-                () => SM.int256(a).ishln(SM.uint256(b)).toString(),
+                () => SM.uint256(a).ishln(SM.uint256(b)).toString(),
             )
         });
         it("should not accept signed right operand", async function () {
             const a = "204812";
             const b = "10";
             expect(
-                () => SM.int256(a).shln(SM.int256(b))
+                () => SM.uint256(a).shln(SM.int256(b))
             ).to.throw();
         });
         it("should not accept negative right operand", async function () {
             const a = "204812";
             const b = -10;
             expect(
-                () => SM.int256(a).shln(b)
+                () => SM.uint256(a).shln(b)
             ).to.throw();
         });
     });
@@ -421,39 +408,61 @@ describe("uint256", function () {
             const { contract } = await promise;
             await testMethod(
                 async () => contract.func(a, b),
-                () => SM.int256(a).shrn(SM.uint256(b)).toString(),
+                () => SM.uint256(a).shrn(SM.uint256(b)).toString(),
             )
             await testMethod(
                 async () => contract.func(a, b),
-                () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
-            )
-        });
-        it("should right shift for negative value", async function () {
-            const a = "-204812";
-            const b = "10";
-            const { contract } = await promise;
-            await testMethod(
-                async () => contract.func(a, b),
-                () => SM.int256(a).shrn(SM.uint256(b)).toString(),
-            )
-            await testMethod(
-                async () => contract.func(a, b),
-                () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
+                () => SM.uint256(a).ishrn(SM.uint256(b)).toString(),
             )
         });
         it("should not accept signed right operand", async function () {
             const a = "204812";
             const b = "10";
             expect(
-                () => SM.int256(a).shrn(SM.int256(b))
+                () => SM.uint256(a).shrn(SM.int256(b))
             ).to.throw();
         });
         it("should not accept negative right operand", async function () {
             const a = "204812";
             const b = -10;
             expect(
-                () => SM.int256(a).shrn(b)
+                () => SM.uint256(a).shrn(b)
             ).to.throw();
+        });
+    });
+
+    describe("and()", function () {
+        const body = `
+            function func(int256 a, int256 b) public pure returns (int256 r) { r = a & b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should and numbers", async function () {
+            const a = "140321709321";
+            const b = "8532174021890421";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).and(SM.uint256(b)).toString(),
+            )
+        });
+        it("should accept number as right operand", async function () {
+            const a = "140321709321";
+            const b = 8532174021890421;
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).and(b).toString(),
+            )
+        });
+        it("should not overflow", async function () {
+            const a = "12345678901234567890";
+            const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
+            const { contract } = await promise;
+            await testMethod(
+                async () => contract.func(a, b),
+                () => SM.uint256(a).and(b).toString(),
+            )
         });
     });
 });
