@@ -73,7 +73,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).add(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "200";
@@ -82,7 +82,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).add(b).toString(),
-            )
+            );
         });
         it("should overflow", async function () {
             const a = "12345";
@@ -91,7 +91,7 @@ describe("uint256", function () {
             await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).add(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should wraparound unchecked", async function () {
             const a = "12345";
@@ -100,7 +100,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.uint256(a).add(SM.uint256(b)).toString(),
-            )
+            );
         });
     });
 
@@ -118,7 +118,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).sub(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "200";
@@ -127,7 +127,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).sub(b).toString(),
-            )
+            );
         });
         it("should overflow", async function () {
             const a = "12345";
@@ -136,7 +136,7 @@ describe("uint256", function () {
             await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).sub(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should wraparound unchecked", async function () {
             const a = "12345";
@@ -145,7 +145,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.uint256(a).sub(SM.uint256(b)).toString(),
-            )
+            );
         });
     });
 
@@ -163,7 +163,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).mul(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "200";
@@ -172,7 +172,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).mul(b).toString(),
-            )
+            );
         });
         it("should overflow", async function () {
             const a = "12345678901234567890";
@@ -181,7 +181,7 @@ describe("uint256", function () {
             await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).mul(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should wraparound unchecked", async function () {
             const a = "12345678901234567890";
@@ -190,7 +190,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.uint256(a).mul(SM.uint256(b)).toString(),
-            )
+            );
         });
     });
 
@@ -208,7 +208,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).div(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "200";
@@ -217,7 +217,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).div(b).toString(),
-            )
+            );
         });
     });
 
@@ -235,7 +235,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).mod(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "205";
@@ -244,7 +244,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).mod(b).toString(),
-            )
+            );
         });
     });
 
@@ -262,7 +262,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).pow(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "200";
@@ -271,7 +271,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).pow(b).toString(),
-            )
+            );
         });
         it("should overflow", async function () {
             const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -280,7 +280,7 @@ describe("uint256", function () {
             await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).pow(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should wraparound unchecked", async function () {
             const a = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
@@ -289,7 +289,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.uint256(a).pow(SM.uint256(b)).toString(),
-            )
+            );
         });
     });
 
@@ -307,7 +307,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.uint256(a).addmod(SM.uint256(b), SM.uint256(c)).toString(),
-            )
+            );
         });
         it("should throw error outside of unchecked mode", async function () {
             const a = "205";
@@ -323,7 +323,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.uint256(a).addmod(SM.uint256(b), SM.uint256(c)).toString(),
-            )
+            );
         });
     });
 
@@ -341,7 +341,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.uint256(a).mulmod(SM.uint256(b), SM.uint256(c)).toString(),
-            )
+            );
         });
         it("should throw error outside of unchecked mode", async function () {
             const a = "205";
@@ -357,7 +357,7 @@ describe("uint256", function () {
             await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.uint256(a).mulmod(SM.uint256(b), SM.uint256(c)).toString(),
-            )
+            );
         });
     });
 
@@ -374,11 +374,11 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).shln(SM.uint256(b)).toString(),
-            )
+            );
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).ishln(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should not accept signed right operand", async function () {
             const a = "204812";
@@ -409,11 +409,11 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).shrn(SM.uint256(b)).toString(),
-            )
+            );
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).ishrn(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should not accept signed right operand", async function () {
             const a = "204812";
@@ -444,7 +444,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).and(SM.uint256(b)).toString(),
-            )
+            );
         });
         it("should accept number as right operand", async function () {
             const a = "140321709321";
@@ -453,7 +453,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).and(b).toString(),
-            )
+            );
         });
         it("should not overflow", async function () {
             const a = "12345678901234567890";
@@ -462,7 +462,7 @@ describe("uint256", function () {
             await testMethod(
                 async () => contract.func(a, b),
                 () => SM.uint256(a).and(b).toString(),
-            )
+            );
         });
     });
 });
@@ -482,7 +482,7 @@ describe("uint16", function () {
             await testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
                 () => SM.uint16(a).addmod(SM.uint16(b), SM.uint256(c)).toString(),
-            )
+            );
         });
     });
     describe("mulmod()", function () {
@@ -498,7 +498,7 @@ describe("uint16", function () {
             await testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
                 () => SM.uint16(a).mulmod(SM.uint16(b), SM.uint256(c)).toString(),
-            )
+            );
         });
     });
 });
