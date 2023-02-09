@@ -70,7 +70,7 @@ describe("int256", function () {
             const a = "200";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).add(SM.int256(b)).toString(),
             )
@@ -79,7 +79,7 @@ describe("int256", function () {
             const a = "200";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).add(b).toString(),
             )
@@ -88,7 +88,7 @@ describe("int256", function () {
             const a = "12345";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testRevertMethod(
+            await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).add(SM.int256(b)).toString(),
             )
@@ -97,7 +97,7 @@ describe("int256", function () {
             const a = "12345";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.int256(a).add(SM.int256(b)).toString(),
             )
@@ -115,7 +115,7 @@ describe("int256", function () {
             const a = "200";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).sub(SM.int256(b)).toString(),
             )
@@ -124,7 +124,7 @@ describe("int256", function () {
             const a = "200";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).sub(b).toString(),
             )
@@ -133,7 +133,7 @@ describe("int256", function () {
             const a = "-10";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testRevertMethod(
+            await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).sub(SM.int256(b)).toString(),
             )
@@ -142,7 +142,7 @@ describe("int256", function () {
             const a = "-10";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.int256(a).sub(SM.int256(b)).toString(),
             )
@@ -160,7 +160,7 @@ describe("int256", function () {
             const a = "200";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).mul(SM.int256(b)).toString(),
             )
@@ -169,7 +169,7 @@ describe("int256", function () {
             const a = "200";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).mul(b).toString(),
             )
@@ -178,7 +178,7 @@ describe("int256", function () {
             const a = "12345678901234567890";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testRevertMethod(
+            await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).mul(SM.int256(b)).toString(),
             )
@@ -187,7 +187,7 @@ describe("int256", function () {
             const a = "12345678901234567890";
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.int256(a).mul(SM.int256(b)).toString(),
             )
@@ -205,7 +205,7 @@ describe("int256", function () {
             const a = "200";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).div(SM.int256(b)).toString(),
             )
@@ -214,7 +214,7 @@ describe("int256", function () {
             const a = "200";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).div(b).toString(),
             )
@@ -232,7 +232,7 @@ describe("int256", function () {
             const a = "205";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).mod(SM.int256(b)).toString(),
             )
@@ -241,7 +241,7 @@ describe("int256", function () {
             const a = "205";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).mod(b).toString(),
             )
@@ -259,7 +259,7 @@ describe("int256", function () {
             const a = "200";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).pow(SM.uint256(b)).toString(),
             )
@@ -268,7 +268,7 @@ describe("int256", function () {
             const a = "200";
             const b = 10;
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).pow(b).toString(),
             )
@@ -277,7 +277,7 @@ describe("int256", function () {
             const a = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const b = "16";
             const { contract } = await promise;
-            testRevertMethod(
+            await testRevertMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).pow(SM.uint256(b)).toString(),
             )
@@ -286,7 +286,7 @@ describe("int256", function () {
             const a = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const b = "16";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.funcUnchecked(a, b),
                 () => SM.int256(a).pow(SM.uint256(b)).toString(),
             )
@@ -309,7 +309,7 @@ describe("int256", function () {
             const b = "199";
             const c = "10";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.int256(a).addmod(SM.int256(b), SM.int256(c)).toString(),
             )
@@ -325,7 +325,7 @@ describe("int256", function () {
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819966";
             const c = "100";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.int256(a).addmod(SM.int256(b), SM.int256(c)).toString(),
             )
@@ -343,7 +343,7 @@ describe("int256", function () {
             const b = "199";
             const c = "10";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.int256(a).mulmod(SM.int256(b), SM.int256(c)).toString(),
             )
@@ -359,7 +359,7 @@ describe("int256", function () {
             const b = "57896044618658097711785492504343953926634992332820282019728792003956564819966";
             const c = "100";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => contract.func(a, b, c),
                 () => SM.int256(a).mulmod(SM.int256(b), SM.int256(c)).toString(),
             )
@@ -376,11 +376,11 @@ describe("int256", function () {
             const a = "204812";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).shln(SM.uint256(b)).toString(),
             )
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).ishln(SM.uint256(b)).toString(),
             )
@@ -389,11 +389,11 @@ describe("int256", function () {
             const a = "-204812";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).shln(SM.uint256(b)).toString(),
             )
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).ishln(SM.uint256(b)).toString(),
             )
@@ -424,11 +424,11 @@ describe("int256", function () {
             const a = "204812";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).shrn(SM.uint256(b)).toString(),
             )
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
             )
@@ -437,11 +437,11 @@ describe("int256", function () {
             const a = "-204812";
             const b = "10";
             const { contract } = await promise;
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).shrn(SM.uint256(b)).toString(),
             )
-            testMethod(
+            await testMethod(
                 async () => contract.func(a, b),
                 () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
             )
@@ -475,7 +475,7 @@ describe("int16", function () {
             const b = "32767";
             const c = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
                 () => SM.int16(a).addmod(SM.int16(b), SM.int256(c)).toString(),
             )
@@ -491,7 +491,7 @@ describe("int16", function () {
             const b = "32767";
             const c = "57896044618658097711785492504343953926634992332820282019728792003956564819967";
             const { contract } = await promise;
-            testUncheckedMethod(
+            await testUncheckedMethod(
                 async () => { return (await contract.func(a, b, c)).toString() },
                 () => SM.int16(a).mulmod(SM.int16(b), SM.int256(c)).toString(),
             )
