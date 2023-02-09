@@ -362,7 +362,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "iand");
         _restrictionLargerBitlen(this, b, "iand");
         const bn = _getBN(b);
-        this.bn.iuand(bn);
+        this.bn.toTwos(this._bitlen).iuand(bn).fromTwos(this._bitlen);
         // and() will take the smallest bit len and don't need to wrap
         return this;
     }
@@ -372,7 +372,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "and");
         const r = this.clone();
         const bn = _getBN(b);
-        r.bn.iuand(bn);
+        r.bn.toTwos(this._bitlen).iuand(bn).fromTwos(this._bitlen);
         return r;
     }
 
@@ -381,7 +381,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "ior");
         _restrictionLargerBitlen(this, b, "ior");
         const bn = _getBN(b);
-        this.bn.iuor(bn);
+        this.bn.toTwos(this._bitlen).iuor(bn).fromTwos(this._bitlen);
         return this._iwraparound();
     }
 
@@ -390,7 +390,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "or");
         const r = this.clone();
         const bn = _getBN(b);
-        r.bn.iuor(bn);
+        r.bn.toTwos(this._bitlen).iuor(bn).fromTwos(this._bitlen);
         return r._iwraparound();
     }
 
@@ -399,7 +399,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "ixor");
         _restrictionLargerBitlen(this, b, "ixor");
         const bn = _getBN(b);
-        this.bn.iuxor(bn);
+        this.bn.toTwos(this._bitlen).iuxor(bn).fromTwos(this._bitlen);
         return this._iwraparound();
     }
 
@@ -408,7 +408,7 @@ export abstract class BaseNumber {
         _restrictionSameSignedness(this, b, "xor");
         const r = this.clone();
         const bn = _getBN(b);
-        r.bn.iuxor(bn);
+        r.bn.toTwos(this._bitlen).iuxor(bn).fromTwos(this._bitlen);
         return r._iwraparound();
     }
 
