@@ -20,6 +20,11 @@ Solidity integer types and operations. It is useful for replicating public Solid
 * [Table of Contents](#table-of-contents)
 * [Installation](#installation)
 * [Usage](#usage)
+* [Motivation](#motivation)
+  + [Comprehensive integer sizes](#comprehensive-integer-sizes)
+  + [Unchecked arithmetic](#unchecked-arithmetic)
+  + [Right shift operator](#right-shift-operator)
+  + [Bitwise operators](#bitwise-operators)
 * [Documentation](#documentation)
   + [Types](#types)
   + [Operations](#operations)
@@ -68,6 +73,29 @@ const a = new SM.Uint256(10);
 const b = SM.uint256(20);
 const c = SM.unchecked(() => SM.Uint256.max().add(11));
 ```
+
+## Motivation
+
+### Comprehensive integer sizes
+Packages like [fixed-bn](https://github.com/ethereumjs/fixed-bn.js/) and [uint256](https://github.com/artit91/uint256) 
+offer either only uint256 or limited integer sizes. This package provides all integer sizes suppported by Solidity.
+
+### Unchecked arithmetic
+To the best of the author's knowledge, there is no Javascript package that allows users to 
+toggle on and off `unchecked { ... }` mode. This package does it in the closest possible syntax.
+
+### Right shift operator
+Solidity's [right shift operator](https://docs.soliditylang.org/en/v0.8.17/types.html#shifts) (*after v0.5.0*) has
+a different implementation than bn.js.
+> x >> y is equivalent to the mathematical expression x / 2**y, rounded towards negative infinity.
+
+For example, in Solidity, `-204812 >> 10 == -201`, 
+whereas in bn.js, `(new BN(-204812)).ushrn(10)` returns `-200`, i.e., rounded **towards zero**.
+
+### Bitwise operators
+To replicate Solidity `x & y` in bn.js, one must explicity convert to two's complement representation
+and do the verbose `x.toTwos(256).uand(y.toTwos(256)).fromTwos(256)`.
+
 
 ## Documentation
 
