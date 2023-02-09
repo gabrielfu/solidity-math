@@ -1,5 +1,6 @@
 import BN from "bn.js";
 import util from "util";
+import * as C from "../constants";
 import { isUnchecked } from "../unchecked";
 
 /** @description valid types to construct a new BN from */
@@ -320,6 +321,12 @@ export abstract class BaseNumber {
 
     // shift
     // never overflow
+    /** 
+     * For positive and negative x values, x << y is equivalent to x * 2**y.
+     * For positive x values, x >> y is equivalent to x / 2**y.
+     * For negative x values, x >> y is equivalent to (x + 1) / 2**y - 1 
+     *  (which is the same as dividing x by 2**y while rounding down towards negative infinity).
+     */
 
     ishln(b: Input): this {
         _restrictionBNInBounds(this, b);
@@ -342,7 +349,12 @@ export abstract class BaseNumber {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "ishrn");
         const bn = _getBN(b);
-        this.bn.iushrn(bn.toNumber());
+        if (this.bn.isNeg()) {
+            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            this.bn.iushrn(bn.toNumber());
+        }
         return this._iwraparound();
     }
 
@@ -351,7 +363,12 @@ export abstract class BaseNumber {
         _restrictionUnsignedB(b, "shrn");
         const bn = _getBN(b);
         const r = this.clone();
-        r.bn.iushrn(bn.toNumber());
+        if (r.bn.isNeg()) {
+            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            r.bn.iushrn(bn.toNumber());
+        }
         return r._iwraparound();
     }
 

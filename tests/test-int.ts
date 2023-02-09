@@ -365,6 +365,102 @@ describe("int256", function () {
             )
         });
     });
+
+    describe("shln()", function () {
+        const body = `
+            function func(int256 a, uint256 b) public pure returns (int256 r) { r = a << b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should left shift for positive value", async function () {
+            const a = "204812";
+            const b = "10";
+            const { contract } = await promise;
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).shln(SM.uint256(b)).toString(),
+            )
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).ishln(SM.uint256(b)).toString(),
+            )
+        });
+        it("should left shift for negative value", async function () {
+            const a = "-204812";
+            const b = "10";
+            const { contract } = await promise;
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).shln(SM.uint256(b)).toString(),
+            )
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).ishln(SM.uint256(b)).toString(),
+            )
+        });
+        it("should not accept signed right operand", async function () {
+            const a = "204812";
+            const b = "10";
+            expect(
+                () => SM.int256(a).shln(SM.int256(b))
+            ).to.throw();
+        });
+        it("should not accept negative right operand", async function () {
+            const a = "204812";
+            const b = -10;
+            expect(
+                () => SM.int256(a).shln(b)
+            ).to.throw();
+        });
+    });
+
+    describe("shrn()", function () {
+        const body = `
+            function func(int256 a, uint256 b) public pure returns (int256 r) { r = a >> b; }
+        `;
+        const promise = deploySource(body);
+
+        it("should right shift for positive value", async function () {
+            const a = "204812";
+            const b = "10";
+            const { contract } = await promise;
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).shrn(SM.uint256(b)).toString(),
+            )
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
+            )
+        });
+        it("should right shift for negative value", async function () {
+            const a = "-204812";
+            const b = "10";
+            const { contract } = await promise;
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).shrn(SM.uint256(b)).toString(),
+            )
+            testMethod(
+                async () => contract.func(a, b),
+                () => SM.int256(a).ishrn(SM.uint256(b)).toString(),
+            )
+        });
+        it("should not accept signed right operand", async function () {
+            const a = "204812";
+            const b = "10";
+            expect(
+                () => SM.int256(a).shrn(SM.int256(b))
+            ).to.throw();
+        });
+        it("should not accept negative right operand", async function () {
+            const a = "204812";
+            const b = -10;
+            expect(
+                () => SM.int256(a).shrn(b)
+            ).to.throw();
+        });
+    });
 });
 
 

@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseNumber = void 0;
 var bn_js_1 = __importDefault(require("bn.js"));
 var util_1 = __importDefault(require("util"));
+var C = __importStar(require("../constants"));
 var unchecked_1 = require("../unchecked");
 /**
  * @description returns a new BaseNumber instance for out of place operations,
@@ -283,6 +307,12 @@ var BaseNumber = /** @class */ (function () {
     };
     // shift
     // never overflow
+    /**
+     * For positive and negative x values, x << y is equivalent to x * 2**y.
+     * For positive x values, x >> y is equivalent to x / 2**y.
+     * For negative x values, x >> y is equivalent to (x + 1) / 2**y - 1
+     *  (which is the same as dividing x by 2**y while rounding down towards negative infinity).
+     */
     BaseNumber.prototype.ishln = function (b) {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "ishln");
@@ -302,7 +332,12 @@ var BaseNumber = /** @class */ (function () {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "ishrn");
         var bn = _getBN(b);
-        this.bn.iushrn(bn.toNumber());
+        if (this.bn.isNeg()) {
+            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            this.bn.iushrn(bn.toNumber());
+        }
         return this._iwraparound();
     };
     BaseNumber.prototype.shrn = function (b) {
@@ -310,7 +345,12 @@ var BaseNumber = /** @class */ (function () {
         _restrictionUnsignedB(b, "shrn");
         var bn = _getBN(b);
         var r = this.clone();
-        r.bn.iushrn(bn.toNumber());
+        if (r.bn.isNeg()) {
+            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            r.bn.iushrn(bn.toNumber());
+        }
         return r._iwraparound();
     };
     // bit

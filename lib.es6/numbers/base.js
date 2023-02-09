@@ -1,5 +1,6 @@
 import BN from "bn.js";
 import util from "util";
+import * as C from "../constants";
 import { isUnchecked } from "../unchecked";
 /**
  * @description returns a new BaseNumber instance for out of place operations,
@@ -277,6 +278,12 @@ var BaseNumber = /** @class */ (function () {
     };
     // shift
     // never overflow
+    /**
+     * For positive and negative x values, x << y is equivalent to x * 2**y.
+     * For positive x values, x >> y is equivalent to x / 2**y.
+     * For negative x values, x >> y is equivalent to (x + 1) / 2**y - 1
+     *  (which is the same as dividing x by 2**y while rounding down towards negative infinity).
+     */
     BaseNumber.prototype.ishln = function (b) {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "ishln");
@@ -296,7 +303,12 @@ var BaseNumber = /** @class */ (function () {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "ishrn");
         var bn = _getBN(b);
-        this.bn.iushrn(bn.toNumber());
+        if (this.bn.isNeg()) {
+            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            this.bn.iushrn(bn.toNumber());
+        }
         return this._iwraparound();
     };
     BaseNumber.prototype.shrn = function (b) {
@@ -304,7 +316,12 @@ var BaseNumber = /** @class */ (function () {
         _restrictionUnsignedB(b, "shrn");
         var bn = _getBN(b);
         var r = this.clone();
-        r.bn.iushrn(bn.toNumber());
+        if (r.bn.isNeg()) {
+            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+        }
+        else {
+            r.bn.iushrn(bn.toNumber());
+        }
         return r._iwraparound();
     };
     // bit

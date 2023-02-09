@@ -65,6 +65,12 @@ export declare abstract class BaseNumber {
     pow(b: Input): BaseNumber;
     addmod(b: Input, m: Input): this;
     mulmod(b: Input, m: Input): this;
+    /**
+     * For positive and negative x values, x << y is equivalent to x * 2**y.
+     * For positive x values, x >> y is equivalent to x / 2**y.
+     * For negative x values, x >> y is equivalent to (x + 1) / 2**y - 1
+     *  (which is the same as dividing x by 2**y while rounding down towards negative infinity).
+     */
     ishln(b: Input): this;
     shln(b: Input): this;
     ishrn(b: Input): this;
