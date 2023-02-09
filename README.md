@@ -75,7 +75,7 @@ const c = SM.unchecked(() => SM.Uint256.max().add(11));
 ```
 
 ## Motivation
-Certain decentralized applications require external actors to regulraly interact with on-chain contracts to ensure normal operations. DEXs like Uniswap rely [arbitrageurs](https://github.com/gabrielfu/amm-arbitrage) and [JIT LP](https://uniswap.org/blog/jit-liquidity) to maintain market prices. Jobs on [Keep3r Network](https://keep3r.network/) will only be executed if they are profitable. These external actors need to pre-compute the rewards of their work, often in a very short amount of time to compete with other actors. It is infeasible to do all calculations on a smart contract as the connection overhead will be too slow. This package is an excellent tool to perform such calculations.
+Certain decentralized applications require external actors to regulraly interact with on-chain contracts to ensure normal operations. DEXs like Uniswap rely on [arbitrageurs](https://github.com/gabrielfu/amm-arbitrage) and [JIT LP](https://uniswap.org/blog/jit-liquidity) to maintain market prices. Jobs on [Keep3r Network](https://keep3r.network/) will only be executed if they are profitable. These external actors need to pre-compute the rewards of their work, often in a very short amount of time to compete with other actors. It is infeasible to do all calculations on a smart contract as the connection overhead will be too slow. This package is an excellent tool to perform such calculations.
 
 ### Comprehensive integer sizes
 Packages like [fixed-bn](https://github.com/ethereumjs/fixed-bn.js/) and [uint256](https://github.com/artit91/uint256) 
