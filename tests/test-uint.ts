@@ -50,12 +50,12 @@ describe("uint256", function () {
 
         it("should have the correct min()", async function () {
             const { contract } = await promise;
-            expect(await contract.min()).to.equal(SM.Uint256.min().toString());
+            expect(await contract.min()).to.equal(SM.type(SM.uint256).min.toString());
         });
 
         it("should have the correct max()", async function () {
             const { contract } = await promise;
-            expect(await contract.max()).to.equal(SM.Uint256.max().toString());
+            expect(await contract.max()).to.equal(SM.type(SM.uint256).max.toString());
         });
     });
 

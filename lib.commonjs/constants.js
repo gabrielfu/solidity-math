@@ -14,9 +14,10 @@ function _computeValues(bitlen) {
     var bn = new bn_js_1.default(bitlen);
     var powerOf2 = exports.BN2.pow(bn);
     var uintmax = powerOf2.sub(exports.BN1);
+    var uintmin = exports.BN0;
     var intmax = powerOf2.div(exports.BN2).sub(exports.BN1);
     var intmin = powerOf2.div(exports.BN2).neg();
-    return { bn: bn, powerOf2: powerOf2, uintmax: uintmax, intmax: intmax, intmin: intmin };
+    return { bn: bn, powerOf2: powerOf2, uintmax: uintmax, uintmin: uintmin, intmax: intmax, intmin: intmin };
 }
 exports.bit8 = _computeValues(8);
 exports.bit16 = _computeValues(16);

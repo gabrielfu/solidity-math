@@ -8,6 +8,7 @@ interface bitValues {
     bn: BN;
     powerOf2: BN;
     uintmax: BN;
+    uintmin: BN;
     intmax: BN;
     intmin: BN;
 }

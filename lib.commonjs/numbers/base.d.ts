@@ -4,38 +4,25 @@ import BN from "bn.js";
 import util from "util";
 /** @description valid types to construct a new BN from */
 export declare type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
-export declare type Input = BNInput | BaseNumber;
-export declare type ConcreteNumberClass = {
-    new (number: Input): BaseNumber;
-};
-export declare abstract class BaseNumber {
+export declare type Input = BNInput | BaseInteger;
+export declare abstract class BaseInteger {
     /** @description underlying BN */
     bn: BN;
-    /** @description bit length (size) of this type */
-    static _bitlen: number;
+    /** @description bit length (size) of this number */
+    readonly _bitlen: number;
     /** @description max representable number of this type */
-    static _ubound: BN;
+    abstract readonly _ubound: BN;
     /** @description min representable number of this type */
-    static _lbound: BN;
-    /** @description whether this type is signed or unsigned */
-    static _signed: boolean;
-    constructor(number: Input);
-    /** @description bit length (size) of this type */
-    get _bitlen(): number;
-    /** @description max representable number of this type */
-    get _ubound(): BN;
-    /** @description min representable number of this type */
-    get _lbound(): BN;
-    /** @description bit length (size) of this type */
-    get _signed(): boolean;
-    /** @description constructor as static function supporting subclasses */
-    static _new<T extends BaseNumber>(number: Input): T;
-    /** @description max representable number of this type */
-    static max<T extends BaseNumber>(): T;
-    /** @description min representable number of this type */
-    static min<T extends BaseNumber>(): T;
+    abstract readonly _lbound: BN;
+    /** @description whether this number is signed or unsigned */
+    readonly _signed: boolean;
+    constructor(number: Input, bitlen: number, signed: boolean);
+    /** @description create new instance with same bitlen & signedness as `this` */
+    _new(number: Input): this;
     /** @description makes a copy of this number */
     clone(): this;
+    /** @description returns type of this instance */
+    abstract get type(): string;
     /** @description string representation of underlying value */
     toString(base?: number): string;
     /** @description string representation of instance */
@@ -48,21 +35,21 @@ export declare abstract class BaseNumber {
      * If not, throws a RangeError.
      */
     _checkBounds(): this;
-    /** @description cast to another BaseNumber subclass type */
-    as<T extends BaseNumber>(btype: typeof BaseNumber): T;
-    /** @description cast to another BaseNumber subclass type */
-    like<T extends BaseNumber>(b: T): T;
+    /** @description cast this to the type `_type` */
+    cast<T extends BaseInteger>(_type: (number: Input) => T): T;
+    /** @description cast this to the type of `b` */
+    like<T extends BaseInteger>(b: T): T;
     iadd(b: Input): this;
-    add(b: Input): BaseNumber;
+    add(b: Input): BaseInteger;
     isub(b: Input): this;
-    sub(b: Input): BaseNumber;
+    sub(b: Input): BaseInteger;
     imul(b: Input): this;
-    mul(b: Input): BaseNumber;
+    mul(b: Input): BaseInteger;
     idiv(b: Input): this;
-    div(b: Input): BaseNumber;
+    div(b: Input): BaseInteger;
     imod(b: Input): this;
-    mod(b: Input): BaseNumber;
-    pow(b: Input): BaseNumber;
+    mod(b: Input): BaseInteger;
+    pow(b: Input): BaseInteger;
     addmod(b: Input, m: Input): this;
     mulmod(b: Input, m: Input): this;
     /**
