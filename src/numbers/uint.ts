@@ -4,7 +4,7 @@ import { BaseInteger, BNInput } from "./base";
 /** @description Unsigned integer base class */
 export class BaseUint extends BaseInteger {
     get type(): string {
-        return `Uint${this._bitlen}`
+        return `Uint${this._bitlen}`;
     }
 
     /** 

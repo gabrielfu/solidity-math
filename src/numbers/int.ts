@@ -4,7 +4,7 @@ import { BaseInteger, BNInput } from "./base";
 /** @description Signed integer base class */
 export class BaseInt extends BaseInteger {
     get type(): string {
-        return `Int${this._bitlen}`
+        return `Int${this._bitlen}`;
     }
 
     /** 
