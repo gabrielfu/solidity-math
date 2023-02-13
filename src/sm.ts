@@ -1,3 +1,4 @@
+export { min, max } from "./numbers/base";
 export {
     uint8, uint16, uint24, uint32, uint40, uint48, uint56, uint64, 
     uint72, uint80, uint88, uint96, uint104, uint112, uint120, uint128, 
