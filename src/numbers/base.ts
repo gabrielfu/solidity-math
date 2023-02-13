@@ -126,6 +126,7 @@ export abstract class BaseInteger {
         return new (<any>this.constructor)(this.bn.clone(), this._bitlen, this._signed);
     }
 
+    /** @description returns type of this instance */
     abstract get type(): string
 
     /** @description string representation of underlying value */
