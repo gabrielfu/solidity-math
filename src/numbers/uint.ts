@@ -3,6 +3,10 @@ import { BaseInteger, BNInput } from "./base";
 
 /** @description Unsigned integer base class */
 export class BaseUint extends BaseInteger {
+    get type(): string {
+        return `Uint${this._bitlen}`
+    }
+
     /** 
      * @description performs unsigned integer wraparound in-place
      */

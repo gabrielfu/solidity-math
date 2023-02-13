@@ -121,10 +121,7 @@ export abstract class BaseInteger {
         return this.constructor._new(this.bn.clone());
     }
 
-    
-    private get type(): string {
-        return (this._signed ? "Int" : "Uint") + this._bitlen.toString();
-    }
+    abstract get type(): string
 
     /** @description string representation of underlying value */
     toString(base=10): string {
