@@ -10,13 +10,13 @@ export declare abstract class BaseInteger {
     bn: BN;
     /** @description bit length (size) of this number */
     readonly _bitlen: number;
-    /** @description max representable number of this type */
-    abstract readonly _ubound: BN;
-    /** @description min representable number of this type */
-    abstract readonly _lbound: BN;
     /** @description whether this number is signed or unsigned */
     readonly _signed: boolean;
     constructor(number: Input, bitlen: number, signed: boolean);
+    /** @description max representable number of this type */
+    get _ubound(): BN;
+    /** @description min representable number of this type */
+    get _lbound(): BN;
     /** @description create new instance with same bitlen & signedness as `this` */
     _new(number: Input): this;
     /** @description makes a copy of this number */

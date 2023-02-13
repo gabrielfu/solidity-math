@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import util from "util";
-import * as C from "../constants";
+import { getBound, BN2 } from "../constants";
 import { isUnchecked } from "../unchecked";
 /**
  * @description returns a new BaseInteger instance for out of place operations,
@@ -75,6 +75,22 @@ var BaseInteger = /** @class */ (function () {
         this._signed = signed;
         this._checkBounds();
     }
+    Object.defineProperty(BaseInteger.prototype, "_ubound", {
+        /** @description max representable number of this type */
+        get: function () {
+            return getBound(this._bitlen, this._signed, true);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(BaseInteger.prototype, "_lbound", {
+        /** @description min representable number of this type */
+        get: function () {
+            return getBound(this._bitlen, this._signed, false);
+        },
+        enumerable: false,
+        configurable: true
+    });
     /** @description create new instance with same bitlen & signedness as `this` */
     BaseInteger.prototype._new = function (number) {
         return new this.constructor(number, this._bitlen, this._signed);
@@ -267,7 +283,7 @@ var BaseInteger = /** @class */ (function () {
         _restrictionUnsignedB(b, "ishrn");
         var bn = _getBN(b);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            this.bn = this.bn.addn(1).div(BN2.pow(bn)).subn(1);
         }
         else {
             this.bn.iushrn(bn.toNumber());
@@ -280,7 +296,7 @@ var BaseInteger = /** @class */ (function () {
         var bn = _getBN(b);
         var r = this.clone();
         if (r.bn.isNeg()) {
-            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            r.bn = this.bn.addn(1).div(BN2.pow(bn)).subn(1);
         }
         else {
             r.bn.iushrn(bn.toNumber());

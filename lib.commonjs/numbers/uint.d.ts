@@ -1,10 +1,7 @@
-import BN from "bn.js";
 import { BaseInteger, Input } from "./base";
 /** @description Unsigned integer base class */
 export declare class Uint extends BaseInteger {
     constructor(number: Input, bitlen: number);
-    get _ubound(): BN;
-    get _lbound(): BN;
     get type(): string;
     /**
      * @description performs unsigned integer wraparound in-place

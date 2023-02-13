@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -29,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseInteger = void 0;
 var bn_js_1 = __importDefault(require("bn.js"));
 var util_1 = __importDefault(require("util"));
-var C = __importStar(require("../constants"));
+var constants_1 = require("../constants");
 var unchecked_1 = require("../unchecked");
 /**
  * @description returns a new BaseInteger instance for out of place operations,
@@ -104,6 +81,22 @@ var BaseInteger = /** @class */ (function () {
         this._signed = signed;
         this._checkBounds();
     }
+    Object.defineProperty(BaseInteger.prototype, "_ubound", {
+        /** @description max representable number of this type */
+        get: function () {
+            return (0, constants_1.getBound)(this._bitlen, this._signed, true);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(BaseInteger.prototype, "_lbound", {
+        /** @description min representable number of this type */
+        get: function () {
+            return (0, constants_1.getBound)(this._bitlen, this._signed, false);
+        },
+        enumerable: false,
+        configurable: true
+    });
     /** @description create new instance with same bitlen & signedness as `this` */
     BaseInteger.prototype._new = function (number) {
         return new this.constructor(number, this._bitlen, this._signed);
@@ -296,7 +289,7 @@ var BaseInteger = /** @class */ (function () {
         _restrictionUnsignedB(b, "ishrn");
         var bn = _getBN(b);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            this.bn = this.bn.addn(1).div(constants_1.BN2.pow(bn)).subn(1);
         }
         else {
             this.bn.iushrn(bn.toNumber());
@@ -309,7 +302,7 @@ var BaseInteger = /** @class */ (function () {
         var bn = _getBN(b);
         var r = this.clone();
         if (r.bn.isNeg()) {
-            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            r.bn = this.bn.addn(1).div(constants_1.BN2.pow(bn)).subn(1);
         }
         else {
             r.bn.iushrn(bn.toNumber());

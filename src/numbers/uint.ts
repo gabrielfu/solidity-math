@@ -1,19 +1,10 @@
-import BN from "bn.js";
-import * as C from "../constants";
+import { BN1 } from "../constants";
 import { BaseInteger, Input } from "./base";
 
 /** @description Unsigned integer base class */
 export class Uint extends BaseInteger {
     constructor(number: Input, bitlen: number) {
         super(number, bitlen, false);
-    }
-
-    get _ubound(): BN {
-        return C._getBitValues(this._bitlen).uintmax;
-    }
-
-    get _lbound(): BN {
-        return C._getBitValues(this._bitlen).uintmin;
     }
 
     get type(): string {
@@ -24,9 +15,9 @@ export class Uint extends BaseInteger {
      * @description performs unsigned integer wraparound in-place
      */
     _iwraparound(): this {
-        this.bn = this.bn.mod(this._ubound.add(C.BN1));
+        this.bn = this.bn.mod(this._ubound.add(BN1));
         if (this.bn.isNeg()) {
-            this.bn = this.bn.add(this._ubound).add(C.BN1);
+            this.bn = this.bn.add(this._ubound).add(BN1);
         }
         return this;
     }

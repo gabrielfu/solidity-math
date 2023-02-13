@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import util from "util";
-import * as C from "../constants";
+import { getBound, BN2 } from "../constants";
 import { isUnchecked } from "../unchecked";
 
 /** @description valid types to construct a new BN from */
@@ -79,10 +79,6 @@ export abstract class BaseInteger {
     bn: BN;
     /** @description bit length (size) of this number */
     readonly _bitlen: number;
-    /** @description max representable number of this type */
-    abstract readonly _ubound: BN;
-    /** @description min representable number of this type */
-    abstract readonly _lbound: BN;
     /** @description whether this number is signed or unsigned */
     readonly _signed: boolean;
 
@@ -100,6 +96,16 @@ export abstract class BaseInteger {
         this._bitlen = bitlen;
         this._signed = signed;
         this._checkBounds();
+    }
+
+    /** @description max representable number of this type */
+    get _ubound(): BN {
+        return getBound(this._bitlen, this._signed, true);
+    }
+
+    /** @description min representable number of this type */
+    get _lbound(): BN {
+        return getBound(this._bitlen, this._signed, false);
     }
 
     /** @description create new instance with same bitlen & signedness as `this` */
@@ -325,7 +331,7 @@ export abstract class BaseInteger {
         _restrictionUnsignedB(b, "ishrn");
         const bn = _getBN(b);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            this.bn = this.bn.addn(1).div(BN2.pow(bn)).subn(1);
         }
         else {
             this.bn.iushrn(bn.toNumber());
@@ -339,7 +345,7 @@ export abstract class BaseInteger {
         const bn = _getBN(b);
         const r = this.clone();
         if (r.bn.isNeg()) {
-            r.bn = this.bn.addn(1).div(C.BN2.pow(bn)).subn(1);
+            r.bn = this.bn.addn(1).div(BN2.pow(bn)).subn(1);
         }
         else {
             r.bn.iushrn(bn.toNumber());

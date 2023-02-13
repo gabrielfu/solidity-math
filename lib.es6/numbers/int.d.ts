@@ -1,10 +1,7 @@
-import BN from "bn.js";
 import { BaseInteger, Input } from "./base";
 /** @description Signed integer base class */
 export declare class Int extends BaseInteger {
     constructor(number: Input, bitlen: number);
-    get _ubound(): BN;
-    get _lbound(): BN;
     get type(): string;
     /**
      * @description performs signed integer wraparound in-place

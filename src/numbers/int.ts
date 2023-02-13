@@ -1,19 +1,10 @@
-import BN from "bn.js";
-import * as C from "../constants";
+import { BN1 } from "../constants";
 import { BaseInteger, Input } from "./base";
 
 /** @description Signed integer base class */
 export class Int extends BaseInteger {
     constructor(number: Input, bitlen: number) {
         super(number, bitlen, true);
-    }
-
-    get _ubound(): BN {
-        return C._getBitValues(this._bitlen).intmax;
-    }
-
-    get _lbound(): BN {
-        return C._getBitValues(this._bitlen).intmin;
     }
 
     get type(): string {
@@ -24,10 +15,10 @@ export class Int extends BaseInteger {
      * @description performs signed integer wraparound in-place
      */
     _iwraparound(): this {
-        const range = this._ubound.sub(this._lbound).add(C.BN1);
+        const range = this._ubound.sub(this._lbound).add(BN1);
         this.bn = this.bn.sub(this._lbound).mod(range);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.add(this._ubound).add(C.BN1);
+            this.bn = this.bn.add(this._ubound).add(BN1);
         }
         else {
             this.bn = this.bn.add(this._lbound);

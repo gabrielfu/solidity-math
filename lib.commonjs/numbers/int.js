@@ -14,32 +14,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.int256 = exports.int248 = exports.int240 = exports.int232 = exports.int224 = exports.int216 = exports.int208 = exports.int200 = exports.int192 = exports.int184 = exports.int176 = exports.int168 = exports.int160 = exports.int152 = exports.int144 = exports.int136 = exports.int128 = exports.int120 = exports.int112 = exports.int104 = exports.int96 = exports.int88 = exports.int80 = exports.int72 = exports.int64 = exports.int56 = exports.int48 = exports.int40 = exports.int32 = exports.int24 = exports.int16 = exports.int8 = exports.Int = void 0;
-var C = __importStar(require("../constants"));
+var constants_1 = require("../constants");
 var base_1 = require("./base");
 /** @description Signed integer base class */
 var Int = /** @class */ (function (_super) {
@@ -47,20 +24,6 @@ var Int = /** @class */ (function (_super) {
     function Int(number, bitlen) {
         return _super.call(this, number, bitlen, true) || this;
     }
-    Object.defineProperty(Int.prototype, "_ubound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).intmax;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Int.prototype, "_lbound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).intmin;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Int.prototype, "type", {
         get: function () {
             return "int".concat(this._bitlen);
@@ -72,10 +35,10 @@ var Int = /** @class */ (function (_super) {
      * @description performs signed integer wraparound in-place
      */
     Int.prototype._iwraparound = function () {
-        var range = this._ubound.sub(this._lbound).add(C.BN1);
+        var range = this._ubound.sub(this._lbound).add(constants_1.BN1);
         this.bn = this.bn.sub(this._lbound).mod(range);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.add(this._ubound).add(C.BN1);
+            this.bn = this.bn.add(this._ubound).add(constants_1.BN1);
         }
         else {
             this.bn = this.bn.add(this._lbound);

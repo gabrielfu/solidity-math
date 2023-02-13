@@ -14,32 +14,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.uint256 = exports.uint248 = exports.uint240 = exports.uint232 = exports.uint224 = exports.uint216 = exports.uint208 = exports.uint200 = exports.uint192 = exports.uint184 = exports.uint176 = exports.uint168 = exports.uint160 = exports.uint152 = exports.uint144 = exports.uint136 = exports.uint128 = exports.uint120 = exports.uint112 = exports.uint104 = exports.uint96 = exports.uint88 = exports.uint80 = exports.uint72 = exports.uint64 = exports.uint56 = exports.uint48 = exports.uint40 = exports.uint32 = exports.uint24 = exports.uint16 = exports.uint8 = exports.Uint = void 0;
-var C = __importStar(require("../constants"));
+var constants_1 = require("../constants");
 var base_1 = require("./base");
 /** @description Unsigned integer base class */
 var Uint = /** @class */ (function (_super) {
@@ -47,20 +24,6 @@ var Uint = /** @class */ (function (_super) {
     function Uint(number, bitlen) {
         return _super.call(this, number, bitlen, false) || this;
     }
-    Object.defineProperty(Uint.prototype, "_ubound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).uintmax;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Uint.prototype, "_lbound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).uintmin;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Uint.prototype, "type", {
         get: function () {
             return "uint".concat(this._bitlen);
@@ -72,9 +35,9 @@ var Uint = /** @class */ (function (_super) {
      * @description performs unsigned integer wraparound in-place
      */
     Uint.prototype._iwraparound = function () {
-        this.bn = this.bn.mod(this._ubound.add(C.BN1));
+        this.bn = this.bn.mod(this._ubound.add(constants_1.BN1));
         if (this.bn.isNeg()) {
-            this.bn = this.bn.add(this._ubound).add(C.BN1);
+            this.bn = this.bn.add(this._ubound).add(constants_1.BN1);
         }
         return this;
     };

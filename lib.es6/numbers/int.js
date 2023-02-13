@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import * as C from "../constants";
+import { BN1 } from "../constants";
 import { BaseInteger } from "./base";
 /** @description Signed integer base class */
 var Int = /** @class */ (function (_super) {
@@ -21,20 +21,6 @@ var Int = /** @class */ (function (_super) {
     function Int(number, bitlen) {
         return _super.call(this, number, bitlen, true) || this;
     }
-    Object.defineProperty(Int.prototype, "_ubound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).intmax;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Int.prototype, "_lbound", {
-        get: function () {
-            return C._getBitValues(this._bitlen).intmin;
-        },
-        enumerable: false,
-        configurable: true
-    });
     Object.defineProperty(Int.prototype, "type", {
         get: function () {
             return "int".concat(this._bitlen);
@@ -46,10 +32,10 @@ var Int = /** @class */ (function (_super) {
      * @description performs signed integer wraparound in-place
      */
     Int.prototype._iwraparound = function () {
-        var range = this._ubound.sub(this._lbound).add(C.BN1);
+        var range = this._ubound.sub(this._lbound).add(BN1);
         this.bn = this.bn.sub(this._lbound).mod(range);
         if (this.bn.isNeg()) {
-            this.bn = this.bn.add(this._ubound).add(C.BN1);
+            this.bn = this.bn.add(this._ubound).add(BN1);
         }
         else {
             this.bn = this.bn.add(this._lbound);
