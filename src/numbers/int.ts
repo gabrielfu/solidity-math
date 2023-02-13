@@ -1,8 +1,17 @@
+import BN from "bn.js";
 import * as C from "../constants";
 import { BaseInteger, BNInput } from "./base";
 
 /** @description Signed integer base class */
 export class BaseInt extends BaseInteger {
+    get _ubound(): BN {
+        return C._getBitValues(this._bitlen).intmax;
+    }
+
+    get _lbound(): BN {
+        return C._getBitValues(this._bitlen).intmin;
+    }
+
     get type(): string {
         return `Int${this._bitlen}`;
     }

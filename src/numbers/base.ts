@@ -90,9 +90,9 @@ export abstract class BaseInteger {
     /** @description bit length (size) of this number */
     readonly _bitlen: number;
     /** @description max representable number of this type */
-    readonly _ubound: BN;
+    abstract readonly _ubound: BN;
     /** @description min representable number of this type */
-    readonly _lbound: BN;
+    abstract readonly _lbound: BN;
     /** @description whether this number is signed or unsigned */
     readonly _signed: boolean;
 
@@ -109,8 +109,6 @@ export abstract class BaseInteger {
         }
         this._bitlen = bitlen;
         this._signed = signed;
-        this._ubound = C._getBitValues(this._bitlen).intmax;
-        this._lbound = C._getBitValues(this._bitlen).intmin;
         this._checkBounds();
     }
 
