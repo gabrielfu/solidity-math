@@ -8,7 +8,7 @@ export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
 export type Input = BNInput | BaseInteger;
 
 /** 
- * @description returns a new BaseNumber instance for out of place operations, 
+ * @description returns a new BaseInteger instance for out of place operations, 
  * with the larger bitlen between `a` & `b`.
  */
 function _newOutOfPlaceNumber(a: BaseInteger, b: Input): BaseInteger {

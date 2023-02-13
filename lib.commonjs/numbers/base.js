@@ -32,7 +32,7 @@ var util_1 = __importDefault(require("util"));
 var C = __importStar(require("../constants"));
 var unchecked_1 = require("../unchecked");
 /**
- * @description returns a new BaseNumber instance for out of place operations,
+ * @description returns a new BaseInteger instance for out of place operations,
  * with the larger bitlen between `a` & `b`.
  */
 function _newOutOfPlaceNumber(a, b) {

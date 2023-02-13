@@ -3,7 +3,7 @@ import util from "util";
 import * as C from "../constants";
 import { isUnchecked } from "../unchecked";
 /**
- * @description returns a new BaseNumber instance for out of place operations,
+ * @description returns a new BaseInteger instance for out of place operations,
  * with the larger bitlen between `a` & `b`.
  */
 function _newOutOfPlaceNumber(a, b) {

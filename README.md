@@ -64,7 +64,7 @@ import SM from "solidity-math";
 
 const a = SM.uint256(10);
 const b = SM.uint128(20);
-const c = SM.unchecked(() => SM.max("uint256").add(11));
+const c = SM.unchecked(() => SM.type(uint256).max.add(11));
 ```
 
 ## Motivation
@@ -193,7 +193,7 @@ List of Solidity operations supported:
 | `a.neq(b)`       |                  | `a != b`            | ≌            |                     |
 
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
-`a` and `b`. For example, `int112(0).add(int64(0))` will have type `Int112`.
+`a` and `b`. For example, `int112(0).add(int64(0))` will have type `int112`.
 
 The below comparison methods will return a `BaseNumber` class (either `1` or `0`) instead of boolean:
 | Method           | Restriction |
@@ -273,11 +273,13 @@ in `unchecked` mode.
 Casting between unsigned & signed types are not allowed.
 ```typescript
 const a = uint256(10);
-const b = uint64(20);
+
+// Cast a to type uint64
+const b = a.cast(uint64);
 
 // Cast b to same type as a
 const c = b.like(a);
-console.log(c); // uint256(20)
+console.log(c); // uint256(10)
 ```
 
 ## Example
@@ -290,14 +292,14 @@ Below is the Typescript equivalent function. Note that the original code is in S
 which allows `-uint256(denominator)`. To use this package, 
 we need to perform `uint256(0).sub(denominator)` in unchecked mode.
 ```typescript
-import { unchecked, uint256, uint256 } from "solidity-math";
+import { unchecked, uint256, uint256, type } from "solidity-math";
 
 function muldiv(a: uint256, b: uint256, denominator: uint256) {
     if (!denominator.gt(0)) {
         throw new Error;
     }
 
-    const mm = unchecked(() => a.mulmod(b, uint256.max()));
+    const mm = unchecked(() => a.mulmod(b, type(uint256).max));
     let prod0 = a.mul(b);
     let prod1 = mm.sub(prod0).sub(a.lt_(b));
 
