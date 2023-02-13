@@ -217,6 +217,7 @@ Other supported functions:
 | Method                     | Return type   | Description                                                      |
 |----------------------------|---------------|------------------------------------------------------------------|
 | `a.clone()`                | `typeof a`    | Returns a clone of *a*.                                          |
+| `a.cast(_type)`            | `_type`       | Returns a new instance of type *_type* and the value of *a*.     |
 | `a.like(b)`                | `typeof b`    | Returns a new instance of same type as *b* and the value of *a*. |
 | `a.toString(base: number)` | `string`      | Returns the base-string and pad with zeroes.                     |
 

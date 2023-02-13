@@ -148,6 +148,17 @@ export abstract class BaseInteger {
         }
     }
 
+    /** @description cast this to the type `_type` */
+    cast<T extends BaseInteger>(_type: (number: Input) => T): T {
+        const r = _type(0);
+        if (this._signed != r._signed) {
+            throw new TypeError(`Cannot cast ${this.type} to ${r.type}.`);
+        }
+        r.bn = this.bn.clone();
+        r._iwraparound();
+        return r;
+    }
+
     /** @description cast this to the type of `b` */
     like<T extends BaseInteger>(b: T): T {
         if (this._signed != b._signed) {
