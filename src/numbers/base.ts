@@ -87,6 +87,10 @@ export abstract class BaseInteger {
     readonly _signed: boolean;
 
     constructor(number: Input, bitlen: number, signed: boolean) {
+        if (bitlen % 8 != 0 || bitlen > 256 || bitlen < 8) {
+            throw new RangeError(`Invalid bit length: ${bitlen}`);
+        }
+
         if (number instanceof BaseInteger) {
             this.bn = number.bn.clone();
         }
