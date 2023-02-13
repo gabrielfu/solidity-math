@@ -8,9 +8,10 @@ function _computeValues(bitlen) {
     var bn = new BN(bitlen);
     var powerOf2 = BN2.pow(bn);
     var uintmax = powerOf2.sub(BN1);
+    var uintmin = BN0;
     var intmax = powerOf2.div(BN2).sub(BN1);
     var intmin = powerOf2.div(BN2).neg();
-    return { bn: bn, powerOf2: powerOf2, uintmax: uintmax, intmax: intmax, intmin: intmin };
+    return { bn: bn, powerOf2: powerOf2, uintmax: uintmax, uintmin: uintmin, intmax: intmax, intmin: intmin };
 }
 export var bit8 = _computeValues(8);
 export var bit16 = _computeValues(16);
