@@ -41,7 +41,7 @@ describe("int256", function () {
         });
     });
 
-    describe("min() & max()", function () {
+    describe("min & max", function () {
         const body = `
             function min() public pure returns (int256) { return type(int256).min; }
             function max() public pure returns (int256) { return type(int256).max; }
@@ -50,12 +50,12 @@ describe("int256", function () {
 
         it("should have the correct min()", async function () {
             const { contract } = await promise;
-            expect(await contract.min()).to.equal(SM.Int256.min().toString());
+            expect(await contract.min()).to.equal(SM.type(SM.int256).min.toString());
         });
 
         it("should have the correct max()", async function () {
             const { contract } = await promise;
-            expect(await contract.max()).to.equal(SM.Int256.max().toString());
+            expect(await contract.max()).to.equal(SM.type(SM.int256).max.toString());
         });
     });
 
