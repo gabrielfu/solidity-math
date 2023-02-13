@@ -64,7 +64,7 @@ import SM from "solidity-math";
 
 const a = SM.uint256(10);
 const b = SM.uint128(20);
-const c = SM.unchecked(() => SM.type(uint256).max.add(11));
+const c = SM.unchecked(() => SM.type(SM.uint256).max.add(11));
 ```
 
 ## Motivation
