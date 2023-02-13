@@ -5,22 +5,22 @@ import { isUnchecked } from "../unchecked";
 
 /** @description valid types to construct a new BN from */
 export type BNInput = number | string | number[] | Uint8Array | Buffer | BN;
-export type Input = BNInput | BaseNumber;
+export type Input = BNInput | BaseInteger;
 
 /** 
  * @description returns a new BaseNumber instance for out of place operations, 
  * with the larger bitlen between `a` & `b`.
  */
-function _newOutOfPlaceNumber(a: BaseNumber, b: Input): BaseNumber {
-    if ((b instanceof BaseNumber) && (b._bitlen > a._bitlen)) {
+function _newOutOfPlaceNumber(a: BaseInteger, b: Input): BaseInteger {
+    if ((b instanceof BaseInteger) && (b._bitlen > a._bitlen)) {
         return a.like(b);
     }
     return a.clone();
 }
 
 /** @description assert `a` & `b` have the same signedness */
-function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
-    if (b instanceof BaseNumber) {
+function _restrictionSameSignedness(a: BaseInteger, b: Input, opname: string) {
+    if (b instanceof BaseInteger) {
         if (a._signed != b._signed) {
             throw new TypeError(
                 `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
@@ -30,8 +30,8 @@ function _restrictionSameSignedness(a: BaseNumber, b: Input, opname: string) {
 }
 
 /** @description assert `a` has larger bitlen than `b` */
-function _restrictionLargerBitlen(a: BaseNumber, b: Input, opname: string) {
-    if (b instanceof BaseNumber) {
+function _restrictionLargerBitlen(a: BaseInteger, b: Input, opname: string) {
+    if (b instanceof BaseInteger) {
         if (a._bitlen < b._bitlen) {
             throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
         }
@@ -40,7 +40,7 @@ function _restrictionLargerBitlen(a: BaseNumber, b: Input, opname: string) {
 
 /** @description assert `b` is unsigned */
 function _restrictionUnsignedB(b: Input, opname: string) {
-    if (b instanceof BaseNumber) {
+    if (b instanceof BaseInteger) {
         if (b._signed) {
             throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
         }
@@ -53,8 +53,8 @@ function _restrictionUnsignedB(b: Input, opname: string) {
 }
 
 /** @description assert `b` fits into the range of type `a` */
-function _restrictionBNInBounds(a: BaseNumber, b: Input) {
-    if (!(b instanceof BaseNumber)) {
+function _restrictionBNInBounds(a: BaseInteger, b: Input) {
+    if (!(b instanceof BaseInteger)) {
         const bn = new BN(b);
         if (bn.lt(a._lbound) || bn.gt(a._ubound)) {
             throw new TypeError(`Right operand ${b} does not fit into type ${a.constructor.name}`);
@@ -71,73 +71,59 @@ function _onlyUnchecked(opname: string) {
 
 /** @description returns a BN instance */
 function _getBN(b: Input): BN {
-    return b instanceof BaseNumber ? b.bn : new BN(b);
+    return b instanceof BaseInteger ? b.bn : new BN(b);
 }
 
-export type ConcreteNumberClass = { new (number: Input): BaseNumber };
-
-export abstract class BaseNumber {
+export abstract class BaseInteger {
     /** @description underlying BN */
     bn: BN;
-    /** @description bit length (size) of this type */
-    static _bitlen = 0;
+    /** @description bit length (size) of this number */
+    readonly _bitlen: number;
     /** @description max representable number of this type */
-    static _ubound: BN;
+    readonly _ubound: BN;
     /** @description min representable number of this type */
-    static _lbound: BN;
-    /** @description whether this type is signed or unsigned */
-    static _signed: boolean;
+    readonly _lbound: BN;
+    /** @description whether this number is signed or unsigned */
+    readonly _signed: boolean;
 
-    constructor(number: Input) {
-        if (number instanceof BaseNumber) {
+    constructor(number: Input, bitlen: number, signed: boolean) {
+        if (number instanceof BaseInteger) {
             this.bn = number.bn.clone();
         }
         else {
             this.bn = new BN(number);
         }
+        this._bitlen = bitlen;
+        this._signed = signed;
+        this._ubound = C._getBitValues(this._bitlen).intmax;
+        this._lbound = C._getBitValues(this._bitlen).intmin;
         this._checkBounds();
     }
 
-    /** @description bit length (size) of this type */
-    get _bitlen(): number {
-        // @ts-ignore
-        return this.constructor._bitlen;
-    }
-    /** @description max representable number of this type */
-    get _ubound(): BN {
-        // @ts-ignore
-        return this.constructor._ubound;
-    }
-    /** @description min representable number of this type */
-    get _lbound(): BN {
-        // @ts-ignore
-        return this.constructor._lbound;
-    }
-    /** @description bit length (size) of this type */
-    get _signed(): boolean {
-        // @ts-ignore
-        return this.constructor._signed;
-    }
+    // /** @description constructor as static function supporting subclasses */
+    // static _new<T extends Integer>(number: Input): T {
+    //     return new (this as unknown as new(_number: Input) => T)(number);
+    // }
 
-    /** @description constructor as static function supporting subclasses */
-    static _new<T extends BaseNumber>(number: Input): T {
-        return new (this as unknown as new(_number: Input) => T)(number);
-    }
+    // /** @description max representable number of this type */
+    // static max<T extends Integer>(): T {
+    //     return this._new(this._ubound);
+    // }
 
-    /** @description max representable number of this type */
-    static max<T extends BaseNumber>(): T {
-        return this._new(this._ubound);
-    }
-
-    /** @description min representable number of this type */
-    static min<T extends BaseNumber>(): T {
-        return this._new(this._lbound);
-    }
+    // /** @description min representable number of this type */
+    // static min<T extends Integer>(): T {
+    //     return this._new(this._lbound);
+    // }
 
     /** @description makes a copy of this number */
     clone(): this {
         // @ts-ignore call static function
         return this.constructor._new(this.bn.clone());
+    }
+
+    
+    private get type(): string {
+        return (this._signed ? "Int" : "Uint") + this._bitlen.toString();
     }
 
     /** @description string representation of underlying value */
@@ -147,11 +133,11 @@ export abstract class BaseNumber {
 
     /** @description string representation of instance */
     [util.inspect.custom](): string {
-        return `${this.constructor.name}(${this.bn.toString()})`;
+        return `${this.type}(${this.bn.toString()})`;
     }
 
     /** @description performs integer wrap around in-place */
-    abstract _iwraparound(): this;
+    abstract _iwraparound(): this
 
     /** 
      * @description Checks if `this` has under/overflowed and takes action.
@@ -171,18 +157,18 @@ export abstract class BaseNumber {
         }
     }
 
-    /** @description cast to another BaseNumber subclass type */
-    as<T extends BaseNumber>(btype: typeof BaseNumber): T {
-        if (this._signed != btype._signed) {
-            throw new TypeError(
-                `Cannot cast ${this.constructor.name} to ${btype.name}.`
-            );
-        }
-        return btype._new(this.bn);
-    }
+    // /** @description cast to another BaseNumber subclass type */
+    // as<T extends Integer>(btype: typeof Integer): T {
+    //     if (this._signed != btype._signed) {
+    //         throw new TypeError(
+    //             `Cannot cast ${this.constructor.name} to ${btype.name}.`
+    //         );
+    //     }
+    //     return btype._new(this.bn);
+    // }
 
     /** @description cast to another BaseNumber subclass type */
-    like<T extends BaseNumber>(b: T): T {
+    like<T extends BaseInteger>(b: T): T {
         if (this._signed != b._signed) {
             throw new TypeError(
                 `Cannot cast ${this.constructor.name} to ${b.constructor.name}.`
@@ -203,7 +189,7 @@ export abstract class BaseNumber {
         return this._checkBounds();
     }
 
-    add(b: Input): BaseNumber {
+    add(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionSameSignedness(this, b, "add");
         const r = _newOutOfPlaceNumber(this, b);
@@ -221,7 +207,7 @@ export abstract class BaseNumber {
         return this._checkBounds();
     }
 
-    sub(b: Input): BaseNumber {
+    sub(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionSameSignedness(this, b, "sub");
         const r = _newOutOfPlaceNumber(this, b);
@@ -239,7 +225,7 @@ export abstract class BaseNumber {
         return this._checkBounds();
     }
 
-    mul(b: Input): BaseNumber {
+    mul(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionSameSignedness(this, b, "mul");
         const r = _newOutOfPlaceNumber(this, b);
@@ -257,7 +243,7 @@ export abstract class BaseNumber {
         return this._checkBounds();
     }
 
-    div(b: Input): BaseNumber {
+    div(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionSameSignedness(this, b, "sub");
         const r = _newOutOfPlaceNumber(this, b);
@@ -275,7 +261,7 @@ export abstract class BaseNumber {
         return this._checkBounds();
     }
 
-    mod(b: Input): BaseNumber {
+    mod(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionSameSignedness(this, b, "mod");
         const r = _newOutOfPlaceNumber(this, b);
@@ -284,7 +270,7 @@ export abstract class BaseNumber {
         return r._checkBounds();
     }
 
-    pow(b: Input): BaseNumber {
+    pow(b: Input): BaseInteger {
         _restrictionBNInBounds(this, b);
         _restrictionUnsignedB(b, "pow");
         const r = _newOutOfPlaceNumber(this, b);
