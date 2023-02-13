@@ -121,8 +121,7 @@ export abstract class BaseInteger {
 
     /** @description makes a copy of this number */
     clone(): this {
-        // @ts-ignore call static function
-        return this.constructor._new(this.bn.clone());
+        return new (<any>this.constructor)(this.bn.clone(), this._bitlen, this._signed);
     }
 
     abstract get type(): string
