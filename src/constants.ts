@@ -10,6 +10,7 @@ interface bitValues {
     bn: BN;
     powerOf2: BN;
     uintmax: BN;
+    uintmin: BN;
     intmax: BN;
     intmin: BN;
 }
@@ -18,9 +19,10 @@ function _computeValues(bitlen: number): bitValues {
     const bn = new BN(bitlen);
     const powerOf2 = BN2.pow(bn);
     const uintmax = powerOf2.sub(BN1);
+    const uintmin = BN0;
     const intmax = powerOf2.div(BN2).sub(BN1);
     const intmin = powerOf2.div(BN2).neg();
-    return { bn, powerOf2, uintmax, intmax, intmin };
+    return { bn, powerOf2, uintmax, uintmin, intmax, intmin };
 }
 
 export const bit8 = _computeValues(8);

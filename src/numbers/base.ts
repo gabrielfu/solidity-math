@@ -23,7 +23,7 @@ function _restrictionSameSignedness(a: BaseInteger, b: Input, opname: string) {
     if (b instanceof BaseInteger) {
         if (a._signed != b._signed) {
             throw new TypeError(
-                `Operator "${opname}" not compatible with types ${a.constructor.name} and ${b.constructor.name}.`
+                `Operator "${opname}" not compatible with types ${a.type} and ${b.type}.`
             );
         }
     }
@@ -33,7 +33,7 @@ function _restrictionSameSignedness(a: BaseInteger, b: Input, opname: string) {
 function _restrictionLargerBitlen(a: BaseInteger, b: Input, opname: string) {
     if (b instanceof BaseInteger) {
         if (a._bitlen < b._bitlen) {
-            throw new TypeError(`Operator "${opname}" not compatible with ${a.constructor.name} and a larger type ${b.constructor.name}`);
+            throw new TypeError(`Operator "${opname}" not compatible with ${a.type} and a larger type ${b.type}`);
         }
     }
 }
@@ -42,7 +42,7 @@ function _restrictionLargerBitlen(a: BaseInteger, b: Input, opname: string) {
 function _restrictionUnsignedB(b: Input, opname: string) {
     if (b instanceof BaseInteger) {
         if (b._signed) {
-            throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.constructor.name}`);
+            throw new TypeError(`Operator "${opname}" not compatible with signed type ${b.type}`);
         }
     }
     else {
@@ -57,7 +57,7 @@ function _restrictionBNInBounds(a: BaseInteger, b: Input) {
     if (!(b instanceof BaseInteger)) {
         const bn = new BN(b);
         if (bn.lt(a._lbound) || bn.gt(a._ubound)) {
-            throw new TypeError(`Right operand ${b} does not fit into type ${a.constructor.name}`);
+            throw new TypeError(`Right operand ${b} does not fit into type ${a.type}`);
         }
     }
 }
@@ -72,16 +72,6 @@ function _onlyUnchecked(opname: string) {
 /** @description returns a BN instance */
 function _getBN(b: Input): BN {
     return b instanceof BaseInteger ? b.bn : new BN(b);
-}
-
-/** @description min representable number of the type of `a` */
-export function min<T extends BaseInteger>(a: T): T {
-    return a._new(a._lbound);
-}
-
-/** @description max representable number of the type of `a` */
-export function max<T extends BaseInteger>(a: T): T {
-    return a._new(a._ubound);
 }
 
 export abstract class BaseInteger {

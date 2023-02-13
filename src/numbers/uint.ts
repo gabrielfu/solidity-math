@@ -1,19 +1,23 @@
 import BN from "bn.js";
 import * as C from "../constants";
-import { BaseInteger, BNInput } from "./base";
+import { BaseInteger, BNInput, Input } from "./base";
 
 /** @description Unsigned integer base class */
-export class BaseUint extends BaseInteger {
+export class Uint extends BaseInteger {
+    constructor(number: Input, bitlen: number) {
+        super(number, bitlen, false);
+    }
+
     get _ubound(): BN {
         return C._getBitValues(this._bitlen).uintmax;
     }
 
     get _lbound(): BN {
-        return C.BN0;
+        return C._getBitValues(this._bitlen).uintmin;
     }
 
     get type(): string {
-        return `Uint${this._bitlen}`;
+        return `uint${this._bitlen}`;
     }
 
     /** 
@@ -28,35 +32,35 @@ export class BaseUint extends BaseInteger {
     }
 }
 
-export const uint8 = (number: BNInput): BaseUint => new BaseUint(number, 8, false);
-export const uint16 = (number: BNInput): BaseUint => new BaseUint(number, 16, false);
-export const uint24 = (number: BNInput): BaseUint => new BaseUint(number, 24, false);
-export const uint32 = (number: BNInput): BaseUint => new BaseUint(number, 32, false);
-export const uint40 = (number: BNInput): BaseUint => new BaseUint(number, 40, false);
-export const uint48 = (number: BNInput): BaseUint => new BaseUint(number, 48, false);
-export const uint56 = (number: BNInput): BaseUint => new BaseUint(number, 56, false);
-export const uint64 = (number: BNInput): BaseUint => new BaseUint(number, 64, false);
-export const uint72 = (number: BNInput): BaseUint => new BaseUint(number, 72, false);
-export const uint80 = (number: BNInput): BaseUint => new BaseUint(number, 80, false);
-export const uint88 = (number: BNInput): BaseUint => new BaseUint(number, 88, false);
-export const uint96 = (number: BNInput): BaseUint => new BaseUint(number, 96, false);
-export const uint104 = (number: BNInput): BaseUint => new BaseUint(number, 104, false);
-export const uint112 = (number: BNInput): BaseUint => new BaseUint(number, 112, false);
-export const uint120 = (number: BNInput): BaseUint => new BaseUint(number, 120, false);
-export const uint128 = (number: BNInput): BaseUint => new BaseUint(number, 128, false);
-export const uint136 = (number: BNInput): BaseUint => new BaseUint(number, 136, false);
-export const uint144 = (number: BNInput): BaseUint => new BaseUint(number, 144, false);
-export const uint152 = (number: BNInput): BaseUint => new BaseUint(number, 152, false);
-export const uint160 = (number: BNInput): BaseUint => new BaseUint(number, 160, false);
-export const uint168 = (number: BNInput): BaseUint => new BaseUint(number, 168, false);
-export const uint176 = (number: BNInput): BaseUint => new BaseUint(number, 176, false);
-export const uint184 = (number: BNInput): BaseUint => new BaseUint(number, 184, false);
-export const uint192 = (number: BNInput): BaseUint => new BaseUint(number, 192, false);
-export const uint200 = (number: BNInput): BaseUint => new BaseUint(number, 200, false);
-export const uint208 = (number: BNInput): BaseUint => new BaseUint(number, 208, false);
-export const uint216 = (number: BNInput): BaseUint => new BaseUint(number, 216, false);
-export const uint224 = (number: BNInput): BaseUint => new BaseUint(number, 224, false);
-export const uint232 = (number: BNInput): BaseUint => new BaseUint(number, 232, false);
-export const uint240 = (number: BNInput): BaseUint => new BaseUint(number, 240, false);
-export const uint248 = (number: BNInput): BaseUint => new BaseUint(number, 248, false);
-export const uint256 = (number: BNInput): BaseUint => new BaseUint(number, 256, false);
+export const uint8 = (number: BNInput): Uint => new Uint(number, 8);
+export const uint16 = (number: BNInput): Uint => new Uint(number, 16);
+export const uint24 = (number: BNInput): Uint => new Uint(number, 24);
+export const uint32 = (number: BNInput): Uint => new Uint(number, 32);
+export const uint40 = (number: BNInput): Uint => new Uint(number, 40);
+export const uint48 = (number: BNInput): Uint => new Uint(number, 48);
+export const uint56 = (number: BNInput): Uint => new Uint(number, 56);
+export const uint64 = (number: BNInput): Uint => new Uint(number, 64);
+export const uint72 = (number: BNInput): Uint => new Uint(number, 72);
+export const uint80 = (number: BNInput): Uint => new Uint(number, 80);
+export const uint88 = (number: BNInput): Uint => new Uint(number, 88);
+export const uint96 = (number: BNInput): Uint => new Uint(number, 96);
+export const uint104 = (number: BNInput): Uint => new Uint(number, 104);
+export const uint112 = (number: BNInput): Uint => new Uint(number, 112);
+export const uint120 = (number: BNInput): Uint => new Uint(number, 120);
+export const uint128 = (number: BNInput): Uint => new Uint(number, 128);
+export const uint136 = (number: BNInput): Uint => new Uint(number, 136);
+export const uint144 = (number: BNInput): Uint => new Uint(number, 144);
+export const uint152 = (number: BNInput): Uint => new Uint(number, 152);
+export const uint160 = (number: BNInput): Uint => new Uint(number, 160);
+export const uint168 = (number: BNInput): Uint => new Uint(number, 168);
+export const uint176 = (number: BNInput): Uint => new Uint(number, 176);
+export const uint184 = (number: BNInput): Uint => new Uint(number, 184);
+export const uint192 = (number: BNInput): Uint => new Uint(number, 192);
+export const uint200 = (number: BNInput): Uint => new Uint(number, 200);
+export const uint208 = (number: BNInput): Uint => new Uint(number, 208);
+export const uint216 = (number: BNInput): Uint => new Uint(number, 216);
+export const uint224 = (number: BNInput): Uint => new Uint(number, 224);
+export const uint232 = (number: BNInput): Uint => new Uint(number, 232);
+export const uint240 = (number: BNInput): Uint => new Uint(number, 240);
+export const uint248 = (number: BNInput): Uint => new Uint(number, 248);
+export const uint256 = (number: BNInput): Uint => new Uint(number, 256);
