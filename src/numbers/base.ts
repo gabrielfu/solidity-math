@@ -62,16 +62,26 @@ function _restrictionBNInBounds(a: BaseInteger, b: Input) {
     }
 }
 
+/** @description assert unchecked mode is switched on */
 function _onlyUnchecked(opname: string) {
     if (!isUnchecked()) {
         throw new TypeError(`Operator ${opname} can only be performed in unchecked mode`);
     }
 }
 
-
 /** @description returns a BN instance */
 function _getBN(b: Input): BN {
     return b instanceof BaseInteger ? b.bn : new BN(b);
+}
+
+/** @description min representable number of the type of `a` */
+export function min<T extends BaseInteger>(a: T): T {
+    return a._new(a._lbound);
+}
+
+/** @description max representable number of the type of `a` */
+export function max<T extends BaseInteger>(a: T): T {
+    return a._new(a._ubound);
 }
 
 export abstract class BaseInteger {
@@ -104,20 +114,12 @@ export abstract class BaseInteger {
         this._checkBounds();
     }
 
-    // /** @description constructor as static function supporting subclasses */
-    // static _new<T extends Integer>(number: Input): T {
-    //     return new (this as unknown as new(_number: Input) => T)(number);
-    // }
-
-    // /** @description max representable number of this type */
-    // static max<T extends Integer>(): T {
-    //     return this._new(this._ubound);
-    // }
-
-    // /** @description min representable number of this type */
-    // static min<T extends Integer>(): T {
-    //     return this._new(this._lbound);
-    // }
+    /** @description create new instance with same bitlen & signedness as `this` */
+    _new(number: Input): this {
+        return new (
+            this.constructor as unknown as new(_number: Input, _bitlen: number, _signed: boolean) => this
+        )(number, this._bitlen, this._signed);
+    }
 
     /** @description makes a copy of this number */
     clone(): this {
@@ -157,25 +159,12 @@ export abstract class BaseInteger {
         }
     }
 
-    // /** @description cast to another BaseNumber subclass type */
-    // as<T extends Integer>(btype: typeof Integer): T {
-    //     if (this._signed != btype._signed) {
-    //         throw new TypeError(
-    //             `Cannot cast ${this.constructor.name} to ${btype.name}.`
-    //         );
-    //     }
-    //     return btype._new(this.bn);
-    // }
-
-    /** @description cast to another BaseNumber subclass type */
+    /** @description cast this to the type of `b` */
     like<T extends BaseInteger>(b: T): T {
         if (this._signed != b._signed) {
-            throw new TypeError(
-                `Cannot cast ${this.constructor.name} to ${b.constructor.name}.`
-            );
+            throw new TypeError(`Cannot cast ${this.type} to ${b.type}.`);
         }
-        // @ts-ignore
-        return b.constructor._new(this.bn);
+        return b._new(this.bn.clone());
     }
 
     // arithmetic
@@ -464,32 +453,26 @@ export abstract class BaseInteger {
     // comparison as value
 
     gt_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.gt(b)));
+        return this._new(+(this.gt(b)));
     }
 
     lt_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.lt(b)));
+        return this._new(+(this.lt(b)));
     }
 
     gte_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.gte(b)));
+        return this._new(+(this.gte(b)));
     }
 
     lte_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.lte(b)));
+        return this._new(+(this.lte(b)));
     }
 
     eq_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.eq(b)));
+        return this._new(+(this.eq(b)));
     }
 
     neq_(b: Input): this {
-        // @ts-ignore
-        return this.constructor._new(+(this.neq(b)));
+        return this._new(+(this.neq(b)));
     }
 }
