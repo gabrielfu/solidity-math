@@ -133,7 +133,8 @@ and do the verbose `x.toTwos(256).uand(y.toTwos(256)).fromTwos(256)`.
 | `uint248`  | `int248` |
 | `uint256`  | `int256` |
 
-The base class of all classes is `BaseInteger`, which cannot be imported or instantiated.
+The base class of all classes is an abstract class `BaseInteger`. 
+All unsigned integers are of a single subclass `Uint`, and all signed integers `Int`.
 
 These "types" are not Javascript classes, but merely functions to create new Solidity numbers.
 
@@ -195,7 +196,7 @@ List of Solidity operations supported:
 Note that for out-of-place arithmetic and bitwise operators, the output will always have the larger type among 
 `a` and `b`. For example, `int112(0).add(int64(0))` will have type `int112`.
 
-The below comparison methods will return a `BaseNumber` class (either `1` or `0`) instead of boolean:
+The below comparison methods will return an `Uint` or `Int` instance (either `1` or `0`), depending on `a`, instead of boolean:
 | Method           | Restriction |
 |------------------|-------------|
 | `a.gt_(b)`       | ≌           |
@@ -292,9 +293,9 @@ Below is the Typescript equivalent function. Note that the original code is in S
 which allows `-uint256(denominator)`. To use this package, 
 we need to perform `uint256(0).sub(denominator)` in unchecked mode.
 ```typescript
-import { unchecked, uint256, uint256, type } from "solidity-math";
+import { unchecked, uint256, Uint, type } from "solidity-math";
 
-function muldiv(a: uint256, b: uint256, denominator: uint256) {
+function muldiv(a: Uint, b: Uint, denominator: Uint) {
     if (!denominator.gt(0)) {
         throw new Error;
     }
