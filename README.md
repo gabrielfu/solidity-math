@@ -276,10 +276,10 @@ const a = uint256(10);
 
 // Cast a to type uint64
 const b = a.cast(uint64);
+const c = uint64(a);
 
-// Cast b to same type as a
-const c = b.like(a);
-console.log(c); // uint256(10)
+// Cast a to same type as b
+const d = a.like(b);
 ```
 
 ## Example
