@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.int136 = exports.int128 = exports.int120 = exports.int112 = exports.int104 = exports.int96 = exports.int88 = exports.int80 = exports.int72 = exports.int64 = exports.int56 = exports.int48 = exports.int40 = exports.int32 = exports.int24 = exports.int16 = exports.int8 = exports.uint256 = exports.uint248 = exports.uint240 = exports.uint232 = exports.uint224 = exports.uint216 = exports.uint208 = exports.uint200 = exports.uint192 = exports.uint184 = exports.uint176 = exports.uint168 = exports.uint160 = exports.uint152 = exports.uint144 = exports.uint136 = exports.uint128 = exports.uint120 = exports.uint112 = exports.uint104 = exports.uint96 = exports.uint88 = exports.uint80 = exports.uint72 = exports.uint64 = exports.uint56 = exports.uint48 = exports.uint40 = exports.uint32 = exports.uint24 = exports.uint16 = exports.uint8 = exports.type = void 0;
-exports.unchecked = exports.int256 = exports.int248 = exports.int240 = exports.int232 = exports.int224 = exports.int216 = exports.int208 = exports.int200 = exports.int192 = exports.int184 = exports.int176 = exports.int168 = exports.int160 = exports.int152 = exports.int144 = void 0;
-var types_1 = require("./numbers/types");
-Object.defineProperty(exports, "type", { enumerable: true, get: function () { return types_1.type; } });
+exports.int120 = exports.int112 = exports.int104 = exports.int96 = exports.int88 = exports.int80 = exports.int72 = exports.int64 = exports.int56 = exports.int48 = exports.int40 = exports.int32 = exports.int24 = exports.int16 = exports.int8 = exports.Uint = exports.uint256 = exports.uint248 = exports.uint240 = exports.uint232 = exports.uint224 = exports.uint216 = exports.uint208 = exports.uint200 = exports.uint192 = exports.uint184 = exports.uint176 = exports.uint168 = exports.uint160 = exports.uint152 = exports.uint144 = exports.uint136 = exports.uint128 = exports.uint120 = exports.uint112 = exports.uint104 = exports.uint96 = exports.uint88 = exports.uint80 = exports.uint72 = exports.uint64 = exports.uint56 = exports.uint48 = exports.uint40 = exports.uint32 = exports.uint24 = exports.uint16 = exports.uint8 = exports.BaseInteger = exports.type = void 0;
+exports.unchecked = exports.Int = exports.int256 = exports.int248 = exports.int240 = exports.int232 = exports.int224 = exports.int216 = exports.int208 = exports.int200 = exports.int192 = exports.int184 = exports.int176 = exports.int168 = exports.int160 = exports.int152 = exports.int144 = exports.int136 = exports.int128 = void 0;
+var type_1 = require("./numbers/type");
+Object.defineProperty(exports, "type", { enumerable: true, get: function () { return type_1.type; } });
+var base_1 = require("./numbers/base");
+Object.defineProperty(exports, "BaseInteger", { enumerable: true, get: function () { return base_1.BaseInteger; } });
 var uint_1 = require("./numbers/uint");
 Object.defineProperty(exports, "uint8", { enumerable: true, get: function () { return uint_1.uint8; } });
 Object.defineProperty(exports, "uint16", { enumerable: true, get: function () { return uint_1.uint16; } });
@@ -37,6 +39,7 @@ Object.defineProperty(exports, "uint232", { enumerable: true, get: function () {
 Object.defineProperty(exports, "uint240", { enumerable: true, get: function () { return uint_1.uint240; } });
 Object.defineProperty(exports, "uint248", { enumerable: true, get: function () { return uint_1.uint248; } });
 Object.defineProperty(exports, "uint256", { enumerable: true, get: function () { return uint_1.uint256; } });
+Object.defineProperty(exports, "Uint", { enumerable: true, get: function () { return uint_1.Uint; } });
 var int_1 = require("./numbers/int");
 Object.defineProperty(exports, "int8", { enumerable: true, get: function () { return int_1.int8; } });
 Object.defineProperty(exports, "int16", { enumerable: true, get: function () { return int_1.int16; } });
@@ -70,5 +73,6 @@ Object.defineProperty(exports, "int232", { enumerable: true, get: function () { 
 Object.defineProperty(exports, "int240", { enumerable: true, get: function () { return int_1.int240; } });
 Object.defineProperty(exports, "int248", { enumerable: true, get: function () { return int_1.int248; } });
 Object.defineProperty(exports, "int256", { enumerable: true, get: function () { return int_1.int256; } });
+Object.defineProperty(exports, "Int", { enumerable: true, get: function () { return int_1.Int; } });
 var unchecked_1 = require("./unchecked");
 Object.defineProperty(exports, "unchecked", { enumerable: true, get: function () { return unchecked_1.unchecked; } });
