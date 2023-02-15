@@ -1,4 +1,5 @@
 # solidity-math
+[![npm version](https://badge.fury.io/js/solidity-math.svg)](https://badge.fury.io/js/solidity-math)
 
 This package extends [bn.js](https://github.com/indutny/bn.js/) to implement 
 Solidity integer types and operations. It is useful for replicating public Solidity contract interactions, particularly when developing autonomous agents and DeFi programs.
