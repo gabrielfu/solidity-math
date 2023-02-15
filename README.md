@@ -36,6 +36,9 @@ Solidity integer types and operations. It is useful for replicating public Solid
   + [Muldiv](#muldiv)
 
 ## Installation
+```shell
+npm i solidity-math
+```
 
 ## Usage
 Named import:

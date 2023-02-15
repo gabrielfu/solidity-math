@@ -1,6 +1,6 @@
 {
   "name": "solidity-math",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Solidity number types in Javascript",
   "main": "lib.commonjs/index.js",
   "module": "lib.es6/index.js",
